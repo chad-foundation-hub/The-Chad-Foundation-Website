@@ -88,7 +88,7 @@ const Message = () => {
                   greater gift than helping to save a Life—young and old.’
                   <br />
                   <br />
-                  <strong>The Gift of Art</strong>
+                  <strong className="underline-strong">The Gift of Art</strong>
                   <br />
                   Chad truly cared about all people. His friends would say,
                   “Chad never saw color, only you, what you were about, what
@@ -119,13 +119,13 @@ const Message = () => {
                   their fears, challenges, hopes, and dreams through Art—
                   stories, plays, creative writing and athletics—they can share,
                   express, and inform, and we as parents can listen and hear
-                  their inner hearts speaking, effecting a better way for
+                  their inner hearts speaking, affecting a better way for
                   growth, understanding, and solutions. Through the{" "}
-                  <strong> Annual Scholarship Program, </strong> Program, CHAD
+                  <strong> Annual Scholarship Program, </strong> CHAD
                   awards an athlete whose teachers and peers honour as the best
                   “Scholar, Athlete &amp; Leader” and an Art Scholarship for the
                   “Best Story of the Heart.” Students who seek out careers in
-                  accredited vocational or trade schools are strongly 3
+                  accredited vocational or trade schools are strongly
                   encouraged to apply. Our world needs all types of talent and
                   skills. As Chad never drank alcohol or did drugs, we will
                   launch the “Life is A Gift—Safe Driving Campaign” to engage
