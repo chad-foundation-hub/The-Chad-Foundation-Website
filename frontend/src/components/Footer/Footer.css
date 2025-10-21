@@ -57,7 +57,7 @@
   color: var(--main-white);
   font-size: 18px;
   font-weight: 100;
-  line-height: 100%;
+  line-height: 150%;
   margin-top: 44px;
   text-align: center;
 }
@@ -84,4 +84,8 @@
   transition: all ease-in-out 300ms;
   background-color: transparent;
   color: var(--orange);
+}
+.span-copyright {
+  margin-left: 18px;
+   margin-right: 18px;
 }

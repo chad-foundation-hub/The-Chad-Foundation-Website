@@ -68,10 +68,16 @@ const Guide = () => {
           <div className="guide-schools-div">
             <p className="guide-schools-div-p">
               For the “Inaugural Chad Scholarship Awards (2026),” The Chad
-              Foundation for Athletes and Artists has chosen three high schools
-              to participate:
+              Foundation for Athletes and Artists has chosen{" "}
+              <strong>
+                North Hollywood High School in North Hollywood, California
+              </strong>
+              . North Hollywood High was Chad Butrum’s alma mater and the
+              recipient of the “1st Chad Echocardiogram Heart Screening for
+              Young Athletes”—the first preventive heart screening for high
+              school athletes in the nation.
             </p>
-            <ul>
+            {/* <ul>
               <li>
                 North Hollywood High School in North Hollywood, California (Chad
                 Butrum’s alma mater)
@@ -89,6 +95,14 @@ const Guide = () => {
               promoting a - "Healthy Body, Mind, and Spirit.” His nonprofit
               charity, The Chad Foundation for Athletes and Artists, instills
               the same values he lived by.
+            </p> */}
+            <p className="guide-schools-div-p">
+              Today, CHAD is focusing on the “inner hearts” of students to
+              nourish their mental and spiritual needs and care for the “whole
+              heart.” Chad lived his twenty-six years on earth promoting a —
+              "Healthy Body, Mind, and Spirit.” His nonprofit charity, The Chad
+              Foundation for Athletes and Artists, instills the same values he
+              lived by.
             </p>
           </div>
           {/* Eligibility */}

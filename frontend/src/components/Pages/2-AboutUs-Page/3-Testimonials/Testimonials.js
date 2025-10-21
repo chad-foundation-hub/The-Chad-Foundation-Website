@@ -9,6 +9,7 @@ import PhotoFive from "../../../../images/AboutUs-Images/testimonials-photo-5.pn
 import PhotoSix from "../../../../images/AboutUs-Images/testimonials-photo-6.png";
 import PhotoSeven from "../../../../images/AboutUs-Images/testimonials-photo-7.jpg";
 import PhotoEight from "../../../../images/AboutUs-Images/testimonials-photo-8.jpg";
+import PhotoNine from "../../../../images/AboutUs-Images/testimonials-photo-9.png";
 
 const TestimonialsCard = ({
   name,
@@ -43,14 +44,14 @@ const TestimonialsCard = ({
             {initialStoryText}
             {isExpandable && !isExpanded && (
               <span className="readMore-span" onClick={toggleExpansion}>
-                {" Read more"}
+                {" ... read more"}
               </span>
             )}
             {isExpandable && isExpanded && (
               <>
                 {expandedStoryText}
                 <span className="readMore-span" onClick={toggleExpansion}>
-                  {" Read less"}
+                  {" .. read less"}
                 </span>
               </>
             )}
@@ -80,10 +81,10 @@ const Testimonials = () => {
           />
           {/* TWO */}
           <TestimonialsCard
-            name="L. Underwood,"
-            position="Director of Special Events"
-            place="Children’s Hospital Los Angeles Foundation"
-            initialStoryText="The Chad Foundation for Athletes and Artists’ support and willingness to participate so generously in our mission is greatly valued, and your gifts will have a significant impact on the care we provide to seriously ill children."
+            name="Alan B. Lewis, MD, "
+            position="Professor of Pediatrics"
+            place="Children’s Hospital Los Angeles Heart Institute"
+            initialStoryText="The Division of Cardiology at Children’s Hospital Los Angeles has collaborated with The Chad Foundation for the past 17 years to perform echocardiographic screening of young athletes. We in the Heart Institute are enthusiastic in our support of the endeavors of The Chad Foundation."
             expandedStoryText=""
             imageUrl={PhotoTwo}
             isExpandable={false}
@@ -110,9 +111,9 @@ const Testimonials = () => {
           />
           {/* FIVE */}
           <TestimonialsCard
-            name="Arnold Schwarzenegger"
-            place="Governor of California"
-            initialStoryText="As Governor of California, I commend the efforts of The Chad Foundation to raise public awareness of health issues. Heart health is an important concern in California, and I will continue to support efforts that encourage early screening and detection to prevent Sudden Cardiac Deaths."
+            name="Michael Willers, MD"
+            place="The Children’s Heart Center of Western Massachusetts"
+            initialStoryText="Cardiac Screenings provide an invaluable service to young people, their families, and their communities. They detect potentially fatal heart problems that were previously invisible. They save lives. They keep families intact. They make it possible for the dreams of young people to become reality."
             expandedStoryText=""
             imageUrl={PhotoFive}
             isExpandable={false}
@@ -132,18 +133,27 @@ const Testimonials = () => {
             name="Jared LaCorte,"
             position="MD, FAAP, FACC"
             place="Staten Island Pediatric Cardiology"
-            initialStoryText="As a physician, especially one who specializes in pediatric cardiology and also as a father, it has been my privilege to participate in cardiac screening events such as those sponsored by the Chad Foundation."
-            expandedStoryText=" I feel very strongly that every young athlete should receive cardiac clearance prior to participating in competitive sports. Testing is non-invasive, results can be obtained quickly, and taking these types of preventative measures can potentially save lives."
+            initialStoryText="As a physician, especially one who specializes in pediatric cardiology and also as a father, it has been my privilege to participate in cardiac screening events such as those sponsored by the Chad Foundation "
+            expandedStoryText=" I feel very strongly that every young athlete should receive cardiac clearance prior to participating in competitive sports. Testing is non-invasive, results can be obtained quickly and taking these types of preventative measures can potentially save lives."
             imageUrl={PhotoSeven}
-            isExpandable={false}
+            isExpandable={true}
           />
           {/* EIGHT */}
           <TestimonialsCard
             name="Michael R. Bloomberg,"
             position="Mayor"
-            initialStoryText="Dear Friends, It is a pleasure to welcome everyone to the Harlem YMCA, where the Chad Foundation for Artists and Athletes is offering preventative screenings for young athletes throughout the day."
+            initialStoryText="Dear Friends, It is a pleasure to welcome everyone to the Harlem YMCA, where the Chad Foundation for Artists and Athletes is offering preventative screenings for young athletes throughout the day "
             expandedStoryText=" On behalf of the City of New York, I thank all those whose generosity and dedication has made these screenings possible. I wish all of the athletes participating in these screenings the very best for an informative day, and for a healthy, happy future. Sincerely, Michael R. Bloomberg, Mayor"
             imageUrl={PhotoEight}
+            isExpandable={true}
+          />
+          {/* NINE */}
+          <TestimonialsCard
+            name="Raecene Shoaff, Lindsay’s mom,"
+            position="(Lindsay Shoaff, Survivor)"
+            initialStoryText="You can imagine my surprise when the Dr. pulled me aside at the Chad Heart Screening to tell me that they had detected something wrong with my daughter Lindsay’s heart (she was twelve years old and a Water Polo player). We acted immediately on the findings and went to see our pediatrician.  Once he found out she was a Water Polo player and did a "
+            expandedStoryText="  basic examination he tried to assure us that she was very healthy especially considering the sport she played. I got a little demanding with the pediatrician. Her doctor referred us to a pediatric cardiologist who conducted the Echo and EKG again and confirmed Dr. L.’s findings at the CHAD Fundraiser Benefit. My daughter has Aortic Regurgitation with Stenosis, which will require a heart valve transplant at some point in her life. The doctor explained that my daughter will have to be very aware of her condition for the rest of her life. The good news is that she doesn’t have to give up Water Polo. He said that the chances of this ever being caught by a general practitioner or pediatrician was probably zero. In the words of our pediatrician, I do consider us the luckiest people for meeting you and being part of The Chad Foundation. Thank you."
+            imageUrl={PhotoNine}
             isExpandable={true}
           />
         </div>

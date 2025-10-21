@@ -93,7 +93,7 @@ const CausesSection = () => {
               <h2 className="sub-section-header">Warning Signs</h2>
             </div>
 
-            <ul className="list bullets">
+            <ul className="causes-list-bullets">
               <li>Chest pain</li>
               <li>Palpitations</li>
               <li>Dizziness</li>
@@ -122,12 +122,13 @@ const CausesSection = () => {
               Learn more about risk factors in children by clicking each item:
             </p>
 
-            <ul className="list links">
+            <ul className="causes-list-bullets">
               <li>
                 <a
                   href="https://www.hrh.ca/patient-education/001174_Healthy%20eating%20for%20child%20and%20teen%20with%20cholesterol.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="risk-factors-anchors"
                 >
                   High cholesterol
                 </a>
@@ -137,6 +138,7 @@ const CausesSection = () => {
                   href="https://www.youtube.com/watch?v=La6RrOpAS38"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="risk-factors-anchors"
                 >
                   Hypertension
                 </a>
@@ -146,6 +148,7 @@ const CausesSection = () => {
                   href="https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="risk-factors-anchors"
                 >
                   Obesity
                 </a>
@@ -155,6 +158,7 @@ const CausesSection = () => {
                   href="https://www.mayoclinic.org/diseases-conditions/type-1-diabetes-in-children/symptoms-causes/syc-20355306"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="risk-factors-anchors"
                 >
                   Diabetes
                 </a>

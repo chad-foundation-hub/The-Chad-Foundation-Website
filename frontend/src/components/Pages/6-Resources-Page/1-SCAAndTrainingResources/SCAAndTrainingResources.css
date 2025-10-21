@@ -17,6 +17,7 @@
   border-radius: 10px;
   background-color: #f5efea;
   padding: 20px;
+  text-align: left;
 }
 
 .SCAAndTraining .resource-card img {
@@ -48,7 +49,7 @@
 .SCAAndTraining .resource-check-button,
 .SCAAndTraining .resource-link-button {
   background-color: var(--orange);
-  color: var(--white);
+  color: var(--main-white);
   font-family: var(--accent-font);
   font-size: 22px;
   padding: 12px 30px;

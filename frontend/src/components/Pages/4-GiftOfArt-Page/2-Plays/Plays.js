@@ -84,9 +84,9 @@ const Plays = () => {
                   <h2 className="plays-header">Welcome Home Kelly!</h2>
                 </div>
                 <p className="plays-p">
-                  After 20 years, a daughter returns home to NYC’s Chinatown a
-                  successful attorney but is faced with the challenges of
-                  re-finding father, family and the American dream in a home
+                  After 20 years, a daughter returns home to NYC’s Chinatown
+                  from LA a successful attorney but is faced with the challenges
+                  of re-finding father, family and the American dream in a home
                   which now seems foreign to her. It reminds us we are here
                   because of the hope and courage of our ancestors. We are the
                   beneficiaries of their long voyage toward freedom…

@@ -126,26 +126,28 @@
   margin: 0;
 }
 
-.causes-section .list {
+.causes-section .causes-list-bullets {
   margin: 0 0 12px 18px;
   padding: 0;
 }
 
-.causes-section .list.bullets {
+.causes-section .causes-list-bullets {
+  list-style-type: disc;
+  margin-top: 24px;
+}
+
+.causes-section .causes-list-bullets.links {
   list-style-type: disc;
 }
 
-.causes-section .list.links {
-  list-style-type: disc;
-}
-
-.causes-section .list li {
+.causes-section .causes-list-bullets li {
   font-family: var(--main-font);
   font-size: 18px;
   font-weight: 600;
   line-height: 1.4;
   color: var(--main-black);
   margin-bottom: 8px;
+  text-align: left;
 }
 
 .causes-section .risk-note {
@@ -153,15 +155,16 @@
   font-size: 18px;
   margin: 0 0 10px 0;
   font-weight: 600;
+  text-align: left;
 }
 
-.causes-section .list.links a {
+.risk-factors-anchors {
   text-decoration: none;
   color: #000;
   transition: color 0.3s ease, background-color 0.3s ease;
 }
 
-.causes-section .list.links a:hover {
+.causes-section .causes-list-bullets.links li a:hover {
   color: #ef761f;
 }
 
