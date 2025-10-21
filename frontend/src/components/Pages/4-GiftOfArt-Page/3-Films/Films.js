@@ -71,9 +71,6 @@ const Films = () => {
                 </div>
                 <div>
                   <h3 className="films-second-subtext">
-                    Political Dialogs 1789 - 2040
-                  </h3>
-                  <h3 className="films-second-subtext">
                     Screenplay and stage play by Werner Neff & Arista
                   </h3>
                 </div>
@@ -107,9 +104,6 @@ const Films = () => {
                   </h2>
                 </div>
                 <div>
-                  <h3 className="films-second-subtext">
-                    Political Dialogs 1789 - 2040
-                  </h3>
                   <h3 className="films-second-subtext">
                     Screenplay and stage play by Werner Neff & Arista
                   </h3>
