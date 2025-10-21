@@ -80,13 +80,13 @@ const UpcomingEvents = () => {
                   </h2>
                 </div>
                 <p className="upcomingEvents-p">
-                  Chad was a great guy who loved all people cared about their
-                  dreams. He never drank an alcohol beverage, smoked a cigarette
-                  or did drugs his entire life. He always did the driving when
-                  he and his friends went out to the clubs dancing and you
-                  always had to wear a seatbelt when you drove with Chad in his
-                  car. - “Healthy body/mind/spirit.” <br />
-                  Please safeguard your life and others by joining the
+                  Chad was a great guy who loved all people and cared about
+                  their dreams. He never drank an alcohol beverage, smoked a
+                  cigarette or did drugs his entire life. He always did the
+                  driving when he and his friends went out to the clubs dancing
+                  and you always had to wear a seatbelt when you drove with Chad
+                  in his car. <br />- “Healthy body/mind/spirit.” Please
+                  safeguard your life and others by joining the
                   <strong>“Chad Safe Driver Campaign - Life is A Gift.”</strong>
                 </p>
                 <button className="safedr-btn" onClick={handleSafeDrClick}>
