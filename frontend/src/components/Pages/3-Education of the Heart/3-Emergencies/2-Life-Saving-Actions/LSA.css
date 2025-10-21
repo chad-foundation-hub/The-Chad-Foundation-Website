@@ -72,6 +72,7 @@
   font-size: clamp(16px, 2vw, 20px);
   line-height: 1.6;
   margin-bottom: 1rem;
+  text-align: left;
 }
 
 /* Button container and styling */
