@@ -42,6 +42,7 @@
 
 .Testimonials-Two .testimonials-content {
   flex-grow: 1;
+  text-align: left;
 }
 
 .Testimonials-Two .testimonials-content-name-and-position {
@@ -95,6 +96,10 @@
     margin-left: auto;
     margin-right: auto;
   }
+  .testimonials-container {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
 }
 
 @media (max-width: 860px) {
@@ -106,7 +111,7 @@
   .Testimonials-Two .testimonials-image {
     width: 82px;
     height: 82px;
-    margin: 0 auto 32px auto; 
+    margin: 0 auto 32px auto;
   }
 
   .Testimonials-Two .testimonials-card {
@@ -133,7 +138,7 @@
 @media (max-width: 540px) {
   .Testimonials-Two .testimonials-image {
     width: 82px;
-    height: 82px; 
+    height: 82px;
     margin: 0 auto 32px auto;
   }
 }
