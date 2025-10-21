@@ -44,6 +44,7 @@
   column-count: 2;
   column-gap: 54px;
   max-width: 100%;
+  text-align: left;
 }
 
 .roll-facts-content ul {
