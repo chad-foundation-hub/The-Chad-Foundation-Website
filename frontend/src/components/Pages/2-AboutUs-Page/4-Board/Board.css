@@ -31,11 +31,12 @@
   line-height: 100%;
   margin-bottom: 0;
 }
+
 .Board .board-paragraph {
   display: inline-block;
   margin-top: 16px;
   padding: 2px 10px;
-  align-items: center;
+  align-items: left;
   border-radius: 10px;
   background: #f5efea;
 }
