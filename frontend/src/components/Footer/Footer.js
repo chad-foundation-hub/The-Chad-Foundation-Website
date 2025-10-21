@@ -189,7 +189,8 @@ function Footer() {
           </Col>
         </Row>
         <h3 className="footer-copyright">
-          2024 Copyright. All Rights Reserved Privacy Policy Terms of Use
+          2024 Copyright. All Rights Reserved <span className="span-copyright"> Privacy Policy </span>{" "}
+          <span> Terms of Use </span>
         </h3>
       </Container>
       {/* Feedback Form Popup */}
