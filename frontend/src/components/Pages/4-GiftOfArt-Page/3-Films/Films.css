@@ -23,6 +23,7 @@
   line-height: 140%;
   text-decoration: underline #eac0a1 9px;
   margin-bottom: 18px;
+  text-align: left;
 }
 
 .Films .films-p {
@@ -63,6 +64,7 @@
   line-height: 18px;
   margin-top: 6px;
   margin-bottom: 12px;
+  text-align: left;
 }
 .Films .films-video {
   width: 498px;
