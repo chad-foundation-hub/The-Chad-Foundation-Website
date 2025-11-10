@@ -1,18 +1,18 @@
 .StoriesOfHeart-Two {
   padding-bottom: 110px;
-  padding-top: 0;
   background-color: var(--main-white);
 }
+
 .StoriesOfHeart-Two .storiesOfHeart-p {
   color: var(--main-black);
   font-family: var(--main-font);
-  max-width: 800px;
+  max-width: 1150px;
   display: block;
   margin: 0 auto;
-  text-align: center;
+  text-align: justify;
   font-size: 21px;
-
 }
+
 .StoriesOfHeart-Two .storiesOfHeart-header {
   color: var(--main-black);
   font-family: var(--accent-font);
@@ -21,7 +21,8 @@
   line-height: 125%;
   text-decoration: underline #eac0a1 9px;
   margin-top: 42px;
-  margin-bottom: 42px;
+  margin-bottom: 54px;
+  text-align: center;
 }
 
 .StoriesOfHeart-Two .storiesOfHeart-container {
@@ -30,35 +31,40 @@
   gap: 55px;
 }
 
+/* --- CARD --- */
 .StoriesOfHeart-Two .storiesOfHeart-card {
-  display: flex;
-  align-items: flex-start;
   border: 1px solid #f5efea;
   padding: 36px;
   border-radius: 8px;
   background-color: #f5efea;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
-  gap: 60px; 
+  overflow: hidden;
+  text-align: left;
 }
 
+/* --- FLOAT IMAGE --- */
 .StoriesOfHeart-Two .storiesOfHeart-image {
-  width: 200px;
+  width: 240px;
   height: auto;
   object-fit: cover;
   border-radius: 10px;
-  flex-shrink: 0;
+  float: left;
+  margin: 0 32px 24px 0;
+  transition: width 0.4s ease-in-out;
 }
 
-.StoriesOfHeart-Two .storiesOfHeart-content {
-  flex-grow: 1;
+.StoriesOfHeart-Two .storiesOfHeart-image.expanded {
+  width: 360px;
 }
 
+/* --- TEXT --- */
 .StoriesOfHeart-Two .storiesOfHeart-name {
-  color: var(--main-black);
-  font-family: var(--main-font);
-  font-size: 24px;
+  color: var(--orange);
+  font-family: var(--accent-font);
+  font-size: 32px;
   font-weight: 700;
   line-height: 100%;
+  letter-spacing: 0.06rem;
 }
 
 .StoriesOfHeart-Two .storiesOfHeart-school {
@@ -68,23 +74,31 @@
   font-style: italic;
   font-weight: 700;
   line-height: 120%;
-  margin-top: -10px;
+  margin-top: 8px;
 }
 
 .StoriesOfHeart-Two .storiesOfHeart-text {
   color: var(--main-black);
   font-family: var(--main-font);
-  font-size: 24px;
+  font-size: 21px;
   font-weight: 400;
-  line-height: 125%;
+  line-height: 135%;
+  text-align: justify;
 }
 
+/* --- Expanded area paragraph spacing --- */
+.storiesOfHeart-expanded p {
+  margin-top: 0.8em;
+  margin-bottom: 0.8em;
+}
+
+/* --- Read more button --- */
 .StoriesOfHeart-Two .storiesOfHeart-readMore-button {
   color: #3dadc8;
   background: none;
   border: none;
   font-family: var(--main-font);
-  font-size: 24px;
+  font-size: 21px;
   font-weight: 400;
   cursor: pointer;
   padding: 0;
@@ -94,7 +108,8 @@
 .StoriesOfHeart-Two .storiesOfHeart-readMore-button:hover {
   text-decoration: none;
 }
-.stories-bottom-text{
+
+.stories-bottom-text {
   color: var(--main-black);
   font-family: var(--main-font);
   font-size: 20px;
@@ -105,43 +120,32 @@
   margin: 80px auto 40px auto;
 }
 
-@media (max-width: 1160px) {
-  .StoriesOfHeart-Two .storiesOfHeart-header {
-    text-align: center;
-    max-width: 92%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
+/* --- RESPONSIVE --- */
 @media (max-width: 860px) {
-  .StoriesOfHeart-Two .storiesOfHeart-card {
-    flex-direction: column;
-    text-align: center;
-  }
-
   .StoriesOfHeart-Two .storiesOfHeart-image {
-    width: 400px;
-    height: auto;
-    margin: 0 auto 32px auto;
+    float: none;
+    display: block;
+    width: 100%;
+    margin: 0 auto 24px auto;
   }
 
-  .StoriesOfHeart-Two .storiesOfHeart-card {
-    padding: 40px 18px;
-    gap: 18px;
+  .StoriesOfHeart-Two .storiesOfHeart-image.expanded {
+    width: 100%;
   }
 
-  .StoriesOfHeart-Two .storiesOfHeart-container {
-    gap: 32px;
+  .StoriesOfHeart-Two .storiesOfHeart-text {
+    text-align: left;
+  }
+  .StoriesOfHeart-Two .storiesOfHeart-p {
+    width: 90%;
+  }
+  .StoriesOfHeart-Two .storiesOfHeart-card{
+    border-radius: 0;
   }
 }
 
 @media (max-width: 540px) {
-    .StoriesOfHeart-Two .storiesOfHeart-image {
-    width: 100%;
-    height: auto;
-    margin: 0 auto 32px auto;
-  }
-  .stories-bottom-text{
+  .stories-bottom-text {
     margin: 50px 16px;
   }
 }
