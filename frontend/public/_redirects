@@ -1,1 +1,5 @@
+# 1. Force all traffic from the .netlify.app URL to the primary domain
+https://chad-foundation.netlify.app/* https://chad-foundation.org/:splat    301!
+
+# 2. Handle the React Single Page App (SPA) routing
 /* /index.html    200
