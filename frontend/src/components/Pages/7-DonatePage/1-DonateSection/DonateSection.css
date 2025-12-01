@@ -1,35 +1,203 @@
 .DonateSection {
-  padding-top: 0;
+  padding: 60px 80px;
   margin-bottom: 40px;
   background-color: var(--main-white);
+  border-radius: 12px;
 }
-.DonateSection .donate-page-header {
-  color: var(--main-black);
-  font-family: var(--accent-font);
-  font-size: 48px;
-  font-weight: 400;
-  line-height: 125%;
-  text-decoration: underline #eac0a1 9px;
-  margin-top: 42px;
-  margin-bottom: 42px;
+
+.DonateSection .donate-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 80px;
+}
+
+/* LEFT */
+
+.DonateSection .donate-left {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
 }
 
 .DonateSection .donate-page-p {
   font-family: var(--main-font);
   color: var(--main-black);
   margin: 0;
+  text-align: justify;
+  font-size: 18px;
+}
+.DonateSection .donate-page-p strong {
   font-size: 22px;
-  font-weight: 600;
 }
 
-@media (max-width: 1160px) {
-  .DonateSection .donate-page-header {
-    text-align: center;
-    max-width: 92%;
-    margin-left: auto;
-    margin-right: auto;
+.DonateSection .donate-image {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+}
+
+/* RIGHT */
+
+.DonateSection .donate-right {
+  flex: 1 1 0;
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.DonateSection .donate-right:hover {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+/* Toggle */
+
+.DonateSection .donate-toggle {
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 32px;
+  background-color: #ececec;
+}
+
+.DonateSection .donate-toggle-option {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  background: transparent;
+  font-family: var(--accent-font);
+  font-size: 18px;
+  cursor: pointer;
+  color: #7b7b7b;
+}
+
+.DonateSection .donate-toggle-option.active {
+  background-color: var(--orange);
+  color: var(--main-white);
+}
+
+/* Amount buttons */
+
+.DonateSection .donate-amount-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.DonateSection .donate-amount-btn {
+  border-radius: 12px;
+  border: 1px solid var(--main-black);
+  background-color: var(--main-white);
+  padding: 10px 0;
+  font-family: var(--accent-font);
+  font-size: 26px;
+  cursor: pointer;
+  color: var(--main-black);
+  transition: background-color 0.2s ease, color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.DonateSection .donate-amount-btn:hover,
+.DonateSection .donate-amount-btn.selected {
+  background-color: var(--blue);
+  color: var(--main-white);
+  border-color: var(--blue);
+}
+
+/* Custom amount pill */
+
+.DonateSection .donate-custom-row {
+  margin-top: 16px;
+}
+
+.DonateSection .donate-custom-box {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--main-black);
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--main-white);
+}
+
+.DonateSection .donate-currency-prefix {
+  font-family: var(--accent-font);
+  font-size: 18px;
+}
+
+.DonateSection .donate-custom-input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-family: var(--main-font);
+  font-size: 16px;
+  background: transparent;
+}
+
+.DonateSection .donate-custom-input::placeholder {
+  color: #7b7b7b;
+}
+
+.DonateSection .donate-currency-code {
+  font-family: var(--accent-font);
+  font-size: 26px;
+}
+
+/* CTA button */
+
+.DonateSection .donate-cta {
+  margin-top: 32px;
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 0;
+  font-family: var(--accent-font);
+  font-size: 20px;
+  background-color: var(--orange);
+  color: var(--main-white);
+  cursor: pointer;
+}
+
+/* Responsive */
+
+@media (max-width: 1000px) {
+  .DonateSection {
+    padding: 40px 60px;
   }
-  .DonateSection .donate-page-p {
-    text-align: center;
+  .DonateSection .donate-card {
+    gap: 50px;
+  }
+}
+
+@media (max-width: 800px) {
+  .DonateSection .donate-card {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 500px) {
+  .DonateSection {
+    padding: 24px;
+  }
+  .DonateSection .donate-card {
+    gap: 32px;
+  }
+  .DonateSection .donate-left {
+    align-items: flex-start;
+  }
+  .DonateSection .donate-image {
+    width: 100%;
+    max-width: 100%;
+  }
+  .DonateSection .donate-right {
+    max-width: 100%;
+    padding: 0;
   }
 }
