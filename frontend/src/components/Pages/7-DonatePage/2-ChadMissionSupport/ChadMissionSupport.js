@@ -35,12 +35,10 @@ const ChadMissionSupport = () => {
   return (
     <section className="ChadMissionSupport">
       <div className="main-container">
+        <h2 className="donate-header">Donate to Save Young Lives</h2>
         <DonateSection />
         <div className="otherWays-main">
-          <h2 className="otherWays-header">
-            Other ways to support
-          </h2>
-
+          <h2 className="otherWays-header">Other ways to support</h2>
           {/* Book */}
           <div className="otherWays-box">
             <div className="otherWays-box-left-side">
