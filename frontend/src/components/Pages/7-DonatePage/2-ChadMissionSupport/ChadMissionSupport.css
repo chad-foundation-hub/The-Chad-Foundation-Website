@@ -1,6 +1,6 @@
 .ChadMissionSupport {
   padding-top: 40px;
-  padding-bottom: 100px;
+  padding-bottom: 140px;
   background-color: #F3F1F1;
 }
 
@@ -11,32 +11,35 @@
   font-weight: 400;
   line-height: 125%;
   text-decoration: underline #eac0a1 9px;
-  margin-top: 42px;
+  margin-top: 100px;
   margin-bottom: 42px;
+  text-align: left;
 }
 
 .ChadMissionSupport .otherWays-box {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 80px 0 0 0 ;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 80px 0 0 0;
   padding: 0;
   width: 100%;
 }
 
 .ChadMissionSupport .otherWays-box-left-side {
-  flex: 1;
+  flex: 0 0 auto;
   display: flex;
-  justify-content: start; 
+  justify-content: flex-start;
+  margin-right: 32px;
 }
 
 .ChadMissionSupport .otherWays-image {
-  max-width: 480px;
+  max-width: 300px; 
+  width: 100%;
   border-radius: 10px;
 }
 
 .ChadMissionSupport .otherWays-box-right-side {
-  flex: 1;
+  flex: 1 1 0;
 }
 
 .ChadMissionSupport .otherWays-h3 {
@@ -54,38 +57,46 @@
   font-size: 20px;
   font-weight: 400;
   line-height: 30px;
-  text-align: justify;
+  text-align: justify; 
   color: var(--main-black);
 }
 
+.ChadMissionSupport .otherWays-readMore {
+  color: #3dadc8;
+  background: none;
+  border: none;
+  font-family: var(--main-font);
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
 .ChadMissionSupport .otherWays-btn {
-  display: flex;
-  margin: 0 auto;
-  margin-top: 40px;
-  width: 100%;
-  height: 100%;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--orange);
-  padding: 14px 40px;
-  color: var(--main-white);
+  display:flex;
+  margin-left: 0;
+  margin-top: 24px;
+  padding: 0;
+  background-color: transparent;
+  color: var(--orange);
   font-family: var(--accent-font);
   line-height: 100%;
   font-size: 32px;
-  border: 1px solid transparent;
-  border-radius: 10px;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
   cursor: pointer;
-  transition: all ease-in-out 300ms;
+  text-decoration: underline;
+  transition: color ease-in-out 300ms;
 }
 
 .ChadMissionSupport .otherWays-btn:hover {
-  background-color: var(--main-white);
-  color: var(--orange);
-  border: 1px solid var(--orange);
+  background-color: transparent;
+  color: #de6f1f;
+  border: none;
 }
 
-@media (max-width: 1160px) {
+@media (max-width: 1200px) {
   .ChadMissionSupport {
     padding-left: 24px;
     padding-right: 24px;
@@ -99,34 +110,36 @@
   }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 800px) {
   .ChadMissionSupport .otherWays-box {
     flex-direction: column;
-    text-align: center;
+  }
+
+  .ChadMissionSupport .otherWays-box-left-side {
+    margin-bottom: 24px;
+    display: block;
+    margin: 0 auto 40px auto;
   }
 
   .ChadMissionSupport .otherWays-box-right-side {
     padding-left: 0;
-    margin-top: 20px;
-    text-align: center; 
   }
 
   .ChadMissionSupport .otherWays-h3,
   .ChadMissionSupport .otherWays-p,
   .ChadMissionSupport .otherWays-btn {
-    text-align: center;
+    text-align: left; 
   }
 
-  .ChadMissionSupport .otherWays-btn {
-    width: auto;
+  .ChadMissionSupport .otherWays-image {
+    max-width: 320px;
+    text-align: center;
   }
 }
 
 @media (max-width: 540px) {
-  .ChadMissionSupport .otherWays-btn{
-    max-width: 100%;
-  }
   .ChadMissionSupport .otherWays-image {
     max-width: 100%;
+  
   }
 }
