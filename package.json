@@ -1,0 +1,25 @@
+{
+  "name": "the-chad-foundation-website",
+  "version": "1.0.0",
+  "description": "A website to showcase the mission and services of the CHAD Foundation of Athletics and Artists",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chad-foundation-hub/The-Chad-Foundation-Website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/chad-foundation-hub/The-Chad-Foundation-Website/issues"
+  },
+  "homepage": "https://github.com/chad-foundation-hub/The-Chad-Foundation-Website#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "stripe": "^20.0.0"
+  }
+}
