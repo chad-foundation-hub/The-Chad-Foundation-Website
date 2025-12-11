@@ -18,12 +18,17 @@ const DONATION_LIMITS = {
   MAX: 1000000, // $10,000.00
 };
 
-// Base Product pricing (Standalone SKUs)
+// keys must match the 'sku' sent from frontend
 const PRODUCTS = {
-  KEYCHAIN: 2500, // $25.00
+  keychain: {
+    name: "Chad Foundation Keychain",
+    price: 2500, // $25.00
+  },
+  // Future example:
+  // book: { name: "Chad's Biography", price: 3000 }
 };
 
-// Add-on pricing (Cannot be purchased alone)
+// Add-on pricing
 const ADDONS = {
   GIFT_WRAP: 500, // $5.00
 };
@@ -39,12 +44,16 @@ const INPUT_LIMITS = {
 // ============================================================================
 
 /**
- * Sanitizes user input
- * Allows alphanumeric, space, hyphen, dot, comma, exclamation, question, and apostrophe
+ * Sanitizes user input while preserving international characters.
+ * Uses Unicode Property Escapes (\p{L}) to match letters from any language.
+ * Allowed: Letters, Numbers, Whitespace, and basic punctuation.
  */
 const sanitizeString = (str, maxLength) => {
   if (typeof str !== "string") return "";
-  const sanitized = str.replace(/[^a-zA-Z0-9\s\-.,!?']/g, "").trim();
+
+  // Replace characters that are NOT: Letters, Numbers, Spaces, or Punctuation
+  const sanitized = str.replace(/[^\p{L}\p{N}\s\-.,!?'"()]/gu, "").trim();
+
   return sanitized.slice(0, maxLength);
 };
 
@@ -83,8 +92,8 @@ const validateDonationAmount = (amount) => {
 };
 
 const validateProductSku = (sku) => {
-  // Only checks against valid base products
-  if (sku !== "keychain") {
+  // Dynamic check: Does this SKU exist in our PRODUCTS config?
+  if (!sku || !PRODUCTS[sku]) {
     return {
       statusCode: 400,
       body: JSON.stringify({ error: "Invalid or missing SKU" }),
@@ -125,13 +134,16 @@ const buildDonationLineItems = (amount, sanitizedFund) => {
   ];
 };
 
-const buildProductLineItems = (addOn) => {
+const buildProductLineItems = (sku, addOn) => {
+  // Dynamic Lookup: Get details from the constant based on SKU
+  const productDetails = PRODUCTS[sku];
+
   const items = [
     {
       price_data: {
         currency: "usd",
-        product_data: { name: "Chad Foundation Keychain" },
-        unit_amount: PRODUCTS.KEYCHAIN,
+        product_data: { name: productDetails.name },
+        unit_amount: productDetails.price,
       },
       quantity: 1,
     },
@@ -142,7 +154,7 @@ const buildProductLineItems = (addOn) => {
       price_data: {
         currency: "usd",
         product_data: { name: "Gift Wrap / Add-on" },
-        unit_amount: ADDONS.GIFT_WRAP, // Uses the distinct ADDONS constant
+        unit_amount: ADDONS.GIFT_WRAP,
       },
       quantity: 1,
     });
@@ -170,7 +182,6 @@ exports.handler = async (event) => {
       };
     }
 
-    // Default addOn to false if missing
     const { type, amount, sku, addOn = false, fund, notes } = body;
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
 
@@ -178,7 +189,7 @@ exports.handler = async (event) => {
     const typeError = validateType(type);
     if (typeError) return typeError;
 
-    // 2. Sanitize inputs ONCE
+    // 2. Sanitize inputs
     const sanitizedFund = sanitizeString(fund, INPUT_LIMITS.FUND);
     const sanitizedNotes = sanitizeString(notes, INPUT_LIMITS.NOTE);
 
@@ -192,9 +203,12 @@ exports.handler = async (event) => {
     } else if (type === "product") {
       const skuError = validateProductSku(sku);
       if (skuError) return skuError;
+
       const addOnError = validateAddOn(addOn);
       if (addOnError) return addOnError;
-      lineItems = buildProductLineItems(addOn);
+
+      // Pass the SKU to the builder for dynamic lookup
+      lineItems = buildProductLineItems(sku, addOn);
     }
 
     // 4. Create Session
@@ -223,6 +237,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({ url: session.url }),
     };
   } catch (error) {
+    // Log safe error details for debugging
     console.error("Stripe Checkout Error:", {
       message: error.message,
       type: error.type,
