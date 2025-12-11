@@ -111,13 +111,11 @@
   }
 
   .DonateNavigation-banner-h3,
-  .DonateNavigation-banner-p,
   .donate-menu-item {
     font-size: 28px;
   }
 
   .DonateNavigation-banner-p {
-    text-align: center;
-    max-width: 100%;
+    max-width: 92%;
   }
 }
