@@ -19,7 +19,7 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 20px;
+  gap: 32px;
 }
 
 .DonateSection .donate-page-p {
@@ -110,7 +110,14 @@
   border-color: var(--blue);
 }
 
-/* Custom amount pill */
+.DonateSection .donate-matching-note {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 12px;
+  font-style: italic;
+  color: #575757;
+  opacity: 0.85;
+}
 
 .DonateSection .donate-custom-row {
   margin-top: 16px;
@@ -150,10 +157,126 @@
   font-size: 26px;
 }
 
+/* FUND DROPDOWN */
+.DonateSection .donate-fund-row {
+  margin-bottom: 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+}
+
+.DonateSection .donate-fund-label {
+  font-family: var(--accent-font);
+  font-size: 16px;
+  color: var(--main-black);
+  text-align: left;
+  margin-top: 18px;
+}
+
+.DonateSection .donate-fund-select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--main-black);
+  border-radius: 12px;
+  background-color: var(--main-white);
+  font-family: var(--main-font);
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.DonateSection .donate-fund-select:focus {
+  outline: none;
+  border-color: var(--blue);
+}
+
+.DonateSection .donate-fund-selected {
+  flex: 1;
+}
+
+.DonateSection .donate-fund-arrow {
+  margin-left: 8px;
+  font-size: 14px;
+}
+
+/* dropdown menu container */
+.DonateSection .donate-fund-options {
+  list-style: none;
+  margin: 6px 0 0 0;
+  padding: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  background-color: var(--main-white);
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(15, 15, 15, 0.167);
+  z-index: 20;
+}
+
+/* each option */
+.DonateSection .donate-fund-option {
+  padding: 12px 14px;
+  font-family: var(--main-font);
+  font-size: 15px;
+  cursor: pointer;
+  text-align: left;
+  background-color: #fafafa;
+  border-bottom: 1px solid #eaeaea;
+}
+
+/* last item: remove bottom border */
+.DonateSection .donate-fund-option:last-child {
+  border-bottom: none;
+}
+
+/* hover */
+.DonateSection .donate-fund-option:hover {
+  background-color: #f0f0f0;
+}
+
+/* selected/active */
+.DonateSection .donate-fund-option.active {
+  font-weight: 600;
+  background-color: #e5e5e5;
+}
+
+/* DEDICATION FIELD */
+.DonateSection .donate-dedication-row {
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.DonateSection .donate-dedication-label {
+  font-family: var(--accent-font);
+  font-size: 16px;
+  color: var(--main-black);
+  text-align: left;
+}
+
+.DonateSection .donate-dedication-input {
+  width: 100%;
+  min-height: 60px;
+  max-height: 120px;
+  padding: 10px 12px;
+  border: 1px solid var(--main-black);
+  border-radius: 12px;
+  font-family: var(--main-font);
+  font-size: 14px;
+  resize: vertical;
+}
+
 /* CTA button */
 
 .DonateSection .donate-cta {
-  margin-top: 32px;
+  margin-top: 18px;
   width: 100%;
   border: none;
   border-radius: 8px;
@@ -178,7 +301,45 @@
 
 @media (max-width: 800px) {
   .DonateSection .donate-card {
-    flex-direction: column;
+    flex-direction: column-reverse;
+  }
+
+  .DonateSection .donate-left,
+  .DonateSection .donate-right {
+    width: 100%;
+  }
+
+  .DonateSection .donate-right {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 0;
+  }
+  .DonateSection .donate-right:hover {
+    box-shadow: none;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .DonateSection .donate-fund-row {
+    align-items: center;
+  }
+
+  .DonateSection .donate-fund-label {
+    width: 100%;
+  }
+
+  .DonateSection .donate-fund-select {
+    width: 100%;
+    font-size: 18px;
+    padding: 12px 14px;
+  }
+
+  .DonateSection .donate-fund-option {
+    font-size: 16px;
+  }
+
+  .DonateSection .donate-dedication-row {
+    align-items: stretch;
   }
 }
 
@@ -196,8 +357,7 @@
     width: 100%;
     max-width: 100%;
   }
-  .DonateSection .donate-right {
-    max-width: 100%;
-    padding: 0;
+  .DonateSection .donate-currency-code {
+    display: none;
   }
 }
