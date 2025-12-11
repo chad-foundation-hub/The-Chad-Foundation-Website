@@ -5,12 +5,25 @@
 // ============================================================================
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
-if (!STRIPE_SECRET_KEY) {
-  console.error("CRITICAL: STRIPE_SECRET_KEY is missing.");
-  throw new Error("Server Misconfiguration");
-}
 
-const stripe = require("stripe")(STRIPE_SECRET_KEY);
+// Initialize Stripe (lazy initialization - will fail at runtime if key is missing)
+let stripe;
+try {
+  if (!STRIPE_SECRET_KEY) {
+    console.warn(
+      "WARNING: STRIPE_SECRET_KEY environment variable is not set. " +
+        "Stripe checkout sessions will fail until this is configured. " +
+        "Set STRIPE_SECRET_KEY in Netlify environment variables."
+    );
+  } else {
+    stripe = require("stripe")(STRIPE_SECRET_KEY);
+  }
+} catch (err) {
+  console.error(
+    "CRITICAL: Failed to initialize Stripe client. Error:",
+    err.message
+  );
+}
 
 // Donation limits (in cents)
 const DONATION_LIMITS = {
@@ -55,7 +68,7 @@ const sanitizeString = (str, maxLength) => {
   }
 
   // Replace characters that are NOT: Letters, Numbers, Spaces, or Punctuation
-  const sanitized = str.replace(/[^\p{L}\p{N}\s\-.,.!?,-]/gu, "").trim();
+  const sanitized = str.replace(/[^\p{L}\p{N}\s\-.,!?'()]/gu, "").trim();
 
   return sanitized.slice(0, maxLength);
 };
@@ -102,7 +115,16 @@ const validateDonationAmount = (amount) => {
 
 const validateProductSku = (sku) => {
   // Dynamic check: Does this SKU exist in our PRODUCTS config?
-  if (typeof sku !== "string" || !sku || !PRODUCTS[sku]) {
+  // SKU must be a string, 1-32 chars, only alphanumeric, underscore, hyphen
+  const SKU_MAX_LENGTH = 32;
+  const skuPattern = /^[A-Za-z0-9_-]{1,32}$/;
+  if (
+    typeof sku !== "string" ||
+    !sku ||
+    sku.length > SKU_MAX_LENGTH ||
+    !skuPattern.test(sku) ||
+    !PRODUCTS[sku]
+  ) {
     return {
       statusCode: 400,
       body: JSON.stringify({ error: "Invalid or missing SKU" }),
@@ -176,6 +198,19 @@ const buildProductLineItems = (sku, addOn) => {
 // ============================================================================
 
 exports.handler = async (event) => {
+  // Runtime check: Ensure Stripe is properly initialized
+  if (!stripe || !STRIPE_SECRET_KEY) {
+    console.error(
+      "CRITICAL: Stripe is not configured. STRIPE_SECRET_KEY is missing from environment variables."
+    );
+    return {
+      statusCode: 500,
+      body: JSON.stringify({
+        error: "Server configuration error. Payment processing is unavailable.",
+      }),
+    };
+  }
+
   if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method Not Allowed" };
   }
@@ -198,11 +233,27 @@ exports.handler = async (event) => {
     const typeError = validateType(type);
     if (typeError) return typeError;
 
-    // 2. Sanitize inputs
-    const sanitizedFund = sanitizeString(fund, INPUT_LIMITS.FUND);
-    const sanitizedNotes = sanitizeString(notes, INPUT_LIMITS.NOTE);
+    // 2. Validate Add-On (early, before type-specific branches)
+    const addOnError = validateAddOn(addOn);
+    if (addOnError) return addOnError;
 
-    // 3. Build Line Items
+    // 3. Sanitize inputs
+    const safeFund =
+      typeof fund === "string"
+        ? fund
+        : typeof fund === "number"
+        ? String(fund)
+        : "";
+    const safeNotes =
+      typeof notes === "string"
+        ? notes
+        : typeof notes === "number"
+        ? String(notes)
+        : "";
+    const sanitizedFund = sanitizeString(safeFund, INPUT_LIMITS.FUND);
+    const sanitizedNotes = sanitizeString(safeNotes, INPUT_LIMITS.NOTE);
+
+    // 4. Build Line Items
     let lineItems = [];
 
     if (type === "donation") {
@@ -213,14 +264,11 @@ exports.handler = async (event) => {
       const skuError = validateProductSku(sku);
       if (skuError) return skuError;
 
-      const addOnError = validateAddOn(addOn);
-      if (addOnError) return addOnError;
-
       // Pass the SKU to the builder for dynamic lookup
       lineItems = buildProductLineItems(sku, addOn);
     }
 
-    // 4. Create Session
+    // 5. Create Session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: lineItems,
