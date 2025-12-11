@@ -49,10 +49,13 @@ const INPUT_LIMITS = {
  * Allowed: Letters, Numbers, Whitespace, and basic punctuation.
  */
 const sanitizeString = (str, maxLength) => {
-  if (typeof str !== "string") return "";
+  if (str === null || str === undefined) return "";
+  if (typeof str !== "string") {
+    throw new Error("Invalid input type for sanitization");
+  }
 
   // Replace characters that are NOT: Letters, Numbers, Spaces, or Punctuation
-  const sanitized = str.replace(/[^\p{L}\p{N}\s\-.,!?'"()]/gu, "").trim();
+  const sanitized = str.replace(/[^\p{L}\p{N}\s\-.,.!?,-]/gu, "").trim();
 
   return sanitized.slice(0, maxLength);
 };
@@ -82,9 +85,15 @@ const validateDonationAmount = (amount) => {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        error: `Donation must be between $${DONATION_LIMITS.MIN / 100} and $${
-          DONATION_LIMITS.MAX / 100
-        }`,
+        error: `Donation must be between $${(
+          DONATION_LIMITS.MIN / 100
+        ).toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD",
+        })} and ${(DONATION_LIMITS.MAX / 100).toLocaleString("en-US", {
+          style: "currency",
+          currency: "USD",
+        })}`,
       }),
     };
   }
@@ -93,7 +102,7 @@ const validateDonationAmount = (amount) => {
 
 const validateProductSku = (sku) => {
   // Dynamic check: Does this SKU exist in our PRODUCTS config?
-  if (!sku || !PRODUCTS[sku]) {
+  if (typeof sku !== "string" || !sku || !PRODUCTS[sku]) {
     return {
       statusCode: 400,
       body: JSON.stringify({ error: "Invalid or missing SKU" }),
@@ -239,8 +248,8 @@ exports.handler = async (event) => {
   } catch (error) {
     // Log safe error details for debugging
     console.error("Stripe Checkout Error:", {
-      message: error.message,
-      type: error.type,
+      message: error?.message,
+      type: error?.type,
     });
     return {
       statusCode: 500,
