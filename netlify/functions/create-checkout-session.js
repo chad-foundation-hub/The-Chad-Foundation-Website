@@ -52,6 +52,9 @@ const INPUT_LIMITS = {
   NOTE: 500,
 };
 
+// SKU must be a string, 1-32 chars, only alphanumeric, underscore, hyphen
+const skuPattern = /^[A-Za-z0-9_-]{1,32}$/;
+
 // ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
@@ -115,13 +118,10 @@ const validateDonationAmount = (amount) => {
 
 const validateProductSku = (sku) => {
   // Dynamic check: Does this SKU exist in our PRODUCTS config?
-  // SKU must be a string, 1-32 chars, only alphanumeric, underscore, hyphen
-  const SKU_MAX_LENGTH = 32;
-  const skuPattern = /^[A-Za-z0-9_-]{1,32}$/;
+
   if (
     typeof sku !== "string" ||
     !sku ||
-    sku.length > SKU_MAX_LENGTH ||
     !skuPattern.test(sku) ||
     !PRODUCTS[sku]
   ) {
@@ -133,13 +133,55 @@ const validateProductSku = (sku) => {
   return null;
 };
 
-const validateAddOn = (addOn) => {
-  if (addOn !== undefined && typeof addOn !== "boolean") {
+const validateAddOns = (addOns) => {
+  // addOns should be undefined, null, or an array of valid add-on names
+  if (addOns === undefined || addOns === null) {
+    return null; // Optional field
+  }
+
+  if (!Array.isArray(addOns)) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: "Invalid add-on value" }),
+      body: JSON.stringify({ error: "Add-ons must be an array" }),
     };
   }
+
+  // Check that all add-ons are valid
+  const validAddOns = Object.keys(ADDONS);
+  for (const addOn of addOns) {
+    if (typeof addOn !== "string" || !validAddOns.includes(addOn)) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({
+          error: `Invalid add-on: "${addOn}". Valid options are: ${validAddOns.join(
+            ", "
+          )}`,
+        }),
+      };
+    }
+  }
+
+  return null;
+};
+
+/**
+ * Validates optional string fields (fund, notes)
+ * Must be undefined, null, or a string - no type coercion
+ */
+const validateStringField = (fieldName, value) => {
+  if (value === undefined || value === null) {
+    return null; // Optional
+  }
+
+  if (typeof value !== "string") {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        error: `${fieldName} must be a string, not ${typeof value}`,
+      }),
+    };
+  }
+
   return null;
 };
 
@@ -165,7 +207,7 @@ const buildDonationLineItems = (amount, sanitizedFund) => {
   ];
 };
 
-const buildProductLineItems = (sku, addOn) => {
+const buildProductLineItems = (sku, addOns = []) => {
   // Dynamic Lookup: Get details from the constant based on SKU
   const productDetails = PRODUCTS[sku];
 
@@ -180,16 +222,23 @@ const buildProductLineItems = (sku, addOn) => {
     },
   ];
 
-  if (addOn) {
-    items.push({
-      price_data: {
-        currency: "usd",
-        product_data: { name: "Gift Wrap / Add-on" },
-        unit_amount: ADDONS.GIFT_WRAP,
-      },
-      quantity: 1,
-    });
+  // Add each selected add-on dynamically
+  if (Array.isArray(addOns) && addOns.length > 0) {
+    for (const addOnName of addOns) {
+      const addOnPrice = ADDONS[addOnName];
+      if (addOnPrice) {
+        items.push({
+          price_data: {
+            currency: "usd",
+            product_data: { name: addOnName },
+            unit_amount: addOnPrice,
+          },
+          quantity: 1,
+        });
+      }
+    }
   }
+
   return items;
 };
 
@@ -226,32 +275,27 @@ exports.handler = async (event) => {
       };
     }
 
-    const { type, amount, sku, addOn = false, fund, notes } = body;
+    const { type, amount, sku, addOns, fund, notes } = body;
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
 
     // 1. Validate Type
     const typeError = validateType(type);
     if (typeError) return typeError;
 
-    // 2. Validate Add-On (early, before type-specific branches)
-    const addOnError = validateAddOn(addOn);
-    if (addOnError) return addOnError;
+    // 2. Validate Add-Ons (early, before type-specific branches)
+    const addOnsError = validateAddOns(addOns);
+    if (addOnsError) return addOnsError;
 
-    // 3. Sanitize inputs
-    const safeFund =
-      typeof fund === "string"
-        ? fund
-        : typeof fund === "number"
-        ? String(fund)
-        : "";
-    const safeNotes =
-      typeof notes === "string"
-        ? notes
-        : typeof notes === "number"
-        ? String(notes)
-        : "";
-    const sanitizedFund = sanitizeString(safeFund, INPUT_LIMITS.FUND);
-    const sanitizedNotes = sanitizeString(safeNotes, INPUT_LIMITS.NOTE);
+    // 3. Validate string fields (fund and notes must be string or undefined)
+    const fundError = validateStringField("fund", fund);
+    if (fundError) return fundError;
+
+    const notesError = validateStringField("notes", notes);
+    if (notesError) return notesError;
+
+    // 4. Sanitize inputs
+    const sanitizedFund = sanitizeString(fund, INPUT_LIMITS.FUND);
+    const sanitizedNotes = sanitizeString(notes, INPUT_LIMITS.NOTE);
 
     // 4. Build Line Items
     let lineItems = [];
@@ -264,8 +308,8 @@ exports.handler = async (event) => {
       const skuError = validateProductSku(sku);
       if (skuError) return skuError;
 
-      // Pass the SKU to the builder for dynamic lookup
-      lineItems = buildProductLineItems(sku, addOn);
+      // Pass the SKU and add-ons array to the builder for dynamic lookup
+      lineItems = buildProductLineItems(sku, addOns);
     }
 
     // 5. Create Session
@@ -295,10 +339,14 @@ exports.handler = async (event) => {
     };
   } catch (error) {
     // Log safe error details for debugging
-    console.error("Stripe Checkout Error:", {
-      message: error?.message,
-      type: error?.type,
-    });
+    if (error && typeof error === "object") {
+      console.error("Stripe Checkout Error:", {
+        message: error.message,
+        type: error.type,
+      });
+    } else {
+      console.error("Stripe Checkout Error: Malformed error object", error);
+    }
     return {
       statusCode: 500,
       body: JSON.stringify({
