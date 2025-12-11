@@ -7,7 +7,7 @@
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 if (!STRIPE_SECRET_KEY) {
   console.error("CRITICAL: STRIPE_SECRET_KEY is missing.");
-  throw new Error("Server Misconfiguration: Missing Stripe Key");
+  throw new Error("Server Misconfiguration");
 }
 
 const stripe = require("stripe")(STRIPE_SECRET_KEY);
@@ -18,9 +18,13 @@ const DONATION_LIMITS = {
   MAX: 1000000, // $10,000.00
 };
 
-// Product pricing (in cents)
+// Base Product pricing (Standalone SKUs)
 const PRODUCTS = {
   KEYCHAIN: 2500, // $25.00
+};
+
+// Add-on pricing (Cannot be purchased alone)
+const ADDONS = {
   GIFT_WRAP: 500, // $5.00
 };
 
@@ -36,12 +40,11 @@ const INPUT_LIMITS = {
 
 /**
  * Sanitizes user input
- * Updated Regex: Allows apostrophes (') for names like "O'Connor"
+ * Allows alphanumeric, space, hyphen, dot, comma, exclamation, question, and apostrophe
  */
 const sanitizeString = (str, maxLength) => {
   if (typeof str !== "string") return "";
-  // Allow alphanumeric, space, hyphen, dot, comma, exclamation, question, and apostrophe
-  const sanitized = str.replace(/[^a-zA-Z0-9\s\-.,!?'’]/g, "").trim();
+  const sanitized = str.replace(/[^a-zA-Z0-9\s\-.,!?']/g, "").trim();
   return sanitized.slice(0, maxLength);
 };
 
@@ -80,6 +83,7 @@ const validateDonationAmount = (amount) => {
 };
 
 const validateProductSku = (sku) => {
+  // Only checks against valid base products
   if (sku !== "keychain") {
     return {
       statusCode: 400,
@@ -89,7 +93,6 @@ const validateProductSku = (sku) => {
   return null;
 };
 
-// Fixed: Allow undefined (optional), but if present must be boolean
 const validateAddOn = (addOn) => {
   if (addOn !== undefined && typeof addOn !== "boolean") {
     return {
@@ -104,8 +107,7 @@ const validateAddOn = (addOn) => {
 // LINE ITEM BUILDERS
 // ============================================================================
 
-const buildDonationLineItems = (amount, fund) => {
-  const sanitizedFund = sanitizeString(fund, INPUT_LIMITS.FUND);
+const buildDonationLineItems = (amount, sanitizedFund) => {
   return [
     {
       price_data: {
@@ -123,7 +125,6 @@ const buildDonationLineItems = (amount, fund) => {
   ];
 };
 
-// ADDED: The missing function for Products!
 const buildProductLineItems = (addOn) => {
   const items = [
     {
@@ -141,7 +142,7 @@ const buildProductLineItems = (addOn) => {
       price_data: {
         currency: "usd",
         product_data: { name: "Gift Wrap / Add-on" },
-        unit_amount: PRODUCTS.GIFT_WRAP,
+        unit_amount: ADDONS.GIFT_WRAP, // Uses the distinct ADDONS constant
       },
       quantity: 1,
     });
@@ -177,13 +178,17 @@ exports.handler = async (event) => {
     const typeError = validateType(type);
     if (typeError) return typeError;
 
-    // 2. Build Line Items
+    // 2. Sanitize inputs ONCE
+    const sanitizedFund = sanitizeString(fund, INPUT_LIMITS.FUND);
+    const sanitizedNotes = sanitizeString(notes, INPUT_LIMITS.NOTE);
+
+    // 3. Build Line Items
     let lineItems = [];
 
     if (type === "donation") {
       const amountError = validateDonationAmount(amount);
       if (amountError) return amountError;
-      lineItems = buildDonationLineItems(amount, fund);
+      lineItems = buildDonationLineItems(amount, sanitizedFund);
     } else if (type === "product") {
       const skuError = validateProductSku(sku);
       if (skuError) return skuError;
@@ -191,10 +196,6 @@ exports.handler = async (event) => {
       if (addOnError) return addOnError;
       lineItems = buildProductLineItems(addOn);
     }
-
-    // 3. Sanitize Metadata
-    const sanitizedFund = sanitizeString(fund, INPUT_LIMITS.FUND);
-    const sanitizedNotes = sanitizeString(notes, INPUT_LIMITS.NOTE);
 
     // 4. Create Session
     const session = await stripe.checkout.sessions.create({
