@@ -321,13 +321,13 @@ exports.handler = async (event) => {
       cancel_url: `${frontendUrl}/donate`,
       payment_intent_data: {
         metadata: {
-          fund: sanitizedFund || "General",
+          fund: sanitizedFund || "General Donation",
           notes: sanitizedNotes || "",
           type,
         },
       },
       metadata: {
-        fund: sanitizedFund || "General",
+        fund: sanitizedFund || "General Donation",
         type,
         notes: sanitizedNotes || "",
       },
