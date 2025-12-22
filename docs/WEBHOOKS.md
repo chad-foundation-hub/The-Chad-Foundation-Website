@@ -30,7 +30,6 @@ Start the Netlify development server to host your functions.
 ```bash
 # Terminal 1
 netlify dev
-
 ```
 
 - **Verify:** Ensure the server is running on `http://localhost:8888`.
@@ -42,7 +41,6 @@ Open a second terminal to create a tunnel. This tells Stripe to forward events t
 ```bash
 # Terminal 2
 stripe listen --forward-to http://localhost:8888/.netlify/functions/stripe-webhook
-
 ```
 
 ### Step 3: Configure Secrets
@@ -57,7 +55,6 @@ When you run the command in Step 2, Stripe CLI will output a **Webhook Signing S
 
 ```bash
 STRIPE_WEBHOOK_SECRET=whsec_test_12345...
-
 ```
 
 4. **Restart Terminal 1** (`netlify dev`) to load the new environment variable.
@@ -69,7 +66,6 @@ Open a third terminal to simulate a successful payment.
 ```bash
 # Terminal 3
 stripe trigger checkout.session.completed
-
 ```
 
 **Success Check:**
