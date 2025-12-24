@@ -13,7 +13,7 @@ const DonateNavigation = ({ currentPage }) => {
           {pageTitleMap[currentPage]}
         </h2>
       </div>
-      <div className="main-container">
+      {/* <div className="main-container">
         <p className="DonateNavigation-banner-p">
           By donating to The Chad Foundation for Athletes and Artists, a
           non-profit, 501(c)(3) tax-exempt charitable organization, you receive
@@ -23,7 +23,7 @@ const DonateNavigation = ({ currentPage }) => {
           minds to be ‘the best’ they can be through the “Gift of Art,” and the
           “Annual Chad Scholarship Program” which supports young dreams.
         </p>
-      </div>
+      </div> */}
     </section>
   );
 };
