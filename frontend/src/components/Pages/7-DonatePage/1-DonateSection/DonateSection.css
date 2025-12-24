@@ -113,9 +113,10 @@
 .DonateSection .donate-matching-note {
   margin-top: 12px;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   font-style: italic;
-  color: #575757;
+  font-weight: 600;
+  color: #404040;
   opacity: 0.85;
 }
 
@@ -286,6 +287,13 @@
   background-color: var(--orange);
   color: var(--main-white);
   cursor: pointer;
+}
+
+.donate-banner p{
+  text-align: justify;
+  font-family: var(--main-font);
+  font-size: 20px;
+  margin-top: 40px;
 }
 
 /* Responsive */
