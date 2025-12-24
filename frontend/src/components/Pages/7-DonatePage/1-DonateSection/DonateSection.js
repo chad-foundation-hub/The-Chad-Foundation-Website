@@ -82,6 +82,7 @@ const DonateSection = () => {
         body: JSON.stringify({
           type: "donation",
           amount: amountInCents,
+          frequency: paymentType, // "one-time" or "monthly"
           fund: selectedFund,
           notes: dedicationText,
         }),
@@ -206,9 +207,7 @@ const DonateSection = () => {
               </label>
 
               <div
-                className={`donate-fund-select ${
-                  isFundOpen ? "open" : ""
-                }`}
+                className={`donate-fund-select ${isFundOpen ? "open" : ""}`}
                 onClick={() => setIsFundOpen((prev) => !prev)}
                 tabIndex={0}
                 onKeyDown={(e) => {
@@ -218,9 +217,7 @@ const DonateSection = () => {
                   }
                 }}
               >
-                <span className="donate-fund-selected">
-                  {selectedFund}
-                </span>
+                <span className="donate-fund-selected">{selectedFund}</span>
                 <span className="donate-fund-arrow">▾</span>
               </div>
 
@@ -265,6 +262,18 @@ const DonateSection = () => {
               department!
             </p>
           </div>
+        </div>
+        <div className="donate-banner">
+          <p>
+            By donating to The Chad Foundation for Athletes and Artists, a
+            non-profit, 501(c)(3) tax-exempt charitable organization, you
+            receive the benefit of tax-deductible donations while supporting the
+            foundation’s mission: to safeguard young hearts, instill a “Heart
+            Healthy Lifestyle—in Mind, Body, and Spirit,” inspire young hearts
+            and minds to be ‘the best’ they can be through the “Gift of Art,”
+            and the “Annual Chad Scholarship Program” which supports young
+            dreams.
+          </p>
         </div>
       </div>
     </section>
