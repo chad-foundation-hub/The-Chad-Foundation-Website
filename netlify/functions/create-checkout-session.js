@@ -25,6 +25,8 @@ try {
   );
 }
 
+const { getCorsHeaders, handleOptions } = require("./utils/cors");
+
 // Donation limits (in cents)
 const DONATION_LIMITS = {
   MIN: 100, // $1.00
@@ -247,6 +249,13 @@ const buildProductLineItems = (sku, addOns = []) => {
 // ============================================================================
 
 exports.handler = async (event) => {
+  const preflightResponse = handleOptions(event);
+  if (preflightResponse) return preflightResponse;
+
+  const corsHeaders = getCorsHeaders(
+    event.headers.origin || event.headers.Origin
+  );
+
   // Runtime check: Ensure Stripe is properly initialized
   if (!stripe || !STRIPE_SECRET_KEY) {
     console.error(
@@ -254,6 +263,7 @@ exports.handler = async (event) => {
     );
     return {
       statusCode: 500,
+      headers: corsHeaders,
       body: JSON.stringify({
         error: "Server configuration error. Payment processing is unavailable.",
       }),
@@ -261,7 +271,11 @@ exports.handler = async (event) => {
   }
 
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
+    return {
+      statusCode: 405,
+      headers: corsHeaders,
+      body: JSON.stringify("Method Not Allowed"),
+    };
   }
 
   try {
@@ -271,6 +285,7 @@ exports.handler = async (event) => {
     } catch (err) {
       return {
         statusCode: 400,
+        headers: corsHeaders,
         body: JSON.stringify({ error: "Invalid JSON body" }),
       };
     }
@@ -335,6 +350,7 @@ exports.handler = async (event) => {
 
     return {
       statusCode: 200,
+      headers: corsHeaders,
       body: JSON.stringify({ url: session.url }),
     };
   } catch (error) {
@@ -349,6 +365,7 @@ exports.handler = async (event) => {
     }
     return {
       statusCode: 500,
+      headers: corsHeaders,
       body: JSON.stringify({
         error: "Unable to create checkout session. Please try again.",
       }),
