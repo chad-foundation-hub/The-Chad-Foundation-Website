@@ -46,7 +46,7 @@ const handleOptions = (event) => {
     return {
       statusCode: 200,
       headers,
-      body: "OK",
+      body: "",
     };
   }
   return null;

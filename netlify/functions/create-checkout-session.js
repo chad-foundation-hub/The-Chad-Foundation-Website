@@ -1,5 +1,3 @@
-// netlify/functions/create-checkout-session.js
-
 // ============================================================================
 // CONFIGURATION & CONSTANTS
 // ============================================================================
@@ -256,6 +254,16 @@ exports.handler = async (event) => {
     event.headers.origin || event.headers.Origin
   );
 
+  const checkError = (validationResult) => {
+    if (validationResult) {
+      return {
+        ...validationResult,
+        headers: corsHeaders,
+      };
+    }
+    return null;
+  };
+
   // Runtime check: Ensure Stripe is properly initialized
   if (!stripe || !STRIPE_SECRET_KEY) {
     console.error(
@@ -274,7 +282,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 405,
       headers: corsHeaders,
-      body: JSON.stringify("Method Not Allowed"),
+      body: JSON.stringify({ error: "Method Not Allowed" }),
     };
   }
 
@@ -294,18 +302,18 @@ exports.handler = async (event) => {
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
 
     // 1. Validate Type
-    const typeError = validateType(type);
+    const typeError = checkError(validateType(type));
     if (typeError) return typeError;
 
     // 2. Validate Add-Ons (early, before type-specific branches)
-    const addOnsError = validateAddOns(addOns);
+    const addOnsError = checkError(validateAddOns(addOns));
     if (addOnsError) return addOnsError;
 
     // 3. Validate string fields (fund and notes must be string or undefined)
-    const fundError = validateStringField("fund", fund);
+    const fundError = checkError(validateStringField("fund", fund));
     if (fundError) return fundError;
 
-    const notesError = validateStringField("notes", notes);
+    const notesError = checkError(validateStringField("notes", notes));
     if (notesError) return notesError;
 
     // 4. Sanitize inputs
@@ -316,11 +324,11 @@ exports.handler = async (event) => {
     let lineItems = [];
 
     if (type === "donation") {
-      const amountError = validateDonationAmount(amount);
+      const amountError = checkError(validateDonationAmount(amount));
       if (amountError) return amountError;
       lineItems = buildDonationLineItems(amount, sanitizedFund);
     } else if (type === "product") {
-      const skuError = validateProductSku(sku);
+      const skuError = checkError(validateProductSku(sku));
       if (skuError) return skuError;
 
       // Pass the SKU and add-ons array to the builder for dynamic lookup
