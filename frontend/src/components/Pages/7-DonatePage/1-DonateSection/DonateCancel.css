@@ -1,0 +1,126 @@
+.DonateCancel {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  background-color: #f5efea;
+  padding: 120px 0 300px;
+}
+
+.DonateCancel .main-container {
+  flex: 1;
+  display: flex;
+}
+
+.DonateCancel-shell {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.DonateCancel-card {
+  width: 100%;
+  max-width: 980px;
+  text-align: center;
+}
+
+.DonateCancel-checkWrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.DonateCancel-check {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: var(--orange);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 12px 22px rgba(239, 118, 31, 0.22);
+}
+
+.DonateCancel-statusTitle {
+  margin: 0 0 14px;
+  font-family: var(--accent-font);
+  color: var(--orange);
+  font-size: 18px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+.DonateCancel-heroTitle {
+  margin: 32px 0 18px;
+  font-family: var(--accent-font);
+  color: var(--main-black);
+  font-size: clamp(40px, 4.8vw, 48px);
+  line-height: 1.02;
+  letter-spacing: 0.3px;
+}
+
+.DonateCancel-subtitle {
+  margin: 0 auto;
+  max-width: 76ch;
+  font-family: var(--main-font);
+  color: rgba(13, 13, 13, 0.85);
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.DonateCancel-actions {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.DonateCancel-shell .try-again-btn {
+  margin: 32px auto 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 12px;
+  font-family: var(--accent-font);
+  font-size: 18px;
+  letter-spacing: 0.2px;
+  text-decoration: none;
+  user-select: none;
+  background: var(--orange);
+  color: var(--main-white);
+  border: 1px solid var(--orange);
+  transition: all ease-in-out 300ms;
+}
+
+
+.DonateCancel-shell .try-again-btn:hover {
+  background-color: var(--main-white);
+  color: var(--orange);
+  border: 1px solid var(--orange);
+}
+
+@media (max-width: 720px) {
+  .DonateCancel {
+    padding: 160px 0 300px;
+  }
+
+  .DonateCancel-heroTitle {
+    margin-top: 24px;
+  }
+
+  .DonateCancel-shell {
+    padding: 0 18px;
+  }
+}
+
+@media (max-width: 500px) {
+  .try-again-btn {
+    width: 100%;
+  }
+}
