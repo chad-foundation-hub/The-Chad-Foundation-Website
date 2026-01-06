@@ -65,8 +65,7 @@ const DonateSuccess = () => {
             <h2 className="DonateSuccess-heroTitle">Thank you for being a hero!</h2>
 
             <p className="DonateSuccess-subtitle">
-              Your transaction was successful. Your support helps The Chad
-              Foundation create more moments of Heart and Art.
+              Your transaction was successful. 
             </p>
 
             <div
@@ -85,7 +84,7 @@ const DonateSuccess = () => {
             </div>
 
             <div className="DonateSuccess-actions">
-              <a className="return-home-btn btn-orange" href="/">
+              <a className="return-home-btn" href="/">
                 Back to Home
               </a>
             </div>
