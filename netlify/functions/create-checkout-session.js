@@ -318,7 +318,7 @@ exports.handler = async (event) => {
       line_items: lineItems,
       mode: "payment",
       success_url: `${frontendUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${frontendUrl}/donate`,
+      cancel_url: `${frontendUrl}/donate/cancel`,
       payment_intent_data: {
         metadata: {
           fund: sanitizedFund || "General Donation",
