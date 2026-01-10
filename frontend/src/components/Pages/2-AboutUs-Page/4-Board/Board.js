@@ -279,7 +279,7 @@ const Board = () => {
               </div>
 
               <div className="board-paragraph">
-                <p className="board-p">Web Developer</p>
+                <p className="board-p">Frontend Developer</p>
               </div>
               {/* TWO */}
               <div className="board-dev-p">
@@ -296,10 +296,10 @@ const Board = () => {
                 <p className="board-p">Web Developer</p>
               </div>
               {/* THREE */}
-              {/* <div className="board-dev-p">
-                <h3 className="board-subheader">Ajinkya Patil</h3>
+              <div className="board-dev-p">
+                <h3 className="board-subheader">Vijay Knot</h3>
                 <a
-                  href="https://www.linkedin.com/in/ajinkya-patil-828115178/"
+                  href="https://www.linkedin.com/in/vijay-khot/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -307,8 +307,8 @@ const Board = () => {
                 </a>
               </div>
               <div className="board-paragraph">
-                <p className="board-p">Back-end Developer</p>
-              </div> */}
+                <p className="board-p">Backend Developer</p>
+              </div>
             </Col>
           </Row>
         </Container>
