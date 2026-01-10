@@ -6,7 +6,7 @@
 }
 
 .SCAAndTraining {
-  margin-bottom: 55px;
+  margin-bottom: 120px;
 }
 
 .SCAAndTraining .resource-card {
@@ -105,5 +105,8 @@
 
   .SCAAndTraining .resource-links-container {
     justify-content: center;
+  }
+  .SCAAndTraining .main-container {
+     padding: 0 12px;
   }
 }
