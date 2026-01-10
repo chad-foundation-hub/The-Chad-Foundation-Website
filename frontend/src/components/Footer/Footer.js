@@ -104,6 +104,14 @@ function Footer() {
             >
               Expert Health Tips
             </ScrollToTopNavLink>
+            <a
+              href="https://www.cfpublic.org/education/2025-06-29/florida-is-the-first-state-to-require-student-athletes-get-life-saving-ekgs"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-p nav-link"
+            >
+              Latest Heart News
+            </a>
           </Col>
           {/* Gift of Art */}
           <Col md className="footer-col">
@@ -189,7 +197,8 @@ function Footer() {
           </Col>
         </Row>
         <h3 className="footer-copyright">
-          2024 Copyright. All Rights Reserved <span className="span-copyright"> Privacy Policy </span>{" "}
+          2024 Copyright. All Rights Reserved{" "}
+          <span className="span-copyright"> Privacy Policy </span>{" "}
           <span> Terms of Use </span>
         </h3>
       </Container>
