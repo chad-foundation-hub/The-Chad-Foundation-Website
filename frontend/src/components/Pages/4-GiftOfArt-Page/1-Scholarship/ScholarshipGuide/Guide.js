@@ -13,7 +13,9 @@ const Guide = () => {
         <div className="guide-container">
           {/* opening section */}
           <div>
-            <h2 className="guide-header">The Chad Scholarship Awards – 2026</h2>
+            <h2 className="guide-header">
+              The Chad Scholarship Awards – 2026/2027
+            </h2>
             <p className="guide-h2-header">Chad Scholarship Guidelines</p>
             <p className="guide-description">
               Chad Alan Butrum believed in nurturing a “Healthy Body, Mind, and
@@ -53,21 +55,21 @@ const Guide = () => {
               <p className="guide-h2-header">Entry Period</p>
               <p>
                 Begins:{" "}
-                <strong>12:00:01 AM ET, Friday, January 16, 2026</strong>
+                <strong>12:00:01 AM ET, Tuesday, December 1, 2026</strong>
                 <br />
-                Ends: <strong>11:59:59 PM ET, Monday, March 16, 2026</strong>
+                Ends: <strong>11:59:59 PM ET, Friday, March 15, 2027</strong>
                 <br />
-                Winners announced: <strong>Thursday, April 16, 2026</strong>
+                Winners announced: <strong>Monday, April 26, 2027</strong>
                 <br />
                 Scholarship award checks dispersed:{" "}
-                <strong>Friday, May 15, 2026</strong>
+                <strong>Monday, May 24, 2027</strong>
               </p>
             </div>
           </div>
           {/* Schools */}
           <div className="guide-schools-div">
             <p className="guide-schools-div-p">
-              For the “Inaugural Chad Scholarship Awards (2026),” The Chad
+              For the “Inaugural Chad Scholarship Awards (2026/2027),” The Chad
               Foundation for Athletes and Artists has chosen{" "}
               <strong>
                 North Hollywood High School in North Hollywood, California
@@ -109,8 +111,8 @@ const Guide = () => {
           <div className="guide-section">
             <p className="guide-h2-header">ELIGIBILITY</p>
             <p>
-              The eligibility requirements for students of these three high
-              schools wishing to apply are:
+              The eligibility requirements for students attending the pre-chosen
+              high schools and wishing to apply are:
             </p>
             <ul>
               <li>
@@ -119,7 +121,7 @@ const Guide = () => {
               </li>
               <li>
                 The applicant is enrolled full-time in their senior year at one
-                of the three pre-chosen high schools.
+                of the pre-chosen high schools.
               </li>
               <li>
                 The high school senior intends to enroll in an accredited
@@ -207,7 +209,7 @@ const Guide = () => {
               The applicant, with their signature, agrees to email or snail mail
               a follow-up letter to The Chad Foundation for Athletes and Artists
               one year after their scholarship award—by{" "}
-              <strong>May 15, 2027</strong> —stating how their Scholarship Award
+              <strong>May 15, 2028</strong> —stating how their Scholarship Award
               was used and what it meant to the continuance of their educational
               and career goals. The follow-up letter should be one page in
               length, double-spaced, and sent to The Chad Foundation email or

@@ -36,8 +36,8 @@ const Scholarship = () => {
             </div>
             <p className="scholarship-p">
               Every year, The Chad Foundation for Athletes and Artists will
-              award six $500 scholarships for high school graduating seniors to
-              be used for continuing education in an accredited college,
+              award $500 scholarships for high school graduating seniors to be
+              used for continuing education in an accredited college,
               university, vocational, or trade school. Qualifying factors will
               be the student’s goals and progress, financial need, a personal
               essay, and nominations from teachers, peers, and community
@@ -46,7 +46,7 @@ const Scholarship = () => {
 
             <p className="scholarship-p">
               Scholarships will be awarded for “The Best Athlete, Scholar, and
-              Community Volunteer/Leader” and for “The Best Story of the Heart.”
+              Leader” and for “The Best Story of the Heart.”
             </p>
 
             <p className="scholarship-p">

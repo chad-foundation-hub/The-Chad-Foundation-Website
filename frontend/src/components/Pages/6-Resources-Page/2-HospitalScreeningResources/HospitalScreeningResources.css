@@ -3,10 +3,11 @@
   flex-wrap: wrap;
   gap: 32px;
   justify-content: center;
+
 }
 
 .HospitalScreeningResources {
-  margin-bottom: 55px;
+  margin-bottom: 120px;
 }
 
 .HospitalScreeningResources .resource-card {
@@ -81,4 +82,8 @@
     align-self: center;
     margin-top: 10px;
   }
+  .HospitalScreeningResources .main-container {
+  padding: 0 12px;
 }
+}
+

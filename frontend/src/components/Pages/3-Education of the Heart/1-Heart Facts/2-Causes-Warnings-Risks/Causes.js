@@ -13,7 +13,7 @@ const CausesSection = () => {
 
   const handleLearnMoreWarning = () => {
     window.open(
-      "https://www.mayoclinic.org/diseases-conditions/hypertrophic-cardiomyopathy/symptoms-causes/syc-20355306",
+      "https://www.heart.org/en/health-topics/cardiomyopathy/symptoms-and-diagnosis-of-cardiomyopathy",
       "_blank"
     );
   };

@@ -125,13 +125,15 @@ const SCAAndTrainingResources = () => {
           imageUrl={ResourcesImageFour}
           name="Simons Heart"
           text="“Protecting Hearts. Saving Lives.” (providing heart screenings)"
-          links={[
-            { url: "https://simonsheart.org/", text: "Check" },
-            {
-              url: "https://www.screenacrossamerica.org/about-us/",
-              text: "More",
-            },
-          ]}
+          // links={[
+          //   { url: "https://simonsheart.org/", text: "Check" },
+          //   {
+          //     url: "https://www.screenacrossamerica.org/about-us/",
+          //     text: "More",
+          //   },
+          // ]}
+          link="https://simonsheart.org/"
+          linkText="Check"
         />
         {/* Card 5 */}
         <ResourceCard
@@ -184,9 +186,9 @@ const SCAAndTrainingResources = () => {
         {/* Card 11 */}
         <ResourceCard
           imageUrl={ResourcesImageEleven}
-          name="Heartfelt Cardiac Projects"
+          name="Heartfelt"
           text="“Dedicated to Saving Lives from Cardiac Arrest” (screenings)"
-          link="https://heartfeltcardiacprojects.org/"
+          link="https://heartfeltscreening.org/"
           linkText="Check"
         />
         {/* Card 12 */}
@@ -288,9 +290,9 @@ const SCAAndTrainingResources = () => {
         {/* Card 24 */}
         <ResourceCard
           imageUrl={ResourcesImageTwentyFour}
-          name="The Beaumont Healthy Heart Check Student Heart Screening"
+          name="Corewell Health - Student Heart Check"
           text="Free Student Heart checks (Michigan)"
-          link="https://www.beaumont.org/services/heart-vascular/student-heart-check"
+          link="https://corewellhealth.org/care-and-specialties/heart-and-vascular/student-heart-check"
           linkText="Check"
         />
         {/* Card 25 */}

@@ -51,13 +51,13 @@ const stories = [
 
   {
     id: 5,
-    name: "Desiree, Holly, Eric, Kyle, Mitchell",
+    name: "The Morell Family",
     image: require("../../../../../images/PeopleWeLove-Images/Tributes/TheMorrellFamily.jpg"),
     initialText:
       "The Morrell Family was headed by the handsome rogue, Chuck Morrell, former footballer (Washington Redskins) and actor (Banacek). Ironically, just like Chad, who was coming out of a huddle when he collapsed face down, Chuck was running for a touchdown as a WSU Cougar, when he, too, collapsed face-down with no apparent reason – there was no one anywhere near him. But unlike Chad, Chuck got up, having just made the longest run in the Cougar books, 87 yards—fortuitous? Yes, for that moment, a grand record never to be broken only tied and many years later.",
     hiddenText:
       "We lost Chad but Chuck Morrell would lose 5 members of his family to this silent killer, HCM. Today, we know, the HCM gene is found in 1 in 500 births, back then the awareness of the disease was still under the cover of night. First, Chuck lost his baby sister, Michelle, at 3 yrs. old to this disease; perhaps thankfully she died in her sleep. Five years later, they would lose their Mom at age 54 to the same heart ailment. Chuck had a twin named Gary, whose son Kyle, would collapse walking home and subsequently die at age 12. Finally, all were tested and it was found that the twin brothers, Chuck and Gary, also possessed the lethal gene, as well as Gary’s other children, Desiree and Mitchell. Mitchell only two years older than his brother Kyle, would also succumb to the disease just a short while later. Thankfully, the daughter would survive and I would have the pleasure of meeting her son Tyler at a heart screening event; he had just received an internal defibrillator, a device that shocks the heart should it go into an erratic arrhythmia so it can start beating at a normal rhythm again. I would also meet Chuck’s lovely daughter, Holly, who would also be diagnosed with HCM and now also has the lifesaving ICD implanted within. In honouring her family, Holly founded her organization, 'Heartfelt Cardiac Programs,' which has been doing community preventive screenings for 17 years. Holly’s Dad, Chuck, had a heart transplant in 1995 and always said as he had been given a younger heart, that that’s what kept him young.",
-    deathDate: "October 12, 2000",
+    // deathDate: "October 12, 2000",
   },
   {
     id: 6,

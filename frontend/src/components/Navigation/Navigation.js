@@ -289,7 +289,7 @@ function Navigation() {
                         }`}
                         onClick={() => handleNavClick("scholarship")}
                       >
-                        Scholarship
+                        Scholarships
                         <br />
                         <span className="dropdown-span">
                           Supporting Students’ Dreams.
