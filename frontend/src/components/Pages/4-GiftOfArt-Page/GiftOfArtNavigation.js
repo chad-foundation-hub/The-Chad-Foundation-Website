@@ -14,7 +14,7 @@ const GiftOfArtNavigation = ({ currentPage }) => {
   }, [currentPage]);
 
   const pageTitleMap = {
-    scholarship: "Scholarship",
+    scholarship: "Scholarships",
     plays: "Plays",
     films: "Films",
     books: "Books",
@@ -51,7 +51,7 @@ const GiftOfArtNavigation = ({ currentPage }) => {
                 }`}
                 onClick={() => setActiveNav("scholarship")}
               >
-                Scholarship
+                Scholarships
               </NavLink>
             </li>
             <li>
