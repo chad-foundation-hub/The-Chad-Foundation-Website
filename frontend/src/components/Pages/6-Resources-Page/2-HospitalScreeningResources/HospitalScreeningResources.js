@@ -8,7 +8,7 @@ import HsResourcesImageTwo from "../../../../images/Resources-Images/hs-resource
 import HsResourcesImageThree from "../../../../images/Resources-Images/hs-resources-image-three.png";
 import HsResourcesImageFour from "../../../../images/Resources-Images/hs-resources-image-four.png";
 import HsResourcesImageFive from "../../../../images/Resources-Images/hs-resources-image-five.png";
-import HsResourcesImageSix from "../../../../images/Resources-Images/hs-resources-image-six.png";
+// import HsResourcesImageSix from "../../../../images/Resources-Images/hs-resources-image-six.png";
 import HsResourcesImageSeven from "../../../../images/Resources-Images/hs-resources-image-seven.png";
 
 const ResourceCard = ({ imageUrl, name, text, link, linkText }) => {
@@ -55,9 +55,9 @@ const HospitalScreeningResources = () => {
         {/* Card 3 */}
         <ResourceCard
           imageUrl={HsResourcesImageThree}
-          name="Beaumont (Hospital)"
+          name="Corewell Health - Student Heart Check"
           text="Student Heart Check (Royal Oak, MI)"
-          link="https://www.beaumont.org/services/heart-vascular/heart-centers/student-heart-check"
+          link="https://corewellhealth.org/care-and-specialties/heart-and-vascular/student-heart-check"
           linkText="Check"
         />
         {/* Card 4 */}
@@ -71,9 +71,9 @@ const HospitalScreeningResources = () => {
         {/* Card 5 */}
         <ResourceCard
           imageUrl={HsResourcesImageFive}
-          name="CHOC (Children’s Hospital of Orange County)"
+          name="CHOC (Children’s Hospital of Orange County) – Rady Children’s Health"
           text="Athlete Heart Screenings and (LEAPS) (Orange County, CA). Life-Threatening Events Associated with Pediatric Sports"
-          link="https://www.choc.org/orthopaedics/sports-medicine/leaps/"
+          link="https://choc.org/heart/leaps/"
           linkText="Check"
         />
         {/* Card 6 */}
@@ -86,13 +86,13 @@ const HospitalScreeningResources = () => {
         />
 
         {/* Card 7 */}
-        <ResourceCard
+        {/* <ResourceCard
           imageUrl={HsResourcesImageSix}
           name="Heart Hospital of Austin"
           text="Young Athlete Heart Screening. Heart Hospital of Austin provides free heart screenings to the children of Central Texas in February and August each year. Children ages 14-18 receive an electrocardiogram (EKG) and an echocardiogram to screen for the deadly disorder hypertrophic cardiomyopathy (HCM). Learn more:"
           link="http://www.hearthospitalofaustin.com/"
           linkText="Check"
-        />
+        /> */}
       </div>
     </section>
   );
