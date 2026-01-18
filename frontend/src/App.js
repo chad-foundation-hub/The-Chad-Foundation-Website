@@ -49,6 +49,8 @@ import HospitalScreeningResources from "./components/Pages/6-Resources-Page/2-Ho
 
 // DonatePage Imports
 import DonateMain from "./components/Pages/7-DonatePage/0-DonateMain/DonateMain.js";
+import DonateSuccess from "./components/Pages/7-DonatePage/1-DonateSection/DonateSuccess.js";
+import DonateCancel from "./components/Pages/7-DonatePage/1-DonateSection/DonateCancel.js";
 
 function App() {
   const [showFeedback, setShowFeedback] = useState(false);
@@ -155,6 +157,8 @@ function App() {
 
           {/* DONATE PAGE */}
           <Route path="/donate-main" element={<DonateMain />} />
+          <Route path="/success" element={<DonateSuccess />} />
+          <Route path="/donate/cancel" element={<DonateCancel />} />
         </Routes>
 
         <Footer />
