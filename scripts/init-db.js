@@ -1,11 +1,9 @@
 require("dotenv").config();
 const { Client } = require("pg");
 
-const connectionString =
-  process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL;
-
 const client = new Client({
-  connectionString: connectionString,
+  connectionString:
+    process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false },
 });
 
@@ -33,15 +31,25 @@ async function initDb() {
     console.log("🔌 Connecting to Neon Database...");
     await client.connect();
 
-    console.log("🗑️  Dropping old table (if exists)...");
-    await client.query(dropTableQuery);
+    // 🛡️ SAFETY LATCH: Only drop if explicitly asked
+    // Usage: node scripts/init-db.js --reset
+    const shouldReset = process.argv.includes("--reset");
 
-    console.log("🏗️  Creating 'donations' table (Issue #20 Schema)...");
+    if (shouldReset) {
+      console.warn(
+        "⚠️  WARNING: Reset flag detected. Dropping 'donations' table...",
+      );
+      await client.query(dropTableQuery);
+    } else {
+      console.log("ℹ️  Skipping DROP (Use --reset to wipe the table).");
+    }
+
+    console.log("🏗️  Creating 'donations' table (if not exists)...");
     await client.query(createTableQuery);
 
-    console.log("✅ Success! Database is provisioned correctly.");
+    console.log("✅ Success! Database is ready.");
   } catch (err) {
-    console.error("❌ Error provisioning database:", err);
+    console.error("❌ Error provisioning database:", err.message, err.stack);
   } finally {
     await client.end();
   }
