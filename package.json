@@ -20,6 +20,7 @@
   "homepage": "https://github.com/chad-foundation-hub/The-Chad-Foundation-Website#readme",
   "dependencies": {
     "dotenv": "^17.2.3",
+    "pg": "^8.17.1",
     "stripe": "^20.0.0"
   }
 }
