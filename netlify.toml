@@ -2,7 +2,7 @@
   base = "."
   command = "cd frontend && npm install && npm run build"
   publish = "frontend/build"
-  functions = "netlify/functions"
+  functions = "./netlify/functions" 
 
 [[redirects]]
   from = "/api/*"
