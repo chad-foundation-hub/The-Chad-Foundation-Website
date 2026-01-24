@@ -1,30 +1,28 @@
----
-
 # 🪝 Stripe Webhook Documentation
 
 This document outlines how to develop, test, and deploy the Stripe Webhook for The Chad Foundation. The webhook handles asynchronous payment confirmation and **persists transaction data into the Neon Postgres database**.
 
 ## 1. Architecture Overview
 
-* **Endpoint:** `POST /.netlify/functions/stripe-webhook`
-* **Trigger:** Receives events from Stripe (e.g., `checkout.session.completed`).
-* **Database:** Connects to Neon Postgres to insert a row into the `donations` table.
-* **Security:** Verifies the cryptographic `Stripe-Signature` header.
-* **Platform:** Netlify Functions (Serverless Node.js).
+- **Endpoint:** `POST /.netlify/functions/stripe-webhook`
+- **Trigger:** Receives events from Stripe (e.g., `checkout.session.completed`).
+- **Database:** Connects to Neon Postgres to insert a row into the `donations` table.
+- **Security:** Verifies the cryptographic `Stripe-Signature` header.
+- **Platform:** Netlify Functions (Serverless Node.js).
 
 ## 2. Prerequisites
 
 Ensure you have the following installed globally:
 
-* **Netlify CLI:** `npm install -g netlify-cli`
-* **Stripe CLI:** [Installation Guide](https://stripe.com/docs/stripe-cli)
+- **Netlify CLI:** `npm install -g netlify-cli`
+- **Stripe CLI:** [Installation Guide](https://stripe.com/docs/stripe-cli)
 
 ### Environment Variables (.env)
 
 For local testing to work, your `.env` file must contain:
 
-1. `STRIPE_SECRET_KEY` (sk_test_...)
-2. `STRIPE_WEBHOOK_SECRET` (whsec_test_...)
+1. `STRIPE_SECRET_KEY` (sk*test*...)
+2. `STRIPE_WEBHOOK_SECRET` (whsec*test*...)
 3. `NETLIFY_DATABASE_URL` (postgres://...)
 
 ---
@@ -110,5 +108,3 @@ Ensure the following are set in **Netlify Dashboard** > **Site Settings** > **En
 | **500 Database Error**               | DB Connection failed.   | Ensure `NETLIFY_DATABASE_URL` is set and valid in `.env` (or Netlify).              |
 | **404 Not Found**                    | Incorrect URL path.     | Ensure you are sending to `/.netlify/functions/stripe-webhook`.                     |
 | **Metadata is N/A**                  | Using `stripe trigger`. | This is normal. The CLI sends generic test data. Real donations will have metadata. |
-
----
