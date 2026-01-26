@@ -13,12 +13,14 @@ const ChadMissionSupport = () => {
     );
   };
 
-  const handleSecondButtonClick = () => {
-    window.open("https://www.google.com", "_blank");
-  };
+  // intentionally empty for the future backend logic:
+  const handleSecondButtonClick = () => {};
 
   const [isBookExpanded, setIsBookExpanded] = useState(false);
   const [isKeychainExpanded, setIsKeychainExpanded] = useState(false);
+
+  // Gift wrap UI state only (backend hook placeholder)
+  const [isGiftWrapSelected, setIsGiftWrapSelected] = useState(false);
 
   const bookInitialText =
     " Celebrating the lives of young athletes lost to Sudden Cardiac Death and the journey of its survivors, this uplifting memoir details the 25-year history of The Chad Foundation for Athletes and Artists to safeguard hearts by providing 10,000 Echocardiogram and EKG screenings in 5 states, and Austria, and Sweden.";
@@ -37,8 +39,10 @@ const ChadMissionSupport = () => {
       <div className="main-container">
         <h2 className="donate-header">Donate to Save Young Lives</h2>
         <DonateSection />
+
         <div className="otherWays-main">
           <h2 className="otherWays-header">Other ways to support</h2>
+
           {/* Book */}
           <div className="otherWays-box">
             <div className="otherWays-box-left-side">
@@ -99,6 +103,19 @@ const ChadMissionSupport = () => {
                   {isKeychainExpanded ? " Read less" : " ..read more"}
                 </span>
               </p>
+
+              <div className="gift-wrap">
+                <label className="gift-wrap-label">
+                  <input
+                    type="checkbox"
+                    className="gift-wrap-checkbox"
+                    checked={isGiftWrapSelected}
+                    onChange={(e) => setIsGiftWrapSelected(e.target.checked)}
+                  />
+                  <span className="gift-wrap-text">Add Gift Box (+$5.00)</span>
+                </label>
+                {/* backend hook placeholder */}
+              </div>
 
               <button
                 className="otherWays-btn"
