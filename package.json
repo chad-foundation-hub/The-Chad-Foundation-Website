@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A website to showcase the mission and services of the CHAD Foundation of Athletics and Artists",
   "main": "index.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "start": "cd frontend && npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
