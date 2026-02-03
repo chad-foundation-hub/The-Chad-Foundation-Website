@@ -4,7 +4,6 @@
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 
-// Initialize Stripe (lazy initialization - will fail at runtime if key is missing)
 let stripe;
 try {
   if (!STRIPE_SECRET_KEY) {
@@ -31,7 +30,6 @@ const DONATION_LIMITS = {
   MAX: 1000000, // $10,000.00
 };
 
-// keys must match the 'sku' sent from frontend
 const PRODUCTS = {
   keychain: {
     name: "Chad Foundation Keychain",
@@ -41,18 +39,15 @@ const PRODUCTS = {
   // book: { name: "Chad's Biography", price: 3000 }
 };
 
-// Add-on pricing
 const ADDONS = {
   GIFT_WRAP: { name: "Premium Gift Box", price: 500 },
 };
 
-// Input validation limits
 const INPUT_LIMITS = {
   FUND: 100,
   NOTE: 500,
 };
 
-// SKU must be a string, 1-32 chars, only alphanumeric, underscore, hyphen
 const skuPattern = /^[A-Za-z0-9_-]{1,32}$/;
 
 // ============================================================================
@@ -61,8 +56,7 @@ const skuPattern = /^[A-Za-z0-9_-]{1,32}$/;
 
 /**
  * Sanitizes user input while preserving international characters.
- * Uses Unicode Property Escapes (\p{L}) to match letters from any language.
- * Allowed: Letters, Numbers, Whitespace, and basic punctuation.
+ * Removes dangerous characters, keeps letters/numbers/punctuation.
  */
 const sanitizeString = (str, maxLength) => {
   if (str === null || str === undefined) return "";
@@ -117,8 +111,6 @@ const validateDonationAmount = (amount) => {
 };
 
 const validateProductSku = (sku) => {
-  // Dynamic check: Does this SKU exist in our PRODUCTS config?
-
   if (
     typeof sku !== "string" ||
     !sku ||
@@ -164,10 +156,6 @@ const validateAddOns = (addOns) => {
   return null;
 };
 
-/**
- * Validates optional string fields (fund, notes)
- * Must be undefined, null, or a string - no type coercion
- */
 const validateStringField = (fieldName, value) => {
   if (value === undefined || value === null) {
     return null; // Optional
@@ -208,7 +196,6 @@ const buildDonationLineItems = (amount, sanitizedFund) => {
 };
 
 const buildProductLineItems = (sku, addOns = []) => {
-  // Dynamic Lookup: Get details from the constant based on SKU
   const productDetails = PRODUCTS[sku];
 
   const items = [
@@ -222,7 +209,6 @@ const buildProductLineItems = (sku, addOns = []) => {
     },
   ];
 
-  // Add each selected add-on dynamically
   if (Array.isArray(addOns) && addOns.length > 0) {
     for (const addOnName of addOns) {
       const addOn = ADDONS[addOnName];
@@ -264,7 +250,6 @@ exports.handler = async (event) => {
     return null;
   };
 
-  // Runtime check: Ensure Stripe is properly initialized
   if (!stripe || !STRIPE_SECRET_KEY) {
     console.error(
       "CRITICAL: Stripe is not configured. STRIPE_SECRET_KEY is missing from environment variables.",
@@ -301,26 +286,21 @@ exports.handler = async (event) => {
     const { type, amount, sku, addOns, fund, notes } = body;
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
 
-    // 1. Validate Type
     const typeError = checkError(validateType(type));
     if (typeError) return typeError;
 
-    // 2. Validate Add-Ons (early, before type-specific branches)
     const addOnsError = checkError(validateAddOns(addOns));
     if (addOnsError) return addOnsError;
 
-    // 3. Validate string fields (fund and notes must be string or undefined)
     const fundError = checkError(validateStringField("fund", fund));
     if (fundError) return fundError;
 
     const notesError = checkError(validateStringField("notes", notes));
     if (notesError) return notesError;
 
-    // 4. Sanitize inputs
     const sanitizedFund = sanitizeString(fund, INPUT_LIMITS.FUND);
     const sanitizedNotes = sanitizeString(notes, INPUT_LIMITS.NOTE);
 
-    // 4. Build Line Items
     let lineItems = [];
 
     if (type === "donation") {
@@ -366,7 +346,6 @@ exports.handler = async (event) => {
       body: JSON.stringify({ url: session.url }),
     };
   } catch (error) {
-    // Log safe error details for debugging
     if (error && typeof error === "object") {
       console.error("Stripe Checkout Error:", {
         message: error.message,

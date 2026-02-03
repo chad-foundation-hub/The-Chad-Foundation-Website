@@ -11,7 +11,6 @@ const VALID_FUNDS = [
 ];
 
 exports.handler = async (event) => {
-  // 1. Safety Checks
   if (
     !process.env.STRIPE_SECRET_KEY ||
     !process.env.STRIPE_WEBHOOK_SECRET ||
@@ -38,7 +37,6 @@ exports.handler = async (event) => {
 
   let stripeEvent;
 
-  // 2. Verify Signature
   try {
     stripeEvent = stripe.webhooks.constructEvent(
       event.body,
@@ -53,22 +51,18 @@ exports.handler = async (event) => {
     };
   }
 
-  // 3. Handle Payment Success
   if (stripeEvent.type === "checkout.session.completed") {
     const session = stripeEvent.data.object;
 
-    // Extract relevant details
     const amount = session.amount_total;
     const currency = session.currency;
     const donorEmail = session.customer_details?.email || null;
     const donorName = session.customer_details?.name || "Supporter";
 
-    // Metadata extraction
     const type = session.metadata?.type || "donation";
     const productSku = session.metadata?.product_sku || null;
     const addOn = session.metadata?.add_on === "true";
 
-    // Fund Validation
     const fundRaw = session.metadata?.fund || "Unspecified";
     let finalFund = fundRaw;
     if (!VALID_FUNDS.includes(fundRaw)) {
@@ -108,7 +102,6 @@ exports.handler = async (event) => {
           ON CONFLICT (stripe_checkout_session_id) DO NOTHING;
         `;
 
-        // ✅ FIXED: Added donorName to the values array
         const values = [
           session.id,
           donorEmail,
