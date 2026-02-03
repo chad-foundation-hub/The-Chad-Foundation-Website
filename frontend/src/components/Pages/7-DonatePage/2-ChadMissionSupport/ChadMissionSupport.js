@@ -9,7 +9,7 @@ const ChadMissionSupport = () => {
   const [isBookExpanded, setIsBookExpanded] = useState(false);
   const [isKeychainExpanded, setIsKeychainExpanded] = useState(false);
 
-  // Gift wrap UI state only (backend hook placeholder)
+  // Gift wrap selection state
   const [isGiftWrapSelected, setIsGiftWrapSelected] = useState(false);
 
   // Handler Functions:
@@ -146,7 +146,6 @@ const ChadMissionSupport = () => {
                   />
                   <span className="gift-wrap-text">Add Gift Box (+$5.00)</span>
                 </label>
-                {/* backend hook placeholder */}
               </div>
 
               <button

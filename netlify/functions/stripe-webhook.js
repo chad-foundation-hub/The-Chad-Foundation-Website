@@ -60,13 +60,13 @@ exports.handler = async (event) => {
     // Extract relevant details
     const amount = session.amount_total;
     const currency = session.currency;
-    const donor_email = session.customer_details?.email || null;
-    const donor_name = session.customer_details?.name || "Supporter";
+    const donorEmail = session.customer_details?.email || null;
+    const donorName = session.customer_details?.name || "Supporter";
 
     // Metadata extraction
     const type = session.metadata?.type || "donation";
-    const product_sku = session.metadata?.product_sku || null;
-    const add_on = session.metadata?.add_on === "true";
+    const productSku = session.metadata?.product_sku || null;
+    const addOn = session.metadata?.add_on === "true";
 
     // Fund Validation
     const fundRaw = session.metadata?.fund || "Unspecified";
@@ -80,7 +80,7 @@ exports.handler = async (event) => {
 
     if (session.payment_status === "paid") {
       console.log(
-        `💰 FULFILLMENT: Recording ${amount} cents for ${finalFund} by ${donor_email}`,
+        `💰 FULFILLMENT: Recording ${amount} cents for ${finalFund} by ${donorEmail}`,
       );
 
       // --- DATABASE PERSISTENCE ---
@@ -96,6 +96,7 @@ exports.handler = async (event) => {
           INSERT INTO donations (
             stripe_checkout_session_id,
             donor_email,
+            donor_name,  
             amount_cents,
             currency,
             type,
@@ -103,21 +104,22 @@ exports.handler = async (event) => {
             add_on,
             status,
             raw_event
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
           ON CONFLICT (stripe_checkout_session_id) DO NOTHING;
         `;
 
+        // ✅ FIXED: Added donorName to the values array
         const values = [
           session.id,
-          donor_email,
+          donorEmail,
+          donorName,
           amount,
           currency,
           type,
-          product_sku,
-          add_on,
+          productSku,
+          addOn,
           session.payment_status,
           JSON.stringify(stripeEvent),
-          // Removed the extra 'type' that was here causing SQL error
         ];
 
         await client.query(query, values);
@@ -143,10 +145,10 @@ exports.handler = async (event) => {
         console.error("⚠️ Could not retrieve receipt URL:", err);
       }
 
-      if (donor_email) {
+      if (donorEmail) {
         await sendThankYouEmail({
-          email: donor_email,
-          name: donor_name,
+          email: donorEmail,
+          name: donorName,
           amount: amount,
           currency: currency,
           receiptUrl: receiptUrl,

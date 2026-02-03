@@ -347,12 +347,16 @@ exports.handler = async (event) => {
           fund: sanitizedFund || "General Donation",
           notes: sanitizedNotes || "",
           type,
+          product_sku: sku || "",
+          add_on: Array.isArray(addOns) && addOns.length > 0 ? "true" : "false",
         },
       },
       metadata: {
         fund: sanitizedFund || "General Donation",
         type,
         notes: sanitizedNotes || "",
+        product_sku: sku || "",
+        add_on: Array.isArray(addOns) && addOns.length > 0 ? "true" : "false",
       },
     });
 
