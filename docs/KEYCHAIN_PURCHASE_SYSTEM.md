@@ -1,0 +1,72 @@
+# Product Purchase Flow (Keychain & Add-Ons)
+
+This document outlines the technical implementation of the Product Purchase flow (specifically the Keychain), which differs from the standard Donation flow.
+
+## 1. Architecture Overview
+
+Unlike donations (where the user sets the price), Products have **fixed backend prices** and support optional **Add-Ons** (like Gift Wrap).
+
+The flow relies on **Stripe Metadata** to carry context (like `product_sku` and `add_on` status) through the payment process so it can be recorded in the Database and Email Confirmation.
+
+## 2. Frontend Implementation
+
+- **Component:** `ChadMissionSupport.js`
+- **Endpoint:** `POST /api/create-checkout-session`
+
+**Payload Structure:**
+
+```json
+{
+  "type": "product",
+  "sku": "keychain",
+  "addOns": ["GIFT_WRAP"]
+}
+```
+
+> **Note:** We do NOT send the price or amount from the frontend. The backend calculates the total to prevent tampering.
+
+## 3. Backend Logic (`create-checkout-session.js`)
+
+The backend maps the `sku` and `addOns` to Stripe Price IDs defined in the server configuration.
+
+**Critical Metadata:**
+We strictly use **snake_case** for metadata keys to match our Database schema.
+
+- `product_sku`: e.g., "keychain"
+- `add_on`: "true" or "false"
+
+## 4. Webhook & Fulfillment (`stripe-webhook.js`)
+
+When `checkout.session.completed` fires, we extract the metadata to perform two actions:
+
+1. **Database Record:**
+   - Maps `metadata.product_sku` -> DB Column `product_sku`
+   - Maps `metadata.add_on` -> DB Column `add_on` (Boolean)
+   - **Note:** If `add_on` is true, the order included the Gift Box.
+
+2. **Email Confirmation:**
+   - Passes `type: "product"` to the email handler.
+   - **Logic:** If `type === "product"`, the email subject changes to "Order Confirmation" and the body text is adjusted to reflect a purchase rather than a generic donation.
+
+## 5. Testing Guide
+
+To test this flow locally, you need the Stripe CLI running.
+
+1. **Start the Server:** `netlify dev`
+2. **Start Stripe Forwarding:**
+
+```bash
+stripe listen --forward-to http://localhost:8888/.netlify/functions/stripe-webhook
+```
+
+3. **Perform Purchase:**
+   - Go to `http://localhost:8888`
+   - Buy a Keychain (with Gift Wrap checked).
+   - Use Stripe Test Card: `4242 4242 4242 4242`
+
+## 6. Future Scalability & Reusability
+
+Currently, the Keychain purchase UI is located on the **Donate Page** (`ChadMissionSupport.js`). However, the backend logic (`/api/create-checkout-session`) is entirely **frontend-agnostic**.
+
+- **Decoupled Logic:** The API cares only about the JSON payload (`sku`, `type`, `addOns`). It does not rely on the user being on any specific page URL.
+- **Moving the Feature:** If we decide to create a dedicated **Store** or **Shop** page in the future, you can simply move the frontend component (or the `handleKeychainPurchase` function) to the new page. **No backend changes will be required.**
