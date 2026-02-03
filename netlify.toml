@@ -2,7 +2,7 @@
   base = "."
   command = "cd frontend && npm install && npm run build"
   publish = "frontend/build"
-  functions = "./netlify/functions" 
+  functions = "netlify/functions"
 
 [[redirects]]
   from = "/api/*"
@@ -10,9 +10,20 @@
   status = 200
   force = true
 
+[[redirects]]
+  from = "https://chad-foundation.netlify.app/*"
+  to = "https://chad-foundation.org/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
 [dev]
-  command = "npm start --prefix frontend"
+  command = "npm start"
+  targetPort = 3000
   port = 8888
-  targetPort = 3000 
-  publish = "frontend/build"
+  framework = "#custom"
   autoLaunch = true

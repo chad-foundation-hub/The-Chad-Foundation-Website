@@ -1,5 +1,6 @@
 const { Client } = require("pg");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const { sendThankYouEmail } = require("./utils/send-email");
 
 const VALID_FUNDS = [
   "General Donation",
@@ -132,6 +133,32 @@ exports.handler = async (event) => {
         return { statusCode: 500, body: "Database Error" };
       } finally {
         await client.end();
+      }
+
+      let receiptUrl = null;
+      try {
+        if (session.payment_intent) {
+          const paymentIntent = await stripe.paymentIntents.retrieve(
+            session.payment_intent,
+            { expand: ["latest_charge"] },
+          );
+          receiptUrl = paymentIntent.latest_charge?.receipt_url;
+        }
+      } catch (err) {
+        console.error("⚠️ Could not retrieve receipt URL:", err);
+      }
+      const donorName = session.customer_details?.name || "Supporter";
+      const donorEmail = session.customer_details?.email;
+
+      if (donorEmail) {
+        await sendThankYouEmail({
+          email: donorEmail,
+          name: donorName,
+          amount: amount,
+          currency: currency,
+          receiptUrl: receiptUrl,
+          fund: finalFund,
+        });
       }
     } else {
       console.log(
