@@ -8,6 +8,13 @@
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
+  force = true
+
+[[redirects]]
+  from = "https://chad-foundation.netlify.app/*"
+  to = "https://chad-foundation.org/:splat"
+  status = 301
+  force = true
 
 [[redirects]]
   from = "/*"
@@ -19,3 +26,4 @@
   targetPort = 3000
   port = 8888
   framework = "#custom"
+  autoLaunch = true

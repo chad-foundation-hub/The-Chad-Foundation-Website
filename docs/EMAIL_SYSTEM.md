@@ -48,6 +48,7 @@ A helper function that constructs the HTML email.
 Stripe's `checkout.session` object does **not** contain the PDF receipt URL directly. We retrieve it using this logic:
 
 ```javascript
+// We pass an object as the second argument, containing the expand array
 const paymentIntent = await stripe.paymentIntents.retrieve(
   session.payment_intent,
   { expand: ["latest_charge"] },
