@@ -11,7 +11,7 @@ try {
     console.warn(
       "WARNING: STRIPE_SECRET_KEY environment variable is not set. " +
         "Stripe checkout sessions will fail until this is configured. " +
-        "Set STRIPE_SECRET_KEY in Netlify environment variables."
+        "Set STRIPE_SECRET_KEY in Netlify environment variables.",
     );
   } else {
     stripe = require("stripe")(STRIPE_SECRET_KEY);
@@ -19,7 +19,7 @@ try {
 } catch (err) {
   console.error(
     "CRITICAL: Failed to initialize Stripe client. Error:",
-    err.message
+    err.message,
   );
 }
 
@@ -43,7 +43,7 @@ const PRODUCTS = {
 
 // Add-on pricing
 const ADDONS = {
-  GIFT_WRAP: 500, // $5.00
+  GIFT_WRAP: { name: "Premium Gift Box", price: 500 },
 };
 
 // Input validation limits
@@ -154,7 +154,7 @@ const validateAddOns = (addOns) => {
         statusCode: 400,
         body: JSON.stringify({
           error: `Invalid add-on: "${addOn}". Valid options are: ${validAddOns.join(
-            ", "
+            ", ",
           )}`,
         }),
       };
@@ -225,13 +225,13 @@ const buildProductLineItems = (sku, addOns = []) => {
   // Add each selected add-on dynamically
   if (Array.isArray(addOns) && addOns.length > 0) {
     for (const addOnName of addOns) {
-      const addOnPrice = ADDONS[addOnName];
-      if (addOnPrice) {
+      const addOn = ADDONS[addOnName];
+      if (addOn) {
         items.push({
           price_data: {
             currency: "usd",
-            product_data: { name: addOnName },
-            unit_amount: addOnPrice,
+            product_data: { name: addOn.name },
+            unit_amount: addOn.price,
           },
           quantity: 1,
         });
@@ -251,7 +251,7 @@ exports.handler = async (event) => {
   if (preflightResponse) return preflightResponse;
 
   const corsHeaders = getCorsHeaders(
-    event.headers.origin || event.headers.Origin
+    event.headers.origin || event.headers.Origin,
   );
 
   const checkError = (validationResult) => {
@@ -267,7 +267,7 @@ exports.handler = async (event) => {
   // Runtime check: Ensure Stripe is properly initialized
   if (!stripe || !STRIPE_SECRET_KEY) {
     console.error(
-      "CRITICAL: Stripe is not configured. STRIPE_SECRET_KEY is missing from environment variables."
+      "CRITICAL: Stripe is not configured. STRIPE_SECRET_KEY is missing from environment variables.",
     );
     return {
       statusCode: 500,

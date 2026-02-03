@@ -6,21 +6,53 @@ import MissionImageOne from "../../../../images/Donate-Images/missionSupport-ima
 import MissionImageTwo from "../../../../images/Donate-Images/missionSupport-image-two.png";
 
 const ChadMissionSupport = () => {
-  const handleFirstButtonClick = () => {
-    window.open(
-      "https://www.amazon.com/CHAD-Celebration-Beyond-Mothers-Memories/dp/1982250801/ref=sr_1_1?crid=3MQQ15ID0BNCP&amp&dib=eyJ2IjoiMSJ9.3NuGObxJ0-qKBnkb99QYHQ.R2pf5_Mp7zRRTEPsP7NGf26Pu9DdwzwklmrozAIVDmk&amp&dib_tag=se&amp&keywords=CHAD%2C+A+Celebration+of+Life+-+Beyond+A+Mother%27s+Memories+by+Arista&amp&qid=1713070639&amp&s=books&amp&sprefix=chad%2C+a+celebration+of+life+-+beyond+a+mother%27s+memories+by+arista%2Cstripbooks%2C111&amp&sr=1-1",
-      "_blank"
-    );
-  };
-
-  // intentionally empty for the future backend logic:
-  const handleSecondButtonClick = () => {};
-
   const [isBookExpanded, setIsBookExpanded] = useState(false);
   const [isKeychainExpanded, setIsKeychainExpanded] = useState(false);
 
   // Gift wrap UI state only (backend hook placeholder)
   const [isGiftWrapSelected, setIsGiftWrapSelected] = useState(false);
+
+  // Handler Functions:
+  // Handling Book Purchase with Donation
+  const handleFirstButtonClick = () => {
+    window.open(
+      "https://www.amazon.com/CHAD-Celebration-Beyond-Mothers-Memories/dp/1982250801/ref=sr_1_1?crid=3MQQ15ID0BNCP&amp&dib=eyJ2IjoiMSJ9.3NuGObxJ0-qKBnkb99QYHQ.R2pf5_Mp7zRRTEPsP7NGf26Pu9DdwzwklmrozAIVDmk&amp&dib_tag=se&amp&keywords=CHAD%2C+A+Celebration+of+Life+-+Beyond+A+Mother%27s+Memories+by+Arista&amp&qid=1713070639&amp&s=books&amp&sprefix=chad%2C+a+celebration+of+life+-+beyond+a+mother%27s+memories+by+arista%2Cstripbooks%2C111&amp&sr=1-1",
+      "_blank",
+    );
+  };
+
+  // Handling Keychain Purchase with Gift Wrap Option
+  const handleKeychainPurchase = async () => {
+    try {
+      const addOnsPayload = isGiftWrapSelected ? ["GIFT_WRAP"] : [];
+
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "product",
+          sku: "keychain",
+          addOns: addOnsPayload, // ["GIFT_WRAP"] or []
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("Checkout failed:", data);
+        alert("Something went wrong with the checkout. Please try again.");
+      }
+    } catch (error) {
+      console.error("Network Error:", error);
+      alert(
+        "Unable to connect to the server. Please check your internet connection.",
+      );
+    }
+  };
 
   const bookInitialText =
     " Celebrating the lives of young athletes lost to Sudden Cardiac Death and the journey of its survivors, this uplifting memoir details the 25-year history of The Chad Foundation for Athletes and Artists to safeguard hearts by providing 10,000 Echocardiogram and EKG screenings in 5 states, and Austria, and Sweden.";
@@ -119,7 +151,7 @@ const ChadMissionSupport = () => {
 
               <button
                 className="otherWays-btn"
-                onClick={handleSecondButtonClick}
+                onClick={handleKeychainPurchase}
               >
                 Donate with Purchase
               </button>

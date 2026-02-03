@@ -57,7 +57,18 @@ exports.handler = async (event) => {
   if (stripeEvent.type === "checkout.session.completed") {
     const session = stripeEvent.data.object;
 
-    // --- FUND VALIDATION LOGIC ---
+    // Extract relevant details
+    const amount = session.amount_total;
+    const currency = session.currency;
+    const donor_email = session.customer_details?.email || null;
+    const donor_name = session.customer_details?.name || "Supporter";
+
+    // Metadata extraction
+    const type = session.metadata?.type || "donation";
+    const product_sku = session.metadata?.product_sku || null;
+    const add_on = session.metadata?.add_on === "true";
+
+    // Fund Validation
     const fundRaw = session.metadata?.fund || "Unspecified";
     let finalFund = fundRaw;
     if (!VALID_FUNDS.includes(fundRaw)) {
@@ -67,20 +78,9 @@ exports.handler = async (event) => {
       finalFund = "General Donation";
     }
 
-    if (session.metadata) {
-      session.metadata.fund = finalFund;
-    }
-
     if (session.payment_status === "paid") {
-      const amount = session.amount_total;
-      const currency = session.currency;
-      const userRaw =
-        session.metadata?.user ||
-        session.customer_details?.email ||
-        "Anonymous";
-
       console.log(
-        `💰 FULFILLMENT: Recording ${amount} cents for ${finalFund} by ${userRaw}`,
+        `💰 FULFILLMENT: Recording ${amount} cents for ${finalFund} by ${donor_email}`,
       );
 
       // --- DATABASE PERSISTENCE ---
@@ -91,13 +91,6 @@ exports.handler = async (event) => {
 
       try {
         await client.connect();
-
-        // Extract Data
-        const donor_email = session.customer_details?.email || null;
-        const type = session.metadata?.type || "donation";
-        const product_sku = session.metadata?.product_sku || null;
-
-        const add_on = session.metadata?.add_on === "true";
 
         const query = `
           INSERT INTO donations (
@@ -124,17 +117,19 @@ exports.handler = async (event) => {
           add_on,
           session.payment_status,
           JSON.stringify(stripeEvent),
+          // Removed the extra 'type' that was here causing SQL error
         ];
 
         await client.query(query, values);
         console.log("✅ Donation saved to database successfully.");
       } catch (dbError) {
         console.error("❌ Database Error:", dbError);
-        return { statusCode: 500, body: "Database Error" };
+        // We do NOT return here; we proceed to send email even if DB fails
       } finally {
         await client.end();
       }
 
+      // --- SEND EMAIL ---
       let receiptUrl = null;
       try {
         if (session.payment_intent) {
@@ -147,17 +142,16 @@ exports.handler = async (event) => {
       } catch (err) {
         console.error("⚠️ Could not retrieve receipt URL:", err);
       }
-      const donorName = session.customer_details?.name || "Supporter";
-      const donorEmail = session.customer_details?.email;
 
-      if (donorEmail) {
+      if (donor_email) {
         await sendThankYouEmail({
-          email: donorEmail,
-          name: donorName,
+          email: donor_email,
+          name: donor_name,
           amount: amount,
           currency: currency,
           receiptUrl: receiptUrl,
           fund: finalFund,
+          type: type,
         });
       }
     } else {
