@@ -6,19 +6,53 @@ import MissionImageOne from "../../../../images/Donate-Images/missionSupport-ima
 import MissionImageTwo from "../../../../images/Donate-Images/missionSupport-image-two.png";
 
 const ChadMissionSupport = () => {
+  const [isBookExpanded, setIsBookExpanded] = useState(false);
+  const [isKeychainExpanded, setIsKeychainExpanded] = useState(false);
+
+  // Gift wrap selection state
+  const [isGiftWrapSelected, setIsGiftWrapSelected] = useState(false);
+
+  // Handler Functions:
+  // Handling Book Purchase with Donation
   const handleFirstButtonClick = () => {
     window.open(
       "https://www.amazon.com/CHAD-Celebration-Beyond-Mothers-Memories/dp/1982250801/ref=sr_1_1?crid=3MQQ15ID0BNCP&amp&dib=eyJ2IjoiMSJ9.3NuGObxJ0-qKBnkb99QYHQ.R2pf5_Mp7zRRTEPsP7NGf26Pu9DdwzwklmrozAIVDmk&amp&dib_tag=se&amp&keywords=CHAD%2C+A+Celebration+of+Life+-+Beyond+A+Mother%27s+Memories+by+Arista&amp&qid=1713070639&amp&s=books&amp&sprefix=chad%2C+a+celebration+of+life+-+beyond+a+mother%27s+memories+by+arista%2Cstripbooks%2C111&amp&sr=1-1",
-      "_blank"
+      "_blank",
     );
   };
 
-  const handleSecondButtonClick = () => {
-    window.open("https://www.google.com", "_blank");
-  };
+  // Handling Keychain Purchase with Gift Wrap Option
+  const handleKeychainPurchase = async () => {
+    try {
+      const addOnsPayload = isGiftWrapSelected ? ["GIFT_WRAP"] : [];
 
-  const [isBookExpanded, setIsBookExpanded] = useState(false);
-  const [isKeychainExpanded, setIsKeychainExpanded] = useState(false);
+      const response = await fetch("/api/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "product",
+          sku: "keychain",
+          addOns: addOnsPayload, // ["GIFT_WRAP"] or []
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        console.error("Checkout failed:", data);
+        alert("Something went wrong with the checkout. Please try again.");
+      }
+    } catch (error) {
+      console.error("Network Error:", error);
+      alert(
+        "Unable to connect to the server. Please check your internet connection.",
+      );
+    }
+  };
 
   const bookInitialText =
     " Celebrating the lives of young athletes lost to Sudden Cardiac Death and the journey of its survivors, this uplifting memoir details the 25-year history of The Chad Foundation for Athletes and Artists to safeguard hearts by providing 10,000 Echocardiogram and EKG screenings in 5 states, and Austria, and Sweden.";
@@ -37,8 +71,10 @@ const ChadMissionSupport = () => {
       <div className="main-container">
         <h2 className="donate-header">Donate to Save Young Lives</h2>
         <DonateSection />
+
         <div className="otherWays-main">
           <h2 className="otherWays-header">Other ways to support</h2>
+
           {/* Book */}
           <div className="otherWays-box">
             <div className="otherWays-box-left-side">
@@ -100,9 +136,21 @@ const ChadMissionSupport = () => {
                 </span>
               </p>
 
+              <div className="gift-wrap">
+                <label className="gift-wrap-label">
+                  <input
+                    type="checkbox"
+                    className="gift-wrap-checkbox"
+                    checked={isGiftWrapSelected}
+                    onChange={(e) => setIsGiftWrapSelected(e.target.checked)}
+                  />
+                  <span className="gift-wrap-text">Add Gift Box (+$5.00)</span>
+                </label>
+              </div>
+
               <button
                 className="otherWays-btn"
-                onClick={handleSecondButtonClick}
+                onClick={handleKeychainPurchase}
               >
                 Donate with Purchase
               </button>

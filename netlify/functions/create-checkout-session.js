@@ -4,14 +4,13 @@
 
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY;
 
-// Initialize Stripe (lazy initialization - will fail at runtime if key is missing)
 let stripe;
 try {
   if (!STRIPE_SECRET_KEY) {
     console.warn(
       "WARNING: STRIPE_SECRET_KEY environment variable is not set. " +
         "Stripe checkout sessions will fail until this is configured. " +
-        "Set STRIPE_SECRET_KEY in Netlify environment variables."
+        "Set STRIPE_SECRET_KEY in Netlify environment variables.",
     );
   } else {
     stripe = require("stripe")(STRIPE_SECRET_KEY);
@@ -19,7 +18,7 @@ try {
 } catch (err) {
   console.error(
     "CRITICAL: Failed to initialize Stripe client. Error:",
-    err.message
+    err.message,
   );
 }
 
@@ -31,7 +30,6 @@ const DONATION_LIMITS = {
   MAX: 1000000, // $10,000.00
 };
 
-// keys must match the 'sku' sent from frontend
 const PRODUCTS = {
   keychain: {
     name: "Chad Foundation Keychain",
@@ -41,18 +39,15 @@ const PRODUCTS = {
   // book: { name: "Chad's Biography", price: 3000 }
 };
 
-// Add-on pricing
 const ADDONS = {
-  GIFT_WRAP: 500, // $5.00
+  GIFT_WRAP: { name: "Premium Gift Box", price: 500 },
 };
 
-// Input validation limits
 const INPUT_LIMITS = {
   FUND: 100,
   NOTE: 500,
 };
 
-// SKU must be a string, 1-32 chars, only alphanumeric, underscore, hyphen
 const skuPattern = /^[A-Za-z0-9_-]{1,32}$/;
 
 // ============================================================================
@@ -61,8 +56,7 @@ const skuPattern = /^[A-Za-z0-9_-]{1,32}$/;
 
 /**
  * Sanitizes user input while preserving international characters.
- * Uses Unicode Property Escapes (\p{L}) to match letters from any language.
- * Allowed: Letters, Numbers, Whitespace, and basic punctuation.
+ * Removes dangerous characters, keeps letters/numbers/punctuation.
  */
 const sanitizeString = (str, maxLength) => {
   if (str === null || str === undefined) return "";
@@ -117,8 +111,6 @@ const validateDonationAmount = (amount) => {
 };
 
 const validateProductSku = (sku) => {
-  // Dynamic check: Does this SKU exist in our PRODUCTS config?
-
   if (
     typeof sku !== "string" ||
     !sku ||
@@ -154,7 +146,7 @@ const validateAddOns = (addOns) => {
         statusCode: 400,
         body: JSON.stringify({
           error: `Invalid add-on: "${addOn}". Valid options are: ${validAddOns.join(
-            ", "
+            ", ",
           )}`,
         }),
       };
@@ -164,10 +156,6 @@ const validateAddOns = (addOns) => {
   return null;
 };
 
-/**
- * Validates optional string fields (fund, notes)
- * Must be undefined, null, or a string - no type coercion
- */
 const validateStringField = (fieldName, value) => {
   if (value === undefined || value === null) {
     return null; // Optional
@@ -208,7 +196,6 @@ const buildDonationLineItems = (amount, sanitizedFund) => {
 };
 
 const buildProductLineItems = (sku, addOns = []) => {
-  // Dynamic Lookup: Get details from the constant based on SKU
   const productDetails = PRODUCTS[sku];
 
   const items = [
@@ -222,16 +209,15 @@ const buildProductLineItems = (sku, addOns = []) => {
     },
   ];
 
-  // Add each selected add-on dynamically
   if (Array.isArray(addOns) && addOns.length > 0) {
     for (const addOnName of addOns) {
-      const addOnPrice = ADDONS[addOnName];
-      if (addOnPrice) {
+      const addOn = ADDONS[addOnName];
+      if (addOn) {
         items.push({
           price_data: {
             currency: "usd",
-            product_data: { name: addOnName },
-            unit_amount: addOnPrice,
+            product_data: { name: addOn.name },
+            unit_amount: addOn.price,
           },
           quantity: 1,
         });
@@ -251,7 +237,7 @@ exports.handler = async (event) => {
   if (preflightResponse) return preflightResponse;
 
   const corsHeaders = getCorsHeaders(
-    event.headers.origin || event.headers.Origin
+    event.headers.origin || event.headers.Origin,
   );
 
   const checkError = (validationResult) => {
@@ -264,10 +250,9 @@ exports.handler = async (event) => {
     return null;
   };
 
-  // Runtime check: Ensure Stripe is properly initialized
   if (!stripe || !STRIPE_SECRET_KEY) {
     console.error(
-      "CRITICAL: Stripe is not configured. STRIPE_SECRET_KEY is missing from environment variables."
+      "CRITICAL: Stripe is not configured. STRIPE_SECRET_KEY is missing from environment variables.",
     );
     return {
       statusCode: 500,
@@ -301,26 +286,21 @@ exports.handler = async (event) => {
     const { type, amount, sku, addOns, fund, notes } = body;
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
 
-    // 1. Validate Type
     const typeError = checkError(validateType(type));
     if (typeError) return typeError;
 
-    // 2. Validate Add-Ons (early, before type-specific branches)
     const addOnsError = checkError(validateAddOns(addOns));
     if (addOnsError) return addOnsError;
 
-    // 3. Validate string fields (fund and notes must be string or undefined)
     const fundError = checkError(validateStringField("fund", fund));
     if (fundError) return fundError;
 
     const notesError = checkError(validateStringField("notes", notes));
     if (notesError) return notesError;
 
-    // 4. Sanitize inputs
     const sanitizedFund = sanitizeString(fund, INPUT_LIMITS.FUND);
     const sanitizedNotes = sanitizeString(notes, INPUT_LIMITS.NOTE);
 
-    // 4. Build Line Items
     let lineItems = [];
 
     if (type === "donation") {
@@ -347,12 +327,16 @@ exports.handler = async (event) => {
           fund: sanitizedFund || "General Donation",
           notes: sanitizedNotes || "",
           type,
+          product_sku: sku || "",
+          add_on: Array.isArray(addOns) && addOns.length > 0 ? "true" : "false",
         },
       },
       metadata: {
         fund: sanitizedFund || "General Donation",
         type,
         notes: sanitizedNotes || "",
+        product_sku: sku || "",
+        add_on: Array.isArray(addOns) && addOns.length > 0 ? "true" : "false",
       },
     });
 
@@ -362,7 +346,6 @@ exports.handler = async (event) => {
       body: JSON.stringify({ url: session.url }),
     };
   } catch (error) {
-    // Log safe error details for debugging
     if (error && typeof error === "object") {
       console.error("Stripe Checkout Error:", {
         message: error.message,

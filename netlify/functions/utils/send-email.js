@@ -22,6 +22,7 @@ async function sendThankYouEmail({
   currency,
   receiptUrl,
   fund,
+  type,
 }) {
   // 1. Safety Check: Fail gracefully if API key is missing
   if (!resend) {
@@ -35,8 +36,7 @@ async function sendThankYouEmail({
   }
 
   try {
-    // 2. Formatting: Handle Currency properly (e.g., $50.00 or €50.00)
-    // This fixes the "Hardcoded Dollar Sign" issue
+    // 2. Formatting: Handle Currency properly (e.g., $50.00)
     const amountInDollars = amount / 100;
     const formatter = new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -49,38 +49,64 @@ async function sendThankYouEmail({
     const safeFund = escapeHtml(fund);
     const safeReceiptUrl = receiptUrl ? escapeHtml(receiptUrl) : null;
 
-    // 4. Content: Define messages for ALL funds (including General)
-    // This fixes the "Missing General Donation" issue
-    const defaultImpactMessage =
-      "Your contribution supports our core mission of raising awareness about Sudden Cardiac Arrest (SCA) in young people—protecting athletes and non-athletes alike through early detection and education.";
+    // 4. Determine Context: Is this a Product Order or a Donation?
+    const isProduct = type === "product";
 
-    const fundMessages = {
-      "General Donation": defaultImpactMessage,
-      "The Chad Scholarship Program":
-        "Your gift helps provide educational opportunities to deserving students, carrying forward Chad's legacy of excellence.",
-      "The Gift of Heart Program":
-        "Your support enables us to provide critical cardiac screenings and heart health education.",
-      "The Gift of Art Program":
-        "Your contribution fosters creativity and supports artistic expression in our community.",
-      "Life is a Gift: Safe Driver Campaign":
-        "Your support is vital to our mission of educating young drivers and preventing tragedies on our roads.",
-    };
+    // 5. Define Dynamic Content
+    let subjectLine;
+    let headline;
+    let mainMessage;
+    let impactMessage;
 
-    // Fallback to default if the fund name doesn't match exactly
-    const impactMessage = fundMessages[fund] || defaultImpactMessage;
+    if (isProduct) {
+      // --- PRODUCT / KEYCHAIN LOGIC ---
+      subjectLine = "Order Confirmation - The Chad Foundation";
+      headline = `Thank You for Your Order, ${safeName}!`;
+      mainMessage = `We have successfully received your order of <strong>${formattedMoney}</strong>.`;
+      impactMessage =
+        "Your purchase helps support our mission of safeguarding young hearts and preventing Sudden Cardiac Arrest. Your item(s) will be prepared for shipment shortly.";
+    } else {
+      // --- DONATION LOGIC ---
+      subjectLine = "Thank You for Your Support - The Chad Foundation";
+      headline = `Thank You, ${safeName}!`;
+      mainMessage = `We have successfully received your donation of <strong>${formattedMoney}</strong>${
+        fund && fund !== "General Donation"
+          ? ` designated for the <strong>${safeFund}</strong>`
+          : ""
+      }.`;
 
+      // Fund-Specific Messages
+      const defaultImpactMessage =
+        "Your contribution supports our core mission of raising awareness about Sudden Cardiac Arrest (SCA) in young people—protecting athletes and non-athletes alike through early detection and education.";
+
+      const fundMessages = {
+        "General Donation": defaultImpactMessage,
+        "The Chad Scholarship Program":
+          "Your gift helps provide educational opportunities to deserving students, carrying forward Chad's legacy of excellence.",
+        "The Gift of Heart Program":
+          "Your support enables us to provide critical cardiac screenings and heart health education.",
+        "The Gift of Art Program":
+          "Your contribution fosters creativity and supports artistic expression in our community.",
+        "Life is a Gift: Safe Driver Campaign":
+          "Your support is vital to our mission of educating young drivers and preventing tragedies on our roads.",
+      };
+
+      impactMessage = fundMessages[fund] || defaultImpactMessage;
+    }
+
+    // 6. Send the Email
     const { data, error } = await resend.emails.send({
       from: "The Chad Foundation <donations@chad-foundation.org>",
       to: [email],
       reply_to: "info@chad-foundation.org",
-      subject: "Thank You for Your Support - The Chad Foundation",
+      subject: subjectLine,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
-          <h2 style="color: #2c3e50; text-align: center;">Thank You, ${safeName}!</h2>
+          
+          <h2 style="color: #2c3e50; text-align: center;">${headline}</h2>
           
           <p style="font-size: 16px; color: #555; line-height: 1.5;">
-            We have successfully received your donation of <strong>${formattedMoney}</strong>
-            ${fund && fund !== "General Donation" ? ` designated for the <strong>${safeFund}</strong>` : ""}.
+            ${mainMessage}
           </p>
           
           <p style="font-size: 16px; color: #555; line-height: 1.5;">
@@ -99,13 +125,18 @@ async function sendThankYouEmail({
                </p>`
           }
 
+          ${
+            !isProduct
+              ? `
           <div style="background-color: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid #2ecc71; margin-bottom: 30px;">
             <h3 style="color: #27ae60; margin-top: 0; font-size: 18px;">Double Your Impact</h3>
             <p style="font-size: 14px; color: #555; margin-bottom: 0;">
               Did you know many employers match charitable donations? 
               Please check with your HR department to see if your company offers a <strong>Corporate Matching Gift Program</strong>.
             </p>
-          </div>
+          </div>`
+              : ""
+          }
 
           <p style="font-size: 14px; color: #7f8c8d; text-align: center; margin-top: 40px;">
             The Chad Foundation<br>

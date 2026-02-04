@@ -11,7 +11,6 @@ const VALID_FUNDS = [
 ];
 
 exports.handler = async (event) => {
-  // 1. Safety Checks
   if (
     !process.env.STRIPE_SECRET_KEY ||
     !process.env.STRIPE_WEBHOOK_SECRET ||
@@ -38,7 +37,6 @@ exports.handler = async (event) => {
 
   let stripeEvent;
 
-  // 2. Verify Signature
   try {
     stripeEvent = stripe.webhooks.constructEvent(
       event.body,
@@ -53,11 +51,18 @@ exports.handler = async (event) => {
     };
   }
 
-  // 3. Handle Payment Success
   if (stripeEvent.type === "checkout.session.completed") {
     const session = stripeEvent.data.object;
 
-    // --- FUND VALIDATION LOGIC ---
+    const amount = session.amount_total;
+    const currency = session.currency;
+    const donorEmail = session.customer_details?.email || null;
+    const donorName = session.customer_details?.name || "Supporter";
+
+    const type = session.metadata?.type || "donation";
+    const productSku = session.metadata?.product_sku || null;
+    const addOn = session.metadata?.add_on === "true";
+
     const fundRaw = session.metadata?.fund || "Unspecified";
     let finalFund = fundRaw;
     if (!VALID_FUNDS.includes(fundRaw)) {
@@ -67,20 +72,9 @@ exports.handler = async (event) => {
       finalFund = "General Donation";
     }
 
-    if (session.metadata) {
-      session.metadata.fund = finalFund;
-    }
-
     if (session.payment_status === "paid") {
-      const amount = session.amount_total;
-      const currency = session.currency;
-      const userRaw =
-        session.metadata?.user ||
-        session.customer_details?.email ||
-        "Anonymous";
-
       console.log(
-        `💰 FULFILLMENT: Recording ${amount} cents for ${finalFund} by ${userRaw}`,
+        `💰 FULFILLMENT: Recording ${amount} cents for ${finalFund} by ${donorEmail}`,
       );
 
       // --- DATABASE PERSISTENCE ---
@@ -92,17 +86,11 @@ exports.handler = async (event) => {
       try {
         await client.connect();
 
-        // Extract Data
-        const donor_email = session.customer_details?.email || null;
-        const type = session.metadata?.type || "donation";
-        const product_sku = session.metadata?.product_sku || null;
-
-        const add_on = session.metadata?.add_on === "true";
-
         const query = `
           INSERT INTO donations (
             stripe_checkout_session_id,
             donor_email,
+            donor_name,  
             amount_cents,
             currency,
             type,
@@ -110,18 +98,19 @@ exports.handler = async (event) => {
             add_on,
             status,
             raw_event
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
           ON CONFLICT (stripe_checkout_session_id) DO NOTHING;
         `;
 
         const values = [
           session.id,
-          donor_email,
+          donorEmail,
+          donorName,
           amount,
           currency,
           type,
-          product_sku,
-          add_on,
+          productSku,
+          addOn,
           session.payment_status,
           JSON.stringify(stripeEvent),
         ];
@@ -130,11 +119,12 @@ exports.handler = async (event) => {
         console.log("✅ Donation saved to database successfully.");
       } catch (dbError) {
         console.error("❌ Database Error:", dbError);
-        return { statusCode: 500, body: "Database Error" };
+        // We do NOT return here; we proceed to send email even if DB fails
       } finally {
         await client.end();
       }
 
+      // --- SEND EMAIL ---
       let receiptUrl = null;
       try {
         if (session.payment_intent) {
@@ -147,8 +137,6 @@ exports.handler = async (event) => {
       } catch (err) {
         console.error("⚠️ Could not retrieve receipt URL:", err);
       }
-      const donorName = session.customer_details?.name || "Supporter";
-      const donorEmail = session.customer_details?.email;
 
       if (donorEmail) {
         await sendThankYouEmail({
@@ -158,6 +146,7 @@ exports.handler = async (event) => {
           currency: currency,
           receiptUrl: receiptUrl,
           fund: finalFund,
+          type: type,
         });
       }
     } else {
