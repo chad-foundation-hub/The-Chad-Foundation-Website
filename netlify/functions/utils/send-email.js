@@ -58,23 +58,32 @@ async function sendThankYouEmail({
     let headline;
     let mainMessage;
     let impactMessage;
-    // Format Shipping Address (if it exists)
+
     let shippingSection = "";
     if (shipping && shipping.address) {
       const { line1, line2, city, state, postal_code, country } =
         shipping.address;
+
+      const safeName = escapeHtml(shipping.name);
+      const safeLine1 = escapeHtml(line1);
+      const safeLine2 = escapeHtml(line2);
+      const safeCity = escapeHtml(city);
+      const safeState = escapeHtml(state);
+      const safeZip = escapeHtml(postal_code);
+      const safeCountry = escapeHtml(country);
+
       const addressHtml = `
-      ${line1}<br>
-      ${line2 ? `${line2}<br>` : ""}
-      ${city}, ${state} ${postal_code}<br>
-      ${country}
+      ${safeLine1}<br>
+      ${safeLine2 ? `${safeLine2}<br>` : ""}
+      ${safeCity}, ${safeState} ${safeZip}<br>
+      ${safeCountry}
     `;
 
       shippingSection = `
       <div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 5px;">
         <h3 style="margin: 0 0 10px; color: #333;">📦 Shipping Address</h3>
         <p style="margin: 0; color: #555; line-height: 1.5;">
-          ${shipping.name}<br>
+          <strong>${safeName}</strong><br>
           ${addressHtml}
         </p>
       </div>

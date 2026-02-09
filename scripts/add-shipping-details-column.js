@@ -1,8 +1,15 @@
-require("dotenv").config();
 const { Client } = require("pg");
 
+const connectionString =
+  process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL;
+
+if (!connectionString) {
+  console.error("❌ Error: No database connection string found.");
+  process.exit(1);
+}
+
 const client = new Client({
-  connectionString: process.env.NETLIFY_DATABASE_URL,
+  connectionString,
   ssl: { rejectUnauthorized: false },
 });
 
@@ -10,29 +17,16 @@ const client = new Client({
   try {
     await client.connect();
     console.log("🔌 Connected to database...");
-    
-    const result = await client.query(`
-      ALTER TABLE donations 
+
+    // ✅ FIX: Removed unused 'const result ='
+    await client.query(`
+      ALTER TABLE donations
       ADD COLUMN IF NOT EXISTS shipping_details JSONB;
     `);
-    
-    console.log("✅ Column added successfully");
-    
-    // Verify it exists
-    const verify = await client.query(`
-      SELECT column_name, data_type 
-      FROM information_schema.columns 
-      WHERE table_name = 'donations' 
-      AND column_name = 'shipping_details';
-    `);
-    
-    if (verify.rows.length > 0) {
-      console.log("✅ Verified:", verify.rows[0]);
-    } else {
-      console.log("❌ Column not found after creation!");
-    }
+
+    console.log("✅ Migration successful: 'shipping_details' column added.");
   } catch (err) {
-    console.error("❌ Error:", err.message);
+    console.error("❌ Migration failed:", err);
   } finally {
     await client.end();
   }
