@@ -59,6 +59,11 @@ exports.handler = async (event) => {
     const donorEmail = session.customer_details?.email || null;
     const donorName = session.customer_details?.name || "Supporter";
 
+    const shippingDetails =
+      session.shipping_details ||
+      session.collected_information?.shipping_details ||
+      null;
+
     const type = session.metadata?.type || "donation";
     const productSku = session.metadata?.product_sku || null;
     const addOn = session.metadata?.add_on === "true";
@@ -74,7 +79,7 @@ exports.handler = async (event) => {
 
     if (session.payment_status === "paid") {
       console.log(
-        `💰 FULFILLMENT: Recording ${amount} cents for ${finalFund} by ${donorEmail}`,
+        `💰 FULFILLMENT: Recording ${amount} cents for ${finalFund} by ${donorEmail || donorName || "Anonymous"}`,
       );
 
       // --- DATABASE PERSISTENCE ---
@@ -97,8 +102,9 @@ exports.handler = async (event) => {
             product_sku,
             add_on,
             status,
-            raw_event
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            raw_event,
+            shipping_details
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
           ON CONFLICT (stripe_checkout_session_id) DO NOTHING;
         `;
 
@@ -113,6 +119,7 @@ exports.handler = async (event) => {
           addOn,
           session.payment_status,
           JSON.stringify(stripeEvent),
+          shippingDetails ? JSON.stringify(shippingDetails) : null, // ✅ FIX #1: Stringify
         ];
 
         await client.query(query, values);
@@ -147,6 +154,7 @@ exports.handler = async (event) => {
           receiptUrl: receiptUrl,
           fund: finalFund,
           type: type,
+          shipping: shippingDetails || null,
         });
       }
     } else {

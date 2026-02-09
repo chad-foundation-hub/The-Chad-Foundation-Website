@@ -316,7 +316,7 @@ exports.handler = async (event) => {
     }
 
     // 5. Create Session
-    const session = await stripe.checkout.sessions.create({
+    const sessionConfig = {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
@@ -338,7 +338,13 @@ exports.handler = async (event) => {
         product_sku: sku || "",
         add_on: Array.isArray(addOns) && addOns.length > 0 ? "true" : "false",
       },
-    });
+    };
+    if (type === "product") {
+      sessionConfig.shipping_address_collection = {
+        allowed_countries: ["US"],
+      };
+    }
+    const session = await stripe.checkout.sessions.create(sessionConfig);
 
     return {
       statusCode: 200,

@@ -23,6 +23,7 @@ async function sendThankYouEmail({
   receiptUrl,
   fund,
   type,
+  shipping,
 }) {
   // 1. Safety Check: Fail gracefully if API key is missing
   if (!resend) {
@@ -57,6 +58,37 @@ async function sendThankYouEmail({
     let headline;
     let mainMessage;
     let impactMessage;
+
+    let shippingSection = "";
+    if (shipping && shipping.address) {
+      const { line1, line2, city, state, postal_code, country } =
+        shipping.address;
+
+      const safeName = escapeHtml(shipping.name);
+      const safeLine1 = escapeHtml(line1);
+      const safeLine2 = escapeHtml(line2);
+      const safeCity = escapeHtml(city);
+      const safeState = escapeHtml(state);
+      const safeZip = escapeHtml(postal_code);
+      const safeCountry = escapeHtml(country);
+
+      const addressHtml = `
+      ${safeLine1}<br>
+      ${safeLine2 ? `${safeLine2}<br>` : ""}
+      ${safeCity}, ${safeState} ${safeZip}<br>
+      ${safeCountry}
+    `;
+
+      shippingSection = `
+      <div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 5px;">
+        <h3 style="margin: 0 0 10px; color: #333;">📦 Shipping Address</h3>
+        <p style="margin: 0; color: #555; line-height: 1.5;">
+          <strong>${safeName}</strong><br>
+          ${addressHtml}
+        </p>
+      </div>
+    `;
+    }
 
     if (isProduct) {
       // --- PRODUCT / KEYCHAIN LOGIC ---
@@ -112,6 +144,9 @@ async function sendThankYouEmail({
           <p style="font-size: 16px; color: #555; line-height: 1.5;">
             ${impactMessage}
           </p>
+
+          ${shippingSection}
+
           
           ${
             safeReceiptUrl

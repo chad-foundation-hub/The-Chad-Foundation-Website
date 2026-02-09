@@ -10,21 +10,22 @@ const client = new Client({
 const dropTableQuery = `DROP TABLE IF EXISTS donations;`;
 
 const createTableQuery = `
-  CREATE TABLE IF NOT EXISTS donations (
-    id SERIAL PRIMARY KEY,
-    stripe_checkout_session_id TEXT UNIQUE NOT NULL, -- Critical for deduplication
-    donor_email TEXT,
-    donor_name TEXT,              -- Kept this as it's useful for "Thank You" emails
-    amount_cents BIGINT NOT NULL DEFAULT 0,
-    currency TEXT NOT NULL DEFAULT 'usd',
-    type TEXT NOT NULL,           -- 'donation' | 'product'
-    product_sku TEXT,             -- For the keychain (e.g., 'keychain_001')
-    add_on BOOLEAN DEFAULT FALSE, -- For Gift Wrap
-    status TEXT,                  -- 'succeeded', 'pending'
-    raw_event JSONB,              -- Stores the full Stripe payload for auditing
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-  );
-`;
+      CREATE TABLE IF NOT EXISTS donations (
+        id SERIAL PRIMARY KEY,
+        stripe_checkout_session_id VARCHAR(255) UNIQUE NOT NULL,
+        donor_email VARCHAR(255),
+        donor_name VARCHAR(255),
+        amount_cents INTEGER,
+        currency VARCHAR(10),
+        type VARCHAR(50) DEFAULT 'donation',
+        product_sku VARCHAR(50),
+        add_on BOOLEAN DEFAULT FALSE,
+        status VARCHAR(50),
+        raw_event JSONB,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        shipping_details JSONB  
+      );
+    `;
 
 async function initDb() {
   try {
