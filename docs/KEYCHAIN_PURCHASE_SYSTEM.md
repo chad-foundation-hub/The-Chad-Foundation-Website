@@ -64,7 +64,37 @@ stripe listen --forward-to http://localhost:8888/.netlify/functions/stripe-webho
    - Buy a Keychain (with Gift Wrap checked).
    - Use Stripe Test Card: `4242 4242 4242 4242`
 
-## 6. Future Scalability & Reusability
+## 6. Shipping & Fulfillment Data
+
+To support physical product delivery, the system conditionally collects shipping addresses based on the transaction type.
+
+### A. Stripe Configuration (`create-checkout-session.js`)
+
+- **Logic:** The `shipping_address_collection` field is enabled **ONLY** when `type === 'product'`.
+- **Constraint:** Currently restricted to `allowed_countries: ["US"]` to simplify logistics.
+- **Donations:** Pure donations do **not** trigger address collection to maintain low friction.
+
+### B. Database Schema (`shipping_details`)
+
+We store the raw address data from Stripe in a **JSONB** column in PostgreSQL.
+
+- **Column:** `shipping_details` (JSONB)
+- **Structure:**
+  ```json
+  {
+    "address": {
+      "city": "Jersey City",
+      "country": "US",
+      "line1": "123 Main St",
+      "line2": "Apt 4B",
+      "postal_code": "07302",
+      "state": "NJ"
+    },
+    "name": "John Doe"
+  }
+  ```
+
+## 7. Future Scalability & Reusability
 
 Currently, the Keychain purchase UI is located on the **Donate Page** (`ChadMissionSupport.js`). However, the backend logic (`/api/create-checkout-session`) is entirely **frontend-agnostic**.
 
