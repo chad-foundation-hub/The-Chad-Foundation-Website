@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { Client } = require("pg");
 
 const connectionString =
@@ -5,6 +6,7 @@ const connectionString =
 
 if (!connectionString) {
   console.error("❌ Error: No database connection string found.");
+  console.error("   Make sure you have a .env file with NETLIFY_DATABASE_URL");
   process.exit(1);
 }
 
@@ -18,9 +20,8 @@ const client = new Client({
     await client.connect();
     console.log("🔌 Connected to database...");
 
-    // ✅ FIX: Removed unused 'const result ='
     await client.query(`
-      ALTER TABLE donations
+      ALTER TABLE donations 
       ADD COLUMN IF NOT EXISTS shipping_details JSONB;
     `);
 
