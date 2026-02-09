@@ -23,6 +23,7 @@ async function sendThankYouEmail({
   receiptUrl,
   fund,
   type,
+  shipping,
 }) {
   // 1. Safety Check: Fail gracefully if API key is missing
   if (!resend) {
@@ -57,6 +58,28 @@ async function sendThankYouEmail({
     let headline;
     let mainMessage;
     let impactMessage;
+    // Format Shipping Address (if it exists)
+    let shippingSection = "";
+    if (shipping && shipping.address) {
+      const { line1, line2, city, state, postal_code, country } =
+        shipping.address;
+      const addressHtml = `
+      ${line1}<br>
+      ${line2 ? `${line2}<br>` : ""}
+      ${city}, ${state} ${postal_code}<br>
+      ${country}
+    `;
+
+      shippingSection = `
+      <div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-radius: 5px;">
+        <h3 style="margin: 0 0 10px; color: #333;">📦 Shipping Address</h3>
+        <p style="margin: 0; color: #555; line-height: 1.5;">
+          ${shipping.name}<br>
+          ${addressHtml}
+        </p>
+      </div>
+    `;
+    }
 
     if (isProduct) {
       // --- PRODUCT / KEYCHAIN LOGIC ---
@@ -112,6 +135,9 @@ async function sendThankYouEmail({
           <p style="font-size: 16px; color: #555; line-height: 1.5;">
             ${impactMessage}
           </p>
+
+          ${shippingSection}
+
           
           ${
             safeReceiptUrl
