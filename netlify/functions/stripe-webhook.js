@@ -1,6 +1,7 @@
 const { Client } = require("pg");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { sendThankYouEmail } = require("./utils/send-email");
+const { appendToSheet } = require("./utils/append-to-sheet");
 
 const VALID_FUNDS = [
   "General Donation",
@@ -119,7 +120,7 @@ exports.handler = async (event) => {
           addOn,
           session.payment_status,
           JSON.stringify(stripeEvent),
-          shippingDetails ? JSON.stringify(shippingDetails) : null, // ✅ FIX #1: Stringify
+          shippingDetails ? JSON.stringify(shippingDetails) : null,
         ];
 
         await client.query(query, values);
@@ -156,6 +157,12 @@ exports.handler = async (event) => {
           type: type,
           shipping: shippingDetails || null,
         });
+
+        if (type === "product") {
+          console.log("📝 Syncing product order to Google Sheets...");
+
+          await appendToSheet(session);
+        }
       }
     } else {
       console.log(

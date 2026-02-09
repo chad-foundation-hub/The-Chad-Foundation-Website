@@ -24,6 +24,8 @@
   "homepage": "https://github.com/chad-foundation-hub/The-Chad-Foundation-Website#readme",
   "dependencies": {
     "dotenv": "^17.2.3",
+    "google-auth-library": "^10.5.0",
+    "google-spreadsheet": "^3.3.0",
     "pg": "^8.17.1",
     "resend": "^6.8.0",
     "stripe": "^20.0.0"
