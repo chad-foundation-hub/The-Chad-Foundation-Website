@@ -41,12 +41,6 @@ The feature relies on three critical environment variables in `.env` (Local) and
 > The private key contains newline characters (`\n`). In `.env` files and Netlify UI, these must be handled carefully. The code automatically replaces literal `\n` strings with actual newline characters:
 > `private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n')`
 
-### B. Google Cloud Setup
-
-1. **Project:** `Chad-Foundation-Fulfillment` (Google Cloud Console).
-2. **Service Account:** `sheets-bot`.
-3. **Permissions:** The Service Account Email must be added as an **Editor** to the specific Google Sheet.
-
 ## 4. Technical Implementation Details
 
 ### Dependencies

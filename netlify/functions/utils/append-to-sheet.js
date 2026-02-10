@@ -1,11 +1,26 @@
 const { GoogleSpreadsheet } = require("google-spreadsheet");
 
-const formatDate = () => new Date().toISOString().split("T")[0];
+const formatDate = (timestamp) => {
+  if (!timestamp) return new Date().toISOString().split("T")[0];
+  return new Date(timestamp * 1000).toISOString().split("T")[0];
+};
 
 const appendToSheet = async (orderData) => {
   try {
-    if (!process.env.GOOGLE_SHEET_ID || !process.env.GOOGLE_PRIVATE_KEY) {
-      console.warn("⚠️ Google Sheets credentials missing. Skipping sync.");
+    const requiredEnvVars = {
+      GOOGLE_SHEET_ID: process.env.GOOGLE_SHEET_ID,
+      GOOGLE_SERVICE_ACCOUNT_EMAIL: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY,
+    };
+
+    const missingVars = Object.entries(requiredEnvVars)
+      .filter(([, value]) => !value)
+      .map(([key]) => key);
+
+    if (missingVars.length > 0) {
+      console.warn(
+        `⚠️ Google Sheets credentials missing: ${missingVars.join(", ")}. Skipping sync.`,
+      );
       return;
     }
 
@@ -19,7 +34,6 @@ const appendToSheet = async (orderData) => {
     await doc.loadInfo();
     const sheet = doc.sheetsByIndex[0];
 
-    // Format shipping address from either location
     let formattedAddress = "N/A";
     const shippingDetails =
       orderData.shipping_details ||
@@ -33,7 +47,7 @@ const appendToSheet = async (orderData) => {
     }
 
     await sheet.addRow({
-      Date: formatDate(),
+      Date: formatDate(orderData.created),
       "Order ID": orderData.id,
       "Customer Name": orderData.customer_details?.name || "Supporter",
       "Item (SKU)": orderData.metadata?.product_sku || "Unknown",

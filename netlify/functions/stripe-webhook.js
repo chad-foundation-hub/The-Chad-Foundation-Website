@@ -157,12 +157,10 @@ exports.handler = async (event) => {
           type: type,
           shipping: shippingDetails || null,
         });
-
-        if (type === "product") {
-          console.log("📝 Syncing product order to Google Sheets...");
-
-          await appendToSheet(session);
-        }
+      }
+      if (type === "product") {
+        console.log("📝 Syncing product order to Google Sheets...");
+        await appendToSheet(session);
       }
     } else {
       console.log(
