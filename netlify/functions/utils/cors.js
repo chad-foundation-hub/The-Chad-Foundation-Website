@@ -41,7 +41,7 @@ const getCorsHeaders = (origin) => {
 const handleOptions = (event) => {
   if (event.httpMethod === "OPTIONS") {
     const headers = getCorsHeaders(
-      event.headers.origin || event.headers.Origin
+      event.headers.origin || event.headers.Origin,
     );
     return {
       statusCode: 200,

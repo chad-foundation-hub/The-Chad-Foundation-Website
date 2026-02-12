@@ -1,13 +1,11 @@
 const { Resend } = require("resend");
 
-// Initialize Resend at runtime to prevent crashes if the key is missing
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
-// Helper: Sanitize input to prevent XSS (Cross-Site Scripting)
 const escapeHtml = (unsafe) => {
   if (!unsafe) return "";
-  return unsafe
+  return String(unsafe)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -25,7 +23,6 @@ async function sendThankYouEmail({
   type,
   shipping,
 }) {
-  // 1. Safety Check: Fail gracefully if API key is missing
   if (!resend) {
     console.warn("⚠️ RESEND_API_KEY is missing. Email skipped.");
     return null;
@@ -37,7 +34,6 @@ async function sendThankYouEmail({
   }
 
   try {
-    // 2. Formatting: Handle Currency properly (e.g., $50.00)
     const amountInDollars = amount / 100;
     const formatter = new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -45,15 +41,12 @@ async function sendThankYouEmail({
     });
     const formattedMoney = formatter.format(amountInDollars);
 
-    // 3. Sanitization: Escape all user inputs AND the URL
     const safeName = escapeHtml(name || "Friend");
     const safeFund = escapeHtml(fund);
     const safeReceiptUrl = receiptUrl ? escapeHtml(receiptUrl) : null;
 
-    // 4. Determine Context: Is this a Product Order or a Donation?
     const isProduct = type === "product";
 
-    // 5. Define Dynamic Content
     let subjectLine;
     let headline;
     let mainMessage;
@@ -91,14 +84,12 @@ async function sendThankYouEmail({
     }
 
     if (isProduct) {
-      // --- PRODUCT / KEYCHAIN LOGIC ---
       subjectLine = "Order Confirmation - The Chad Foundation";
       headline = `Thank You for Your Order, ${safeName}!`;
       mainMessage = `We have successfully received your order of <strong>${formattedMoney}</strong>.`;
       impactMessage =
         "Your purchase helps support our mission of safeguarding young hearts and preventing Sudden Cardiac Arrest. Your item(s) will be prepared for shipment shortly.";
     } else {
-      // --- DONATION LOGIC ---
       subjectLine = "Thank You for Your Support - The Chad Foundation";
       headline = `Thank You, ${safeName}!`;
       mainMessage = `We have successfully received your donation of <strong>${formattedMoney}</strong>${
@@ -107,7 +98,6 @@ async function sendThankYouEmail({
           : ""
       }.`;
 
-      // Fund-Specific Messages
       const defaultImpactMessage =
         "Your contribution supports our core mission of raising awareness about Sudden Cardiac Arrest (SCA) in young people—protecting athletes and non-athletes alike through early detection and education.";
 
@@ -126,7 +116,6 @@ async function sendThankYouEmail({
       impactMessage = fundMessages[fund] || defaultImpactMessage;
     }
 
-    // 6. Send the Email
     const { data, error } = await resend.emails.send({
       from: "The Chad Foundation <donations@chad-foundation.org>",
       to: [email],
@@ -196,4 +185,4 @@ async function sendThankYouEmail({
   }
 }
 
-module.exports = { sendThankYouEmail };
+module.exports = { sendThankYouEmail, escapeHtml };
