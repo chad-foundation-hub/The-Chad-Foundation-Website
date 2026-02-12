@@ -26,6 +26,8 @@ To run this locally or in production, you need:
   - _Dev/Test:_ Uses a separate test key to prevent spamming real users.
 - `ADMIN_EMAIL`: The email address for internal admin notifications.
   - _Recipient:_ Organization admin who receives transaction alerts.
+- `GOOGLE_SHEET_ID`: The ID of the Fulfillment Google Sheet used for tracking product orders.
+  - _Usage:_ Used to generate direct links to the Fulfillment Google Sheet in admin product order emails.
 
 ## 📂 Code Structure
 
@@ -37,7 +39,7 @@ The main entry point. It handles:
 2. Saving the donation to the Postgres Database.
 3. Retrieving the **Receipt URL** (by expanding the `payment_intent`).
 4. Calling `sendThankYouEmail()` for user receipts.
-5. Calling `sendAdminEmail()` for internal notifications.
+5. Calling `sendAdminNotification()` for internal notifications.
 
 ### 2. `netlify/functions/utils/send-email.js`
 
