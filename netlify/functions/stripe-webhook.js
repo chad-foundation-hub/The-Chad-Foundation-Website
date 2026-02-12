@@ -2,6 +2,7 @@ const { Client } = require("pg");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const { sendThankYouEmail } = require("./utils/send-email");
 const { appendToSheet } = require("./utils/append-to-sheet");
+const { sendAdminNotification } = require("./utils/send-admin-email");
 
 const VALID_FUNDS = [
   "General Donation",
@@ -158,6 +159,14 @@ exports.handler = async (event) => {
           shipping: shippingDetails || null,
         });
       }
+
+      console.log("🔔 Sending admin notification...");
+      await sendAdminNotification({
+        type,
+        orderData: session,
+        shippingDetails: shippingDetails,
+      });
+
       if (type === "product") {
         console.log("📝 Syncing product order to Google Sheets...");
         await appendToSheet(session);
