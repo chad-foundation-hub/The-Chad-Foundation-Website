@@ -163,7 +163,6 @@ const DonateSection = () => {
                 Monthly
               </button>
             </div>
-
             {/* Amount Buttons */}
             <div className="donate-amount-grid">
               {amountsToRender.map((amount) => (
@@ -178,8 +177,7 @@ const DonateSection = () => {
                 </button>
               ))}
             </div>
-
-            {/* Custom Amount (One-time Only) */}
+            {/* Custom Amount (One-time & Monthly) */}
             <div className="donate-custom-row">
               <div className="donate-custom-box">
                 <span className="donate-currency-prefix">$</span>
@@ -194,7 +192,6 @@ const DonateSection = () => {
                 <span className="donate-currency-code">USD</span>
               </div>
             </div>
-
             {/* DROPDOWN */}
             <div className="donate-fund-row">
               <label className="donate-fund-label">
@@ -232,7 +229,6 @@ const DonateSection = () => {
                 </ul>
               )}
             </div>
-
             {/* DEDICATION FIELD */}
             <div className="donate-dedication-row">
               <label className="donate-dedication-label">
@@ -245,12 +241,10 @@ const DonateSection = () => {
                 placeholder="Optionally, you can add a short dedication or in memory note here."
               />
             </div>
-
             {/* CTA */}
             <button className="donate-cta" onClick={handleDonateClick}>
               Give to Save Lives
             </button>
-
             {/* EMPLOYER MATCHING NOTE */}
             <p className="donate-matching-note">
               Did you know? Many employers match donations. Check with your HR
