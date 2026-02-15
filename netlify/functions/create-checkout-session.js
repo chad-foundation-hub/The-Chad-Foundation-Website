@@ -35,8 +35,6 @@ const PRODUCTS = {
     name: "Chad Foundation Keychain",
     price: 2500, // $25.00
   },
-  // Future example:
-  // book: { name: "Chad's Biography", price: 3000 }
 };
 
 const ADDONS = {
@@ -54,19 +52,12 @@ const skuPattern = /^[A-Za-z0-9_-]{1,32}$/;
 // UTILITY FUNCTIONS
 // ============================================================================
 
-/**
- * Sanitizes user input while preserving international characters.
- * Removes dangerous characters, keeps letters/numbers/punctuation.
- */
 const sanitizeString = (str, maxLength) => {
   if (str === null || str === undefined) return "";
   if (typeof str !== "string") {
     throw new Error("Invalid input type for sanitization");
   }
-
-  // Replace characters that are NOT: Letters, Numbers, Spaces, or Punctuation
   const sanitized = str.replace(/[^\p{L}\p{N}\s\-.,!?'()]/gu, "").trim();
-
   return sanitized.slice(0, maxLength);
 };
 
@@ -126,41 +117,29 @@ const validateProductSku = (sku) => {
 };
 
 const validateAddOns = (addOns) => {
-  // addOns should be undefined, null, or an array of valid add-on names
-  if (addOns === undefined || addOns === null) {
-    return null; // Optional field
-  }
-
+  if (addOns === undefined || addOns === null) return null;
   if (!Array.isArray(addOns)) {
     return {
       statusCode: 400,
       body: JSON.stringify({ error: "Add-ons must be an array" }),
     };
   }
-
-  // Check that all add-ons are valid
   const validAddOns = Object.keys(ADDONS);
   for (const addOn of addOns) {
     if (typeof addOn !== "string" || !validAddOns.includes(addOn)) {
       return {
         statusCode: 400,
         body: JSON.stringify({
-          error: `Invalid add-on: "${addOn}". Valid options are: ${validAddOns.join(
-            ", ",
-          )}`,
+          error: `Invalid add-on: "${addOn}". Valid options are: ${validAddOns.join(", ")}`,
         }),
       };
     }
   }
-
   return null;
 };
 
 const validateStringField = (fieldName, value) => {
-  if (value === undefined || value === null) {
-    return null; // Optional
-  }
-
+  if (value === undefined || value === null) return null;
   if (typeof value !== "string") {
     return {
       statusCode: 400,
@@ -169,7 +148,6 @@ const validateStringField = (fieldName, value) => {
       }),
     };
   }
-
   return null;
 };
 
@@ -177,18 +155,22 @@ const validateStringField = (fieldName, value) => {
 // LINE ITEM BUILDERS
 // ============================================================================
 
-const buildDonationLineItems = (amount, sanitizedFund) => {
+const buildDonationLineItems = (amount, sanitizedFund, isSubscription) => {
+  const productName = isSubscription
+    ? "Monthly Donation to The Chad Foundation"
+    : "Donation to The Chad Foundation";
   return [
     {
       price_data: {
         currency: "usd",
         product_data: {
-          name: "Donation to The Chad Foundation",
+          name: productName,
           description: sanitizedFund
             ? `Fund: ${sanitizedFund}`
             : "General Donation",
         },
         unit_amount: amount,
+        recurring: isSubscription ? { interval: "month" } : undefined,
       },
       quantity: 1,
     },
@@ -197,7 +179,6 @@ const buildDonationLineItems = (amount, sanitizedFund) => {
 
 const buildProductLineItems = (sku, addOns = []) => {
   const productDetails = PRODUCTS[sku];
-
   const items = [
     {
       price_data: {
@@ -224,7 +205,6 @@ const buildProductLineItems = (sku, addOns = []) => {
       }
     }
   }
-
   return items;
 };
 
@@ -252,7 +232,7 @@ exports.handler = async (event) => {
 
   if (!stripe || !STRIPE_SECRET_KEY) {
     console.error(
-      "CRITICAL: Stripe is not configured. STRIPE_SECRET_KEY is missing from environment variables.",
+      "CRITICAL: Stripe is not configured. STRIPE_SECRET_KEY is missing.",
     );
     return {
       statusCode: 500,
@@ -283,7 +263,7 @@ exports.handler = async (event) => {
       };
     }
 
-    const { type, amount, sku, addOns, fund, notes } = body;
+    const { type, amount, frequency, sku, addOns, fund, notes } = body;
     const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
 
     const typeError = checkError(validateType(type));
@@ -301,44 +281,61 @@ exports.handler = async (event) => {
     const sanitizedFund = sanitizeString(fund, INPUT_LIMITS.FUND);
     const sanitizedNotes = sanitizeString(notes, INPUT_LIMITS.NOTE);
 
+    if (frequency && !["one-time", "monthly"].includes(frequency)) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({
+          error: "Invalid frequency. Must be 'one-time' or 'monthly'.",
+        }),
+      };
+    }
+
+    const isSubscription = frequency === "monthly";
+
     let lineItems = [];
 
     if (type === "donation") {
       const amountError = checkError(validateDonationAmount(amount));
       if (amountError) return amountError;
-      lineItems = buildDonationLineItems(amount, sanitizedFund);
+      lineItems = buildDonationLineItems(amount, sanitizedFund, isSubscription);
     } else if (type === "product") {
       const skuError = checkError(validateProductSku(sku));
       if (skuError) return skuError;
-
-      // Pass the SKU and add-ons array to the builder for dynamic lookup
       lineItems = buildProductLineItems(sku, addOns);
     }
 
-    // 5. Create Session
+    // Prepare Metadata
+    const metadata = {
+      fund: sanitizedFund || "General Donation",
+      notes: sanitizedNotes || "",
+      type,
+      product_sku: sku || "",
+      frequency: frequency || "one-time",
+      add_on: Array.isArray(addOns) && addOns.length > 0 ? "true" : "false",
+    };
+
+    // Create Session Configuration
     const sessionConfig = {
       payment_method_types: ["card"],
       line_items: lineItems,
-      mode: "payment",
+      mode: isSubscription ? "subscription" : "payment",
       success_url: `${frontendUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${frontendUrl}/donate/cancel`,
-      payment_intent_data: {
-        metadata: {
-          fund: sanitizedFund || "General Donation",
-          notes: sanitizedNotes || "",
-          type,
-          product_sku: sku || "",
-          add_on: Array.isArray(addOns) && addOns.length > 0 ? "true" : "false",
-        },
-      },
-      metadata: {
-        fund: sanitizedFund || "General Donation",
-        type,
-        notes: sanitizedNotes || "",
-        product_sku: sku || "",
-        add_on: Array.isArray(addOns) && addOns.length > 0 ? "true" : "false",
-      },
+      metadata: metadata,
     };
+
+    // Handle Metadata Location based on Mode
+    if (isSubscription) {
+      sessionConfig.subscription_data = {
+        metadata: metadata,
+      };
+    } else {
+      sessionConfig.payment_intent_data = {
+        metadata: metadata,
+      };
+    }
+
     if (type === "product") {
       sessionConfig.shipping_address_collection = {
         allowed_countries: ["US"],

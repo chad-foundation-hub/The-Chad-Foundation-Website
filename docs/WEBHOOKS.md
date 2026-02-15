@@ -1,11 +1,13 @@
-# 🪝 Stripe Webhook Documentation
+# 🪝 Stripe Webhook & Recurring Donations Documentation
 
-This document outlines how to develop, test, and deploy the Stripe Webhook for The Chad Foundation. The webhook handles asynchronous payment confirmation and **persists transaction data into the Neon Postgres database**.
+This document outlines how to develop, test, and deploy the Stripe Webhook for The Chad Foundation. The webhook handles **One-Time Donations**, **Recurring Subscriptions**, and **Product Orders**, persisting all transaction data into the Neon Postgres database.
 
 ## 1. Architecture Overview
 
 - **Endpoint:** `POST /.netlify/functions/stripe-webhook`
-- **Trigger:** Receives events from Stripe (e.g., `checkout.session.completed`).
+- **Triggers (Events):**
+  1. `checkout.session.completed`: Handles the **First Payment** (One-time or Subscription start).
+  2. `invoice.paid`: Handles **Recurring Renewals** (Subsequent monthly payments).
 - **Database:** Connects to Neon Postgres to insert a row into the `donations` table.
 - **Security:** Verifies the cryptographic `Stripe-Signature` header.
 - **Platform:** Netlify Functions (Serverless Node.js).
@@ -24,6 +26,7 @@ For local testing to work, your `.env` file must contain:
 1. `STRIPE_SECRET_KEY` (sk*test*...)
 2. `STRIPE_WEBHOOK_SECRET` (whsec*test*...)
 3. `NETLIFY_DATABASE_URL` (postgres://...)
+4. `ADMIN_EMAIL` & `FROM_EMAIL` (For notification testing)
 
 ---
 
@@ -63,9 +66,13 @@ When you run the command in Step 2, Stripe CLI will output a **Webhook Signing S
 2. Update your local `.env` file: `STRIPE_WEBHOOK_SECRET=whsec_test_12345...`
 3. **Restart Terminal 1** (`netlify dev`) to load the new environment variable.
 
-### Step 4: Trigger a Test Event
+---
 
-Open a third terminal to simulate a successful payment.
+## 4. Testing Scenarios
+
+### A. Test One-Time Donation (First Payment)
+
+Open a third terminal to simulate a successful checkout session.
 
 ```bash
 # Terminal 3
@@ -75,19 +82,37 @@ stripe trigger checkout.session.completed
 
 **Success Check:**
 
-1. **Netlify Logs:** You should see `✅ Donation saved to database successfully.`
-2. **Database:** Run `node scripts/test-db.js` to confirm the new row count.
+1. **Logs:** `💰 FULFILLMENT: Recording 1000 cents...`
+2. **DB:** A new row is inserted with `stripe_checkout_session_id`.
 
----
+### B. Test Recurring Renewal (Next Month's Payment)
 
-## 4. Production Configuration
+To test a renewal without modifying code, we must inject the `billing_reason` that the webhook expects.
 
-### Step 1: Add Endpoint in Stripe
+**Command:**
+
+```bash
+stripe trigger invoice.paid --add invoice:billing_reason=subscription_cycle
+```
+
+Success Check:
+
+Logs: You should see 🔄 RECURRING PAYMENT... and ✅ Donation saved.
+
+Note: You do NOT need to edit stripe-webhook.js if you use this command.
+
+## 5. Production Configuration
+
+### Step 1: Add Endpoint in Stripe (Critical Update)
 
 1. Go to **Stripe Dashboard** (Live Mode) > **Developers** > **Webhooks**.
 2. Click **Add Endpoint**.
 3. **Endpoint URL:** `https://your-site-domain.org/.netlify/functions/stripe-webhook`
-4. **Events:** Select `checkout.session.completed`.
+4. **Events:** You MUST select **BOTH** events:
+
+- `checkout.session.completed` (For initial sales)
+- `invoice.paid` (For monthly renewals)
+
 5. Click **Add Endpoint**.
 
 ### Step 2: Set Netlify Environment Variables
@@ -100,11 +125,13 @@ Ensure the following are set in **Netlify Dashboard** > **Site Settings** > **En
 
 ---
 
-## 5. Troubleshooting
+// ...existing code...
 
-| Error                                | Cause                   | Fix                                                                                 |
-| ------------------------------------ | ----------------------- | ----------------------------------------------------------------------------------- |
-| **400 Webhook Error: No signatures** | Secrets mismatch.       | Check if you are using the _CLI Test Secret_ in Production, or vice versa.          |
-| **500 Database Error**               | DB Connection failed.   | Ensure `NETLIFY_DATABASE_URL` is set and valid in `.env` (or Netlify).              |
-| **404 Not Found**                    | Incorrect URL path.     | Ensure you are sending to `/.netlify/functions/stripe-webhook`.                     |
-| **Metadata is N/A**                  | Using `stripe trigger`. | This is normal. The CLI sends generic test data. Real donations will have metadata. |
+## 6. Troubleshooting
+
+| Error                                | Cause                        | Fix                                                                                   |
+| ------------------------------------ | ---------------------------- | ------------------------------------------------------------------------------------- |
+| **400 Webhook Error: No signatures** | Secrets mismatch.            | Check if you are using the _CLI Test Secret_ in Production, or vice versa.            |
+| **Renewal not saving to DB**         | Wrong Event Type.            | Ensure you added `invoice.paid` to the Stripe Dashboard events list.                  |
+| **Renewal ignored in logs**          | Safety Check(billing_reason) | Use the --add invoice:billing_reason=subscription_cycle flag when triggering via CLI. |
+| **Metadata is N/A**                  | Using `stripe trigger`.      | This is normal. The CLI sends generic test data. Real donations will have metadata.   |
