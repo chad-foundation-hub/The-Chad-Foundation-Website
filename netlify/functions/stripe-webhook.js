@@ -14,9 +14,16 @@ const VALID_FUNDS = [
 
 // Helper functions
 async function saveDonationToDB(data) {
+  const sslConfig = process.env.DB_CA_CERT
+    ? {
+        rejectUnauthorized: true,
+        ca: process.env.DB_CA_CERT.replace(/\\n/g, "\n"), // Fix newlines from .env
+      }
+    : { rejectUnauthorized: false };
+
   const client = new Client({
     connectionString: process.env.NETLIFY_DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
+    ssl: sslConfig,
   });
 
   try {
