@@ -227,13 +227,30 @@ exports.handler = async (event) => {
       const amount = invoice.amount_paid;
       const currency = invoice.currency;
 
-      const fundRaw =
+      let fundRaw =
         invoice.lines?.data[0]?.metadata?.fund ||
-        invoice.metadata?.fund ||
-        "General Donation";
-      const finalFund = VALID_FUNDS.includes(fundRaw)
-        ? fundRaw
-        : "General Donation";
+        invoice.subscription_details?.metadata?.fund ||
+        invoice.metadata?.fund;
+
+      if (!fundRaw && invoice.subscription) {
+        try {
+          console.log(
+            `🔎 Fetching subscription ${invoice.subscription} to recover metadata...`,
+          );
+          const subscription = await stripe.subscriptions.retrieve(
+            invoice.subscription,
+          );
+          fundRaw = subscription.metadata?.fund;
+        } catch (err) {
+          console.warn(
+            "⚠️ Could not fetch subscription metadata:",
+            err.message,
+          );
+        }
+      }
+
+      const finalFund =
+        fundRaw && VALID_FUNDS.includes(fundRaw) ? fundRaw : "General Donation";
 
       // 1. Save to DB
       await saveDonationToDB({

@@ -280,6 +280,17 @@ exports.handler = async (event) => {
 
     const sanitizedFund = sanitizeString(fund, INPUT_LIMITS.FUND);
     const sanitizedNotes = sanitizeString(notes, INPUT_LIMITS.NOTE);
+
+    if (frequency && !["one-time", "monthly"].includes(frequency)) {
+      return {
+        statusCode: 400,
+        headers: corsHeaders,
+        body: JSON.stringify({
+          error: "Invalid frequency. Must be 'one-time' or 'monthly'.",
+        }),
+      };
+    }
+
     const isSubscription = frequency === "monthly";
 
     let lineItems = [];

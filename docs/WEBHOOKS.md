@@ -87,29 +87,19 @@ stripe trigger checkout.session.completed
 
 ### B. Test Recurring Renewal (Next Month's Payment)
 
-Testing future renewals is tricky because the Stripe CLI generates generic events.
+To test a renewal without modifying code, we must inject the `billing_reason` that the webhook expects.
 
 **Command:**
 
 ```bash
-# Terminal 3
-stripe trigger invoice.paid
-
+stripe trigger invoice.paid --add invoice:billing_reason=subscription_cycle
 ```
 
-**⚠️ Important Developer Note:**
-By default, the webhook has a safety check to only process invoices with `billing_reason='subscription_cycle'`. The CLI trigger sends `billing_reason='manual'`, so the webhook will ignore it (to prevent bugs).
+Success Check:
 
-**To Force a Successful Test:**
+Logs: You should see 🔄 RECURRING PAYMENT... and ✅ Donation saved.
 
-1. Open `netlify/functions/stripe-webhook.js`.
-2. Temporarily comment out the check: `if (invoice.billing_reason === 'subscription_cycle')`.
-3. Save and wait for Netlify to reload.
-4. Run `stripe trigger invoice.paid`.
-5. **Logs:** You should see `🔄 RECURRING PAYMENT...` and `✅ Donation saved`.
-6. **Revert:** Uncomment the safety check before committing!
-
----
+Note: You do NOT need to edit stripe-webhook.js if you use this command.
 
 ## 5. Production Configuration
 
@@ -135,11 +125,13 @@ Ensure the following are set in **Netlify Dashboard** > **Site Settings** > **En
 
 ---
 
+// ...existing code...
+
 ## 6. Troubleshooting
 
-| Error                                | Cause                   | Fix                                                                                   |
-| ------------------------------------ | ----------------------- | ------------------------------------------------------------------------------------- |
-| **400 Webhook Error: No signatures** | Secrets mismatch.       | Check if you are using the _CLI Test Secret_ in Production, or vice versa.            |
-| **Renewal not saving to DB**         | Wrong Event Type.       | Ensure you added `invoice.paid` to the Stripe Dashboard events list.                  |
-| **Renewal ignored in logs**          | Safety Check.           | Real renewals work, but CLI tests fail unless you disable the `billing_reason` check. |
-| **Metadata is N/A**                  | Using `stripe trigger`. | This is normal. The CLI sends generic test data. Real donations will have metadata.   |
+| Error                                | Cause                        | Fix                                                                                   |
+| ------------------------------------ | ---------------------------- | ------------------------------------------------------------------------------------- |
+| **400 Webhook Error: No signatures** | Secrets mismatch.            | Check if you are using the _CLI Test Secret_ in Production, or vice versa.            |
+| **Renewal not saving to DB**         | Wrong Event Type.            | Ensure you added `invoice.paid` to the Stripe Dashboard events list.                  |
+| **Renewal ignored in logs**          | Safety Check(billing_reason) | Use the --add invoice:billing_reason=subscription_cycle flag when triggering via CLI. |
+| **Metadata is N/A**                  | Using `stripe trigger`.      | This is normal. The CLI sends generic test data. Real donations will have metadata.   |
