@@ -281,6 +281,15 @@ exports.handler = async (event) => {
           shipping: null,
           isRecurring: true,
         });
+      } else {
+        console.warn(
+          "⚠️ Skipping donor receipt for recurring renewal because email is missing.",
+          {
+            invoiceId: invoice.id,
+            amount: amount,
+            fund: finalFund,
+          },
+        );
       }
 
       // 3. Send Admin Notification
