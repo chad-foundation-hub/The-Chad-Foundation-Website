@@ -12,6 +12,58 @@ const VALID_FUNDS = [
   "Life is a Gift: Safe Driver Campaign",
 ];
 
+// Helper functions
+async function saveDonationToDB(data) {
+  const client = new Client({
+    connectionString: process.env.NETLIFY_DATABASE_URL,
+    ssl: { rejectUnauthorized: false },
+  });
+
+  try {
+    await client.connect();
+
+    const query = `
+      INSERT INTO donations (
+        stripe_checkout_session_id,
+        donor_email,
+        donor_name,  
+        amount_cents,
+        currency,
+        type,
+        product_sku,
+        add_on,
+        status,
+        raw_event,
+        shipping_details
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      ON CONFLICT (stripe_checkout_session_id) DO NOTHING;
+    `;
+
+    const values = [
+      data.id,
+      data.email,
+      data.name,
+      data.amount,
+      data.currency,
+      data.type,
+      data.productSku,
+      data.addOn,
+      data.status,
+      JSON.stringify(data.rawEvent),
+      data.shipping ? JSON.stringify(data.shipping) : null,
+    ];
+
+    await client.query(query, values);
+    console.log("✅ Donation saved to database successfully.");
+  } catch (dbError) {
+    console.error("❌ Database Error:", dbError);
+    // We do NOT throw here; we want emails to still send if DB fails slightly
+  } finally {
+    await client.end();
+  }
+}
+
+// --- MAIN HANDLER ---
 exports.handler = async (event) => {
   if (
     !process.env.STRIPE_SECRET_KEY ||
@@ -53,6 +105,9 @@ exports.handler = async (event) => {
     };
   }
 
+  // ==================================================================
+  // CASE 1: CHECKOUT COMPLETED (First Payment)
+  // ==================================================================
   if (stripeEvent.type === "checkout.session.completed") {
     const session = stripeEvent.data.object;
 
@@ -69,6 +124,7 @@ exports.handler = async (event) => {
     const type = session.metadata?.type || "donation";
     const productSku = session.metadata?.product_sku || null;
     const addOn = session.metadata?.add_on === "true";
+    const frequency = session.metadata?.frequency || "one-time";
 
     const fundRaw = session.metadata?.fund || "Unspecified";
     let finalFund = fundRaw;
@@ -81,59 +137,25 @@ exports.handler = async (event) => {
 
     if (session.payment_status === "paid") {
       console.log(
-        `💰 FULFILLMENT: Recording ${amount} cents for ${finalFund} by ${donorEmail || donorName || "Anonymous"}`,
+        `💰 FULFILLMENT: Recording ${amount} cents for ${finalFund} (${frequency}) by ${donorEmail || donorName || "Anonymous"}`,
       );
 
-      // --- DATABASE PERSISTENCE ---
-      const client = new Client({
-        connectionString: process.env.NETLIFY_DATABASE_URL,
-        ssl: { rejectUnauthorized: false },
+      // 1. Save to DB (Using Helper)
+      await saveDonationToDB({
+        id: session.id,
+        email: donorEmail,
+        name: donorName,
+        amount: amount,
+        currency: currency,
+        type: type,
+        productSku: productSku,
+        addOn: addOn,
+        status: session.payment_status,
+        rawEvent: stripeEvent,
+        shipping: shippingDetails,
       });
 
-      try {
-        await client.connect();
-
-        const query = `
-          INSERT INTO donations (
-            stripe_checkout_session_id,
-            donor_email,
-            donor_name,  
-            amount_cents,
-            currency,
-            type,
-            product_sku,
-            add_on,
-            status,
-            raw_event,
-            shipping_details
-          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-          ON CONFLICT (stripe_checkout_session_id) DO NOTHING;
-        `;
-
-        const values = [
-          session.id,
-          donorEmail,
-          donorName,
-          amount,
-          currency,
-          type,
-          productSku,
-          addOn,
-          session.payment_status,
-          JSON.stringify(stripeEvent),
-          shippingDetails ? JSON.stringify(shippingDetails) : null,
-        ];
-
-        await client.query(query, values);
-        console.log("✅ Donation saved to database successfully.");
-      } catch (dbError) {
-        console.error("❌ Database Error:", dbError);
-        // We do NOT return here; we proceed to send email even if DB fails
-      } finally {
-        await client.end();
-      }
-
-      // --- SEND EMAIL ---
+      // 2. Retrieve Receipt URL
       let receiptUrl = null;
       try {
         if (session.payment_intent) {
@@ -142,11 +164,15 @@ exports.handler = async (event) => {
             { expand: ["latest_charge"] },
           );
           receiptUrl = paymentIntent.latest_charge?.receipt_url;
+        } else if (session.invoice) {
+          const invoice = await stripe.invoices.retrieve(session.invoice);
+          receiptUrl = invoice.hosted_invoice_url;
         }
       } catch (err) {
         console.error("⚠️ Could not retrieve receipt URL:", err);
       }
 
+      // 3. Send Donor Email
       if (donorEmail) {
         await sendThankYouEmail({
           email: donorEmail,
@@ -160,13 +186,19 @@ exports.handler = async (event) => {
         });
       }
 
+      // 4. Send Admin Notification
       console.log("🔔 Sending admin notification...");
-      await sendAdminNotification({
-        type,
-        orderData: session,
-        shippingDetails: shippingDetails,
-      });
+      try {
+        await sendAdminNotification({
+          type,
+          orderData: session,
+          shippingDetails: shippingDetails,
+        });
+      } catch (err) {
+        console.error("❌ Failed to send admin notification:", err);
+      }
 
+      // 5. Sync Sheets (Products Only)
       if (type === "product") {
         console.log("📝 Syncing product order to Google Sheets...");
         await appendToSheet(session);
@@ -175,6 +207,81 @@ exports.handler = async (event) => {
       console.log(
         `⏳ Payment not paid yet (Status: ${session.payment_status})`,
       );
+    }
+  }
+
+  // ==================================================================
+  // CASE 2: INVOICE PAID (Recurring Renewals)
+  // ==================================================================
+  else if (stripeEvent.type === "invoice.paid") {
+    const invoice = stripeEvent.data.object;
+
+    if (invoice.billing_reason === "subscription_cycle") {
+      console.log(
+        `🔄 RECURRING PAYMENT: ${invoice.amount_paid} cents from ${invoice.customer_email}`,
+      );
+
+      // Extract Metadata
+      const donorEmail = invoice.customer_email;
+      const donorName = invoice.customer_name || "Recurring Donor";
+      const amount = invoice.amount_paid;
+      const currency = invoice.currency;
+
+      const fundRaw =
+        invoice.lines?.data[0]?.metadata?.fund ||
+        invoice.metadata?.fund ||
+        "General Donation";
+      const finalFund = VALID_FUNDS.includes(fundRaw)
+        ? fundRaw
+        : "General Donation";
+
+      // 1. Save to DB
+      await saveDonationToDB({
+        id: invoice.id,
+        email: donorEmail,
+        name: donorName,
+        amount: amount,
+        currency: currency,
+        type: "donation",
+        productSku: null,
+        addOn: false,
+        status: "paid",
+        rawEvent: stripeEvent,
+        shipping: null,
+      });
+
+      // 2. Send Donor Receipt
+      if (donorEmail) {
+        await sendThankYouEmail({
+          email: donorEmail,
+          name: donorName,
+          amount: amount,
+          currency: currency,
+          receiptUrl: invoice.hosted_invoice_url,
+          fund: finalFund,
+          type: "donation",
+          shipping: null,
+        });
+      }
+
+      // 3. Send Admin Notification
+      const mockSession = {
+        amount_total: amount,
+        customer_details: { name: donorName, email: donorEmail },
+        metadata: { fund: finalFund, notes: "Recurring Renewal" },
+        id: invoice.id,
+        payment_intent: invoice.payment_intent,
+      };
+
+      try {
+        await sendAdminNotification({
+          type: "donation",
+          orderData: mockSession,
+          shippingDetails: null,
+        });
+      } catch (err) {
+        console.error("❌ Failed to send admin notification for renewal:", err);
+      }
     }
   } else {
     console.log(`ℹ️  Unhandled Stripe event type: ${stripeEvent.type}`);

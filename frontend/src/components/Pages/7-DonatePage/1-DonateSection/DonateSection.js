@@ -63,10 +63,7 @@ const DonateSection = () => {
   };
 
   const handleDonateClick = async () => {
-    const finalAmount =
-      paymentType === "one-time" && customAmount
-        ? Number(customAmount)
-        : selectedAmount;
+    const finalAmount = customAmount ? Number(customAmount) : selectedAmount;
 
     if (!finalAmount || Number.isNaN(finalAmount) || finalAmount <= 0) {
       alert("Please select or enter a valid amount.");
@@ -91,7 +88,7 @@ const DonateSection = () => {
       if (!response.ok) {
         console.error("Create checkout session failed", response.status);
         alert(
-          "Something went wrong while starting your donation. Please try again."
+          "Something went wrong while starting your donation. Please try again.",
         );
         return;
       }
@@ -103,13 +100,13 @@ const DonateSection = () => {
       } else {
         console.error("No checkout URL returned from backend", data);
         alert(
-          "We could not start the checkout session. Please try again later."
+          "We could not start the checkout session. Please try again later.",
         );
       }
     } catch (error) {
       console.error("Error creating checkout session", error);
       alert(
-        "There was a network error while starting your donation. Please try again."
+        "There was a network error while starting your donation. Please try again.",
       );
     }
   };
@@ -183,22 +180,20 @@ const DonateSection = () => {
             </div>
 
             {/* Custom Amount (One-time Only) */}
-            {paymentType === "one-time" && (
-              <div className="donate-custom-row">
-                <div className="donate-custom-box">
-                  <span className="donate-currency-prefix">$</span>
-                  <input
-                    type="number"
-                    min="1"
-                    placeholder="Custom Amount"
-                    className="donate-custom-input"
-                    value={customAmount}
-                    onChange={handleCustomChange}
-                  />
-                  <span className="donate-currency-code">USD</span>
-                </div>
+            <div className="donate-custom-row">
+              <div className="donate-custom-box">
+                <span className="donate-currency-prefix">$</span>
+                <input
+                  type="number"
+                  min="1"
+                  placeholder="Custom Amount"
+                  className="donate-custom-input"
+                  value={customAmount}
+                  onChange={handleCustomChange}
+                />
+                <span className="donate-currency-code">USD</span>
               </div>
-            )}
+            </div>
 
             {/* DROPDOWN */}
             <div className="donate-fund-row">
