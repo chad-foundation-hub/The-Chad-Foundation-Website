@@ -183,6 +183,7 @@ exports.handler = async (event) => {
           fund: finalFund,
           type: type,
           shipping: shippingDetails || null,
+          isRecurring: frequency === "monthly",
         });
       }
 
@@ -278,6 +279,7 @@ exports.handler = async (event) => {
           fund: finalFund,
           type: "donation",
           shipping: null,
+          isRecurring: true,
         });
       }
 

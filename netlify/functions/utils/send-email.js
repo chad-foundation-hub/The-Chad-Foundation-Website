@@ -2,6 +2,7 @@ const { Resend } = require("resend");
 
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
+const portalUrl = process.env.STRIPE_CUSTOMER_PORTAL_URL;
 
 const escapeHtml = (unsafe) => {
   if (!unsafe) return "";
@@ -22,10 +23,16 @@ async function sendThankYouEmail({
   fund,
   type,
   shipping,
+  isRecurring,
 }) {
   if (!resend) {
     console.warn("⚠️ RESEND_API_KEY is missing. Email skipped.");
     return null;
+  }
+  if (!portalUrl) {
+    console.warn(
+      "⚠️ STRIPE_CUSTOMER_PORTAL_URL is missing. Customer portal link will not be included.",
+    );
   }
 
   if (!email) {
@@ -90,30 +97,53 @@ async function sendThankYouEmail({
       impactMessage =
         "Your purchase helps support our mission of safeguarding young hearts and preventing Sudden Cardiac Arrest. Your item(s) will be prepared for shipment shortly.";
     } else {
-      subjectLine = "Thank You for Your Support - The Chad Foundation";
+      // 1. Customize Subject for Recurring
+      subjectLine = isRecurring
+        ? "Monthly Donation Receipt - The Chad Foundation"
+        : "Thank You for Your Support - The Chad Foundation";
+
       headline = `Thank You, ${safeName}!`;
-      mainMessage = `We have successfully received your donation of <strong>${formattedMoney}</strong>${
+
+      // 2. Customize Body for Recurring
+      const frequencyText = isRecurring ? "monthly recurring " : "";
+
+      mainMessage = `We have successfully received your ${frequencyText}donation of <strong>${formattedMoney}</strong>${
         fund && fund !== "General Donation"
           ? ` designated for the <strong>${safeFund}</strong>`
           : ""
       }.`;
 
       const defaultImpactMessage =
-        "Your contribution supports our core mission of raising awareness about Sudden Cardiac Arrest (SCA) in young people—protecting athletes and non-athletes alike through early detection and education.";
+        "Your contribution supports our core mission of raising awareness about Sudden Cardiac Arrest (SCA) in young people.";
 
       const fundMessages = {
         "General Donation": defaultImpactMessage,
         "The Chad Scholarship Program":
-          "Your gift helps provide educational opportunities to deserving students, carrying forward Chad's legacy of excellence.",
+          "Your gift helps provide educational opportunities to deserving students.",
         "The Gift of Heart Program":
-          "Your support enables us to provide critical cardiac screenings and heart health education.",
+          "Your support enables us to provide critical cardiac screenings.",
         "The Gift of Art Program":
-          "Your contribution fosters creativity and supports artistic expression in our community.",
+          "Your contribution fosters creativity and supports artistic expression.",
         "Life is a Gift: Safe Driver Campaign":
-          "Your support is vital to our mission of educating young drivers and preventing tragedies on our roads.",
+          "Your support is vital to our mission of educating young drivers.",
       };
 
       impactMessage = fundMessages[fund] || defaultImpactMessage;
+    }
+
+    // 3. Create the Subscription Management Section
+    let subscriptionSection = "";
+    if (isRecurring && portalUrl) {
+      subscriptionSection = `
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; text-align: center;">
+          <p style="font-size: 14px; color: #7f8c8d; margin-bottom: 10px;">
+            Need to update your payment method or cancel your subscription?
+          </p>
+          <a href="${portalUrl}" style="color: #3498db; text-decoration: underline; font-size: 14px;">
+            Manage My Monthly Donation
+          </a>
+        </div>
+      `;
     }
 
     const { data, error } = await resend.emails.send({
@@ -161,6 +191,8 @@ async function sendThankYouEmail({
           </div>`
               : ""
           }
+
+          ${subscriptionSection}  
 
           <p style="font-size: 14px; color: #7f8c8d; text-align: center; margin-top: 40px;">
             The Chad Foundation<br>
