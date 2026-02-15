@@ -2,103 +2,109 @@
 
 ## Overview
 
-This feature sends a branded "Thank You" email to donors immediately after a successful donation. It replaces the generic Stripe receipt with a warm, personalized message that includes:
+This feature sends a branded "Thank You" email to donors immediately after a successful transaction. It replaces the generic Stripe receipt with a warm, personalized message that includes:
 
-- Donor Name
-- Donation Amount
-- Specific "Impact Message" based on the selected Fund.
-- A link to the official Stripe Receipt (PDF).
-- A reminder about Corporate Matching Gifts.
+- **Donor Name** & **Amount**.
+- **Impact Message** specific to the selected Fund.
+- **Official Receipt Link** (PDF) from Stripe.
+- **Subscription Management Link** (for recurring donors).
+- **Corporate Matching Gift** reminder.
 
 ## 🛠 Architecture
 
-- **Trigger:** Stripe Webhook (`checkout.session.completed`)
-- **Backend:** Netlify Functions (Node.js)
-- **Email Service:** [Resend](https://resend.com)
-- **DNS Verification:** DKIM and SPF records managed in Netlify DNS.
+- **Triggers:**
+  1. `checkout.session.completed` (First Payment / One-Time).
+  2. `invoice.paid` (Monthly Recurring Renewals).
+- **Backend:** Netlify Functions (Node.js).
+- **Email Service:** [Resend](https://resend.com).
+- **Self-Service:** [Stripe Customer Portal](https://dashboard.stripe.com/settings/billing/portal).
 
 ## 🔑 Environment Variables
 
 To run this locally or in production, you need:
 
 - `RESEND_API_KEY`: The API key from Resend.com.
-  - _Production:_ Uses the verified domain key.
-  - _Dev/Test:_ Uses a separate test key to prevent spamming real users.
-- `ADMIN_EMAIL`: The email address for internal admin notifications.
-  - _Recipient:_ Organization admin who receives transaction alerts.
-- `GOOGLE_SHEET_ID`: The ID of the Fulfillment Google Sheet used for tracking product orders.
-  - _Usage:_ Used to generate direct links to the Fulfillment Google Sheet in admin product order emails.
+- `ADMIN_EMAIL`: The recipient for internal alerts.
+- `STRIPE_CUSTOMER_PORTAL_URL`: **(New)** The static link to the Stripe Customer Portal for managing subscriptions.
+- `GOOGLE_SHEET_ID`: For tracking product fulfillment.
+
+---
 
 ## 📂 Code Structure
 
 ### 1. `netlify/functions/stripe-webhook.js`
 
-The main entry point. It handles:
+The main entry point. It now handles two distinct events:
 
-1. Verifying the Stripe Signature.
-2. Saving the donation to the Postgres Database.
-3. Retrieving the **Receipt URL** (by expanding the `payment_intent`).
-4. Calling `sendThankYouEmail()` for user receipts.
-5. Calling `sendAdminNotification()` for internal notifications.
+- **Checkout Completed:**
+  - Saves the **First Donation** to the DB.
+  - Retrieves the receipt via `payment_intent`.
+  - Triggered by `checkout.session.completed`.
+- **Invoice Paid (Recurring):**
+  - Saves **Renewal Donations** to the DB.
+  - Retrieves the receipt via `invoice.hosted_invoice_url`.
+  - Recovers "Fund" metadata from the Subscription object if missing on the invoice.
+  - Triggered by `invoice.paid`.
 
 ### 2. `netlify/functions/utils/send-email.js`
 
-A helper function that constructs the HTML email for donors.
+A helper function that constructs the HTML email.
 
-- **Dynamic Funds:** It uses a `fundMessages` object to map the user's selected fund (e.g., "Safe Driver Campaign") to a specific thank-you sentence.
-- **Safety:** It catches errors internally so that if an email fails, the Webhook still returns a `200 OK`.
+- **Dynamic Subject Line:** Changes based on `isRecurring` (e.g., "Monthly Donation Receipt").
+- **Subscription Link:** If `isRecurring` is true, it appends a "Manage My Monthly Donation" link pointing to `STRIPE_CUSTOMER_PORTAL_URL`.
+- **Safety:** Catches errors internally so webhooks always return `200 OK`.
 
 ### 3. `netlify/functions/utils/send-admin-email.js`
 
-A helper function that constructs internal alert emails for the organization admin.
+Sends internal alerts to the organization admin (`ADMIN_EMAIL`).
 
-- **Trigger:** Called immediately after a successful Stripe Checkout (`checkout.session.completed`).
-- **Recipient:** Defined by the `ADMIN_EMAIL` environment variable.
-- **Templates:**
-  - **Product Orders:** Includes Shipping Address and a direct link to the [Fulfillment Google Sheet](https://docs.google.com/spreadsheets).
-  - **Donations:** Includes Donor Name, Email, Amount, Fund Designation, **Dedication (if present)**, and a link to the [Stripe Dashboard](https://dashboard.stripe.com).
-- **Conditional Logic:** Email subject and content differ based on transaction `type` (product vs. donation).
-
-### Configuration
-
-To change the recipient of admin alerts:
-
-1. Go to **Netlify Site Settings** → **Build & Deploy** → **Environment**.
-2. Update the `ADMIN_EMAIL` variable.
-3. Save changes.
-4. **Redeploy is NOT required** — Environment variables update instantly for serverless functions.
+- **Alert Types:**
+  - **New Donation:** One-time gifts.
+  - **Recurring Renewal:** Monthly automatic payments.
+  - **Product Order:** Includes shipping address.
 
 ---
 
 ## ⚙️ Receipt URL Logic
 
-Stripe's `checkout.session` object does **not** contain the PDF receipt URL directly. We retrieve it using this logic:
+We use different logic depending on the transaction type:
 
-```javascript
-// We pass an object as the second argument, containing the expand array
-const paymentIntent = await stripe.paymentIntents.retrieve(
-  session.payment_intent,
-  { expand: ["latest_charge"] },
-);
-const receiptUrl = paymentIntent.latest_charge?.receipt_url;
-```
+1. **One-Time Donation:**
+
+   ```javascript
+   const paymentIntent = await stripe.paymentIntents.retrieve(
+     session.payment_intent,
+     {
+       expand: ["latest_charge"],
+     },
+   );
+   const receiptUrl = paymentIntent.latest_charge?.receipt_url;
+   ```
+
+2. **Recurring Renewal:**
+   ```javascript
+   // Invoices have the URL directly
+   const receiptUrl = invoice.hosted_invoice_url;
+   ```
+
+---
 
 ## 🧪 How to Test
 
 ### Local Development
 
-1. Start Netlify Dev: `netlify dev` (Port 8888)
+1. Start Netlify Dev: `netlify dev`
 2. Start Stripe Listen: `stripe listen --forward-to http://localhost:8888/.netlify/functions/stripe-webhook`
-3. **Real Test:** Go to `localhost:8888`, donate $1 using a Test Card (4242 4242 4242 4242).
-4. **Mock Test:** Use Stripe CLI (Note: This simulates the event but often lacks the Receipt URL):
 
-```bash
-stripe trigger checkout.session.completed --add checkout_session:customer_email=you@example.com
-```
+### Scenarios
+
+| Scenario              | Command                                                                       | Expected Outcome                                        |
+| --------------------- | ----------------------------------------------------------------------------- | ------------------------------------------------------- |
+| **One-Time Donation** | `stripe trigger checkout.session.completed`                                   | Email subject: "Thank You for Your Support"             |
+| **Recurring Renewal** | `stripe trigger invoice.paid --add invoice:billing_reason=subscription_cycle` | Email subject: "Monthly Donation Receipt" + Portal Link |
+
+---
 
 ## 📝 DNS Configuration
 
-For emails to land in the Inbox (not Spam), the domain `chad-foundation.org` was verified on Resend.
-
-- **Records:** MX, TXT (SPF), and TXT (DKIM).
-- **Management:** These records are stored in Netlify DNS.
+For emails to land in the Inbox (not Spam), the domain `chad-foundation.org` is verified on Resend with MX, SPF, and DKIM records managed in Netlify DNS.
