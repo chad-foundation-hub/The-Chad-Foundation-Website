@@ -1,5 +1,3 @@
-<!-- filepath: /Users/vijaykhot/The-Chad-Foundation-Website/docs/KEYCHAIN_PURCHASE_SYSTEM.md -->
-
 # Product Purchase Flow (Keychain & Add-Ons)
 
 This document outlines the technical implementation of the Product Purchase flow (specifically the Keychain), which differs from the standard Donation flow.
