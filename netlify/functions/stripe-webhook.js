@@ -16,21 +16,19 @@ const VALID_FUNDS = [
 async function saveDonationToDB(data) {
   let sslConfig;
 
-  // 🔍 DEBUG: Print what we see (don't print the whole key, just length)
-  console.log(`🔍 DEBUG: DB_CA_CERT exists? ${!!process.env.DB_CA_CERT}`);
-  console.log(`🔍 DEBUG: NETLIFY_DEV is? ${process.env.NETLIFY_DEV}`);
-
+  // 🔒 SSL Configuration
   if (process.env.DB_CA_CERT) {
-    console.log("🔒 SSL MODE: SECURE (Using Provided Certificate)");
     sslConfig = {
       rejectUnauthorized: true,
       ca: process.env.DB_CA_CERT.replace(/\\n/g, "\n"),
     };
   } else if (process.env.NETLIFY_DEV === "true") {
-    console.warn("⚠️ SSL MODE: DEV FALLBACK (Insecure Connection)");
+    console.warn("⚠️  [DEV] Connecting to DB without SSL verification.");
     sslConfig = { rejectUnauthorized: false };
   } else {
-    console.error("❌ SSL MODE: FATAL ERROR (Missing Cert in Production)");
+    console.error(
+      "❌ [SECURITY FATAL] DB_CA_CERT is missing. Cannot connect securely.",
+    );
     throw new Error(
       "DB_CA_CERT is required for secure production connections.",
     );
