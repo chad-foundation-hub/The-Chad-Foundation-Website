@@ -14,9 +14,29 @@ const VALID_FUNDS = [
 
 // Helper functions
 async function saveDonationToDB(data) {
+  let sslConfig;
+
+  // 🔒 SSL Configuration
+  if (process.env.DB_CA_CERT) {
+    sslConfig = {
+      rejectUnauthorized: true,
+      ca: process.env.DB_CA_CERT.replace(/\\n/g, "\n"),
+    };
+  } else if (process.env.NETLIFY_DEV === "true") {
+    console.warn("⚠️  [DEV] Connecting to DB without SSL verification.");
+    sslConfig = { rejectUnauthorized: false };
+  } else {
+    console.error(
+      "❌ [SECURITY FATAL] DB_CA_CERT is missing. Cannot connect securely.",
+    );
+    throw new Error(
+      "DB_CA_CERT is required for secure production connections.",
+    );
+  }
+
   const client = new Client({
     connectionString: process.env.NETLIFY_DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
+    ssl: sslConfig,
   });
 
   try {
