@@ -14,12 +14,27 @@ const VALID_FUNDS = [
 
 // Helper functions
 async function saveDonationToDB(data) {
-  const sslConfig = process.env.DB_CA_CERT
-    ? {
-        rejectUnauthorized: true,
-        ca: process.env.DB_CA_CERT.replace(/\\n/g, "\n"), // Fix newlines from .env
-      }
-    : { rejectUnauthorized: false };
+  let sslConfig;
+
+  // 🔍 DEBUG: Print what we see (don't print the whole key, just length)
+  console.log(`🔍 DEBUG: DB_CA_CERT exists? ${!!process.env.DB_CA_CERT}`);
+  console.log(`🔍 DEBUG: NETLIFY_DEV is? ${process.env.NETLIFY_DEV}`);
+
+  if (process.env.DB_CA_CERT) {
+    console.log("🔒 SSL MODE: SECURE (Using Provided Certificate)");
+    sslConfig = {
+      rejectUnauthorized: true,
+      ca: process.env.DB_CA_CERT.replace(/\\n/g, "\n"),
+    };
+  } else if (process.env.NETLIFY_DEV === "true") {
+    console.warn("⚠️ SSL MODE: DEV FALLBACK (Insecure Connection)");
+    sslConfig = { rejectUnauthorized: false };
+  } else {
+    console.error("❌ SSL MODE: FATAL ERROR (Missing Cert in Production)");
+    throw new Error(
+      "DB_CA_CERT is required for secure production connections.",
+    );
+  }
 
   const client = new Client({
     connectionString: process.env.NETLIFY_DATABASE_URL,
