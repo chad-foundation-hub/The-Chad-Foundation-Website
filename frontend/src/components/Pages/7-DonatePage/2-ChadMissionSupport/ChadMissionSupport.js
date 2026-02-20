@@ -5,15 +5,21 @@ import DonateSection from "../1-DonateSection/DonateSection";
 import MissionImageOne from "../../../../images/Donate-Images/missionSupport-image-one.png";
 import MissionImageTwo from "../../../../images/Donate-Images/missionSupport-image-two.png";
 
+const PRICING = {
+  KEYCHAIN: 15,
+  ENGRAVED_BOX: 5,
+};
+
 const ChadMissionSupport = () => {
   const [isBookExpanded, setIsBookExpanded] = useState(false);
   const [isKeychainExpanded, setIsKeychainExpanded] = useState(false);
+  const [isEngravedBoxSelected, setIsEngravedBoxSelected] = useState(false);
 
-  // Gift wrap selection state
-  const [isGiftWrapSelected, setIsGiftWrapSelected] = useState(false);
+  // Dynamically calculate the total price
+  const currentTotal = isEngravedBoxSelected
+    ? PRICING.KEYCHAIN + PRICING.ENGRAVED_BOX
+    : PRICING.KEYCHAIN;
 
-  // Handler Functions:
-  // Handling Book Purchase with Donation
   const handleFirstButtonClick = () => {
     window.open(
       "https://www.amazon.com/CHAD-Celebration-Beyond-Mothers-Memories/dp/1982250801/ref=sr_1_1?crid=3MQQ15ID0BNCP&amp&dib=eyJ2IjoiMSJ9.3NuGObxJ0-qKBnkb99QYHQ.R2pf5_Mp7zRRTEPsP7NGf26Pu9DdwzwklmrozAIVDmk&amp&dib_tag=se&amp&keywords=CHAD%2C+A+Celebration+of+Life+-+Beyond+A+Mother%27s+Memories+by+Arista&amp&qid=1713070639&amp&s=books&amp&sprefix=chad%2C+a+celebration+of+life+-+beyond+a+mother%27s+memories+by+arista%2Cstripbooks%2C111&amp&sr=1-1",
@@ -21,10 +27,9 @@ const ChadMissionSupport = () => {
     );
   };
 
-  // Handling Keychain Purchase with Gift Wrap Option
   const handleKeychainPurchase = async () => {
     try {
-      const addOnsPayload = isGiftWrapSelected ? ["GIFT_WRAP"] : [];
+      const addOnsPayload = isEngravedBoxSelected ? ["ENGRAVED_GIFT_BOX"] : [];
 
       const response = await fetch("/api/create-checkout-session", {
         method: "POST",
@@ -34,7 +39,7 @@ const ChadMissionSupport = () => {
         body: JSON.stringify({
           type: "product",
           sku: "keychain",
-          addOns: addOnsPayload, // ["GIFT_WRAP"] or []
+          addOns: addOnsPayload,
         }),
       });
 
@@ -125,6 +130,10 @@ const ChadMissionSupport = () => {
                 “Life is a Gift” Keychain Pendant - Chad Safe Driver Campaign
               </h3>
 
+              <h4 style={{ margin: "5px 0 15px 0", color: "#333" }}>
+                ${PRICING.KEYCHAIN.toFixed(2)}
+              </h4>
+
               <p className="otherWays-p">
                 {keychainInitialText}
                 {isKeychainExpanded && keychainExpandedText}
@@ -141,10 +150,12 @@ const ChadMissionSupport = () => {
                   <input
                     type="checkbox"
                     className="gift-wrap-checkbox"
-                    checked={isGiftWrapSelected}
-                    onChange={(e) => setIsGiftWrapSelected(e.target.checked)}
+                    checked={isEngravedBoxSelected}
+                    onChange={(e) => setIsEngravedBoxSelected(e.target.checked)}
                   />
-                  <span className="gift-wrap-text">Add Gift Box (+$5.00)</span>
+                  <span className="gift-wrap-text">
+                    Add Engraved Gift Box (+${PRICING.ENGRAVED_BOX.toFixed(2)})
+                  </span>
                 </label>
               </div>
 
@@ -152,7 +163,7 @@ const ChadMissionSupport = () => {
                 className="otherWays-btn"
                 onClick={handleKeychainPurchase}
               >
-                Donate with Purchase
+                Purchase for ${currentTotal.toFixed(2)}
               </button>
             </div>
           </div>
