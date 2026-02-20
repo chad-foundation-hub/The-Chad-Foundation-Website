@@ -5,14 +5,21 @@ import DonateSection from "../1-DonateSection/DonateSection";
 import MissionImageOne from "../../../../images/Donate-Images/missionSupport-image-one.png";
 import MissionImageTwo from "../../../../images/Donate-Images/missionSupport-image-two.png";
 
+const PRICING = {
+  KEYCHAIN: 15,
+  ENGRAVED_BOX: 5,
+};
+
 const ChadMissionSupport = () => {
   const [isBookExpanded, setIsBookExpanded] = useState(false);
   const [isKeychainExpanded, setIsKeychainExpanded] = useState(false);
-
   const [isEngravedBoxSelected, setIsEngravedBoxSelected] = useState(false);
 
-  // Handler Functions:
-  // Handling Book Purchase with Donation
+  // Dynamically calculate the total price
+  const currentTotal = isEngravedBoxSelected
+    ? PRICING.KEYCHAIN + PRICING.ENGRAVED_BOX
+    : PRICING.KEYCHAIN;
+
   const handleFirstButtonClick = () => {
     window.open(
       "https://www.amazon.com/CHAD-Celebration-Beyond-Mothers-Memories/dp/1982250801/ref=sr_1_1?crid=3MQQ15ID0BNCP&amp&dib=eyJ2IjoiMSJ9.3NuGObxJ0-qKBnkb99QYHQ.R2pf5_Mp7zRRTEPsP7NGf26Pu9DdwzwklmrozAIVDmk&amp&dib_tag=se&amp&keywords=CHAD%2C+A+Celebration+of+Life+-+Beyond+A+Mother%27s+Memories+by+Arista&amp&qid=1713070639&amp&s=books&amp&sprefix=chad%2C+a+celebration+of+life+-+beyond+a+mother%27s+memories+by+arista%2Cstripbooks%2C111&amp&sr=1-1",
@@ -20,7 +27,6 @@ const ChadMissionSupport = () => {
     );
   };
 
-  // Handling Keychain Purchase with Engraved Gift Box Option
   const handleKeychainPurchase = async () => {
     try {
       const addOnsPayload = isEngravedBoxSelected ? ["ENGRAVED_GIFT_BOX"] : [];
@@ -124,7 +130,9 @@ const ChadMissionSupport = () => {
                 “Life is a Gift” Keychain Pendant - Chad Safe Driver Campaign
               </h3>
 
-              <h4 style={{ margin: "5px 0 15px 0", color: "#333" }}>$15.00</h4>
+              <h4 style={{ margin: "5px 0 15px 0", color: "#333" }}>
+                ${PRICING.KEYCHAIN.toFixed(2)}
+              </h4>
 
               <p className="otherWays-p">
                 {keychainInitialText}
@@ -146,7 +154,7 @@ const ChadMissionSupport = () => {
                     onChange={(e) => setIsEngravedBoxSelected(e.target.checked)}
                   />
                   <span className="gift-wrap-text">
-                    Add Engraved Gift Box (+$5.00)
+                    Add Engraved Gift Box (+${PRICING.ENGRAVED_BOX.toFixed(2)})
                   </span>
                 </label>
               </div>
@@ -155,7 +163,7 @@ const ChadMissionSupport = () => {
                 className="otherWays-btn"
                 onClick={handleKeychainPurchase}
               >
-                Purchase for ${isEngravedBoxSelected ? "20.00" : "15.00"}
+                Purchase for ${currentTotal.toFixed(2)}
               </button>
             </div>
           </div>
