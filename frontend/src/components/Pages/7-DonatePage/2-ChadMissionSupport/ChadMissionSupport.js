@@ -9,8 +9,7 @@ const ChadMissionSupport = () => {
   const [isBookExpanded, setIsBookExpanded] = useState(false);
   const [isKeychainExpanded, setIsKeychainExpanded] = useState(false);
 
-  // Gift wrap selection state
-  const [isGiftWrapSelected, setIsGiftWrapSelected] = useState(false);
+  const [isEngravedBoxSelected, setIsEngravedBoxSelected] = useState(false);
 
   // Handler Functions:
   // Handling Book Purchase with Donation
@@ -21,10 +20,10 @@ const ChadMissionSupport = () => {
     );
   };
 
-  // Handling Keychain Purchase with Gift Wrap Option
+  // Handling Keychain Purchase with Engraved Gift Box Option
   const handleKeychainPurchase = async () => {
     try {
-      const addOnsPayload = isGiftWrapSelected ? ["GIFT_WRAP"] : [];
+      const addOnsPayload = isEngravedBoxSelected ? ["ENGRAVED_GIFT_BOX"] : [];
 
       const response = await fetch("/api/create-checkout-session", {
         method: "POST",
@@ -34,7 +33,7 @@ const ChadMissionSupport = () => {
         body: JSON.stringify({
           type: "product",
           sku: "keychain",
-          addOns: addOnsPayload, // ["GIFT_WRAP"] or []
+          addOns: addOnsPayload,
         }),
       });
 
@@ -125,6 +124,8 @@ const ChadMissionSupport = () => {
                 “Life is a Gift” Keychain Pendant - Chad Safe Driver Campaign
               </h3>
 
+              <h4 style={{ margin: "5px 0 15px 0", color: "#333" }}>$15.00</h4>
+
               <p className="otherWays-p">
                 {keychainInitialText}
                 {isKeychainExpanded && keychainExpandedText}
@@ -141,10 +142,12 @@ const ChadMissionSupport = () => {
                   <input
                     type="checkbox"
                     className="gift-wrap-checkbox"
-                    checked={isGiftWrapSelected}
-                    onChange={(e) => setIsGiftWrapSelected(e.target.checked)}
+                    checked={isEngravedBoxSelected}
+                    onChange={(e) => setIsEngravedBoxSelected(e.target.checked)}
                   />
-                  <span className="gift-wrap-text">Add Gift Box (+$5.00)</span>
+                  <span className="gift-wrap-text">
+                    Add Engraved Gift Box (+$5.00)
+                  </span>
                 </label>
               </div>
 
@@ -152,7 +155,7 @@ const ChadMissionSupport = () => {
                 className="otherWays-btn"
                 onClick={handleKeychainPurchase}
               >
-                Donate with Purchase
+                Purchase for ${isEngravedBoxSelected ? "20.00" : "15.00"}
               </button>
             </div>
           </div>

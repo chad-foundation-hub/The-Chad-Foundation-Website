@@ -32,13 +32,13 @@ const DONATION_LIMITS = {
 
 const PRODUCTS = {
   keychain: {
-    name: "Chad Foundation Keychain",
-    price: 2500, // $25.00
+    name: "Life is a Gift Keychain Pendant",
+    price: 1500, // $15.00
   },
 };
 
 const ADDONS = {
-  GIFT_WRAP: { name: "Premium Gift Box", price: 500 },
+  ENGRAVED_GIFT_BOX: { name: "Engraved Gift Box", price: 500 },
 };
 
 const INPUT_LIMITS = {
