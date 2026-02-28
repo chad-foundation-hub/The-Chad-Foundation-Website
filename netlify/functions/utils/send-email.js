@@ -145,60 +145,161 @@ async function sendThankYouEmail({
         </div>
       `;
     }
+    const SITE_URL =
+      process.env.URL ||
+      process.env.DEPLOY_PRIME_URL ||
+      "https://chad-foundation.org";
 
+    const LOGO_URL = `${SITE_URL}/chad_logo.png`;
+    
     const { data, error } = await resend.emails.send({
       from: "The Chad Foundation <donations@chad-foundation.org>",
       to: [email],
       reply_to: "info@chad-foundation.org",
       subject: subjectLine,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
-          
-          <h2 style="color: #2c3e50; text-align: center;">${headline}</h2>
-          
-          <p style="font-size: 16px; color: #555; line-height: 1.5;">
-            ${mainMessage}
-          </p>
-          
-          <p style="font-size: 16px; color: #555; line-height: 1.5;">
-            ${impactMessage}
-          </p>
+         <body style="margin:0; padding:0; background-color:#ffffff;">
 
-          ${shippingSection}
+ <table width="100%" cellpadding="0" cellspacing="0" style="padding:24px 0;">
+ <tr>
+ <td align="center" style="padding:0 12px;">
 
-          
-          ${
-            safeReceiptUrl
-              ? `<div style="text-align: center; margin: 30px 0;">
-                <a href="${safeReceiptUrl}" style="background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                  View Official Receipt
-                </a>
-               </div>`
-              : `<p style="font-size: 14px; color: #7f8c8d; text-align: center; margin: 30px 0; font-style: italic;">
-                 Your official receipt will be sent separately by Stripe.
-               </p>`
-          }
+ <table width="600" cellpadding="0" cellspacing="0"
+            style="
+ width:100%;
+ max-width:600px;
+ border-radius:12px;
+ overflow:hidden;
+ background-color:#f5efea;
+            ">
 
-          ${
-            !isProduct
-              ? `
-          <div style="background-color: #f8f9fa; padding: 15px; border-radius: 6px; border-left: 4px solid #2ecc71; margin-bottom: 30px;">
-            <h3 style="color: #27ae60; margin-top: 0; font-size: 18px;">Double Your Impact</h3>
-            <p style="font-size: 14px; color: #555; margin-bottom: 0;">
-              Did you know many employers match charitable donations? 
-              Please check with your HR department to see if your company offers a <strong>Corporate Matching Gift Program</strong>.
-            </p>
-          </div>`
-              : ""
-          }
+            // Header
+ <tr>
+ <td style="padding:24px 20px 10px 20px; text-align:center;">
+ <img src="${LOGO_URL}" width="140" alt="The Chad Foundation" style="display:block; margin:0 auto; height:auto;" />
+ </td>
+ </tr>
 
-          ${subscriptionSection}  
+            // Body
+ <tr>
+ <td style="
+ padding:10px 28px 28px 28px;
+ font-family:'Source Sans Pro', Arial, Helvetica, sans-serif;
+ color:#0d0d0d;
+              ">
 
-          <p style="font-size: 14px; color: #7f8c8d; text-align: center; margin-top: 40px;">
-            The Chad Foundation<br>
-            <small>A registered 501(c)(3) non-profit organization.</small>
-          </p>
-        </div>
+            // Headline
+ <h2 style="
+ text-align:center;
+ margin:10px 0 20px 0;
+ font-size:22px;
+ letter-spacing:0.4px;
+ font-family: Anton, Impact, Haettenschweiler, 'Arial Narrow Bold', Arial, Helvetica, sans-serif;
+ color:#0d0d0d;
+                ">
+ ${headline}
+ </h2>
+
+ <p style="font-size:16px; line-height:1.6; margin:0 0 14px 0;">
+ ${mainMessage}
+ </p>
+
+ <p style="font-size:16px; line-height:1.6; margin:0 0 14px 0;">
+ ${impactMessage}
+ </p>
+
+ ${shippingSection}
+
+ ${
+   safeReceiptUrl
+     ? `
+ <div style="text-align:center; margin:30px 0;">
+ <a
+                    href="${safeReceiptUrl}"
+                    style="
+ display:inline-block;
+ background-color:#ef761f;
+ color:#fffefe;
+ text-decoration:none;
+ padding:14px 32px;
+ border-radius:10px;
+ font-size:18px;
+ font-weight:700;
+ letter-spacing:0.3px;
+ box-shadow:0px 4px 10px rgba(0,0,0,0.15);
+ font-family: Anton, Impact, Haettenschweiler, 'Arial Narrow Bold', Arial, Helvetica, sans-serif;
+                    "
+ >
+ View Official Receipt
+ </a>
+ </div>
+ `
+     : `
+ <p
+                  style="
+ margin:22px 0 0 0;
+ font-size:13px;
+ line-height:1.5;
+ color:#555;
+ text-align:center;
+ font-style:italic;
+                  "
+ >
+ Your official receipt will be sent separately by Stripe.
+ </p>
+ `
+ }
+
+ ${
+   !isProduct
+     ? `
+ <div
+                  style="
+ margin-top:28px;
+ background-color:#ffffff;
+ border-radius:10px;
+ border-left:4px solid #3dadc8;
+ padding:16px;
+                  "
+ >
+ <h3 style="
+ margin:0 0 8px 0;
+ font-size:16px;
+ font-family: Anton, Impact, Haettenschweiler, 'Arial Narrow Bold', Arial, Helvetica, sans-serif;
+                  ">
+ Double Your Impact
+ </h3>
+
+ <p style="margin:0; font-size:14px; line-height:1.5;">
+ Did you know many employers match charitable donations?
+ Please check with your HR department to see if your company offers a
+ <strong>Corporate Matching Gift Program</strong>.
+ </p>
+ </div>
+ `
+     : ""
+ }
+
+ ${subscriptionSection}
+
+          //  Footer 
+ <div style="border-top:1px solid #dddddd; margin-top:34px; padding-top:18px; text-align:center;">
+ <p style="margin:0; font-size:13px; color:#555;">
+ <strong style="color:#0d0d0d;">The Chad Foundation</strong><br />
+ A registered 501(c)(3) non-profit organization.
+ </p>
+ </div>
+
+ </td>
+ </tr>
+
+ </table>
+
+ </td>
+ </tr>
+ </table>
+
+ </body>
       `,
     });
 
