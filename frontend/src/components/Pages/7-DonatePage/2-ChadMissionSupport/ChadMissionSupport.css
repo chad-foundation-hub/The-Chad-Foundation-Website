@@ -1,6 +1,6 @@
 .ChadMissionSupport {
   padding-top: 40px;
-  padding-bottom: 140px;
+  padding-bottom: 70px;
   background-color: #f3f1f1;
 }
 
@@ -73,7 +73,8 @@
 }
 
 .ChadMissionSupport .otherWays-readMore {
-  color: #3dadc8;
+  color: #656a6b;
+  font-style: italic;
   background: none;
   border: none;
   font-family: var(--main-font);
@@ -140,7 +141,22 @@
 .ChadMissionSupport .gift-wrap + .otherWays-btn {
   margin-top: 12px;
 }
-
+.ChadMissionSupport .safe-driver-link {
+  color: #3dadc8;
+  font-family: var(--main-font);
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.donations-bottom-text {
+  max-width: 600px;
+  text-align: center;
+  margin: 90px auto 0 auto;
+  font-style: italic;
+  font-family: var(--main-font);
+  font-size: 15px;
+}
 @media (max-width: 1240px) {
   .ChadMissionSupport {
     padding-left: 24px;
@@ -185,6 +201,12 @@
   .ChadMissionSupport .gift-wrap {
     margin-top: 10px;
   }
+}
+.ChadMissionSupport .otherWays-pricing-h4 {
+  text-align: left;
+  color: #333;
+  font-family: var(--main-font);
+  font-size: 22px;
 }
 
 @media (max-width: 540px) {
