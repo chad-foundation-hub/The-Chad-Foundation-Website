@@ -18,7 +18,7 @@ const RollOfDrivers = () => {
       <div className="main-container">
         {/* <h1 className="roll-header">Chad Honour Roll of Safe Drivers</h1> */}
         <div className="roll-box">
-          <h2 className="roll-h2">Why not to “Text, Drink and Drive”</h2>
+          <h2 className="roll-h2">Why not to “Text, Drink and Drive”?</h2>
           <div className="roll-facts-content">
             <ul>
               <li>
