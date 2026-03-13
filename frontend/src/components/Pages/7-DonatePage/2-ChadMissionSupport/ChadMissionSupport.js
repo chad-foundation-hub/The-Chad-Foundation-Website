@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./ChadMissionSupport.css";
 import DonateSection from "../1-DonateSection/DonateSection";
+import { Link } from "react-router-dom";
 
 import MissionImageOne from "../../../../images/Donate-Images/missionSupport-image-one.png";
 import MissionImageTwo from "../../../../images/Donate-Images/missionSupport-image-two.png";
@@ -14,7 +15,7 @@ const ChadMissionSupport = () => {
   const [isBookExpanded, setIsBookExpanded] = useState(false);
   const [isKeychainExpanded, setIsKeychainExpanded] = useState(false);
   const [isEngravedBoxSelected, setIsEngravedBoxSelected] = useState(false);
-
+  
   // Dynamically calculate the total price
   const currentTotal = isEngravedBoxSelected
     ? PRICING.KEYCHAIN + PRICING.ENGRAVED_BOX
@@ -66,10 +67,13 @@ const ChadMissionSupport = () => {
     ' It shares heartfelt stories of other Families who have lost children to SCD and presents the history and importance of heart screenings - its pros and cons - through scientific studies, as well as the lifesaving tools - AEDs and CPR. The book has the endorsement of Adam Silver, Commissioner of the National Basketball Association. From Sudden Cardiac Victims to Survivors - heartbreak to heroism - learn how The Chad Foundation and countless advocate organizations, cardiologists, and health professionals worldwide have safeguarded the lives of youth through early preventive screening so they will have a better future. 100% of the royalties from the CHAD Book go directly to The Chad Foundation for Athletes and Artists, a nonprofit, charitable organization, with a 501 c 3 tax-exempt status to benefit the youth it serves. "The Gift of Heart and Art"';
 
   const keychainInitialText =
-    "Chad was a great guy who loved all people, cared about their dreams. He never drank, smoked or did drugs. He always was the 'designated driver' when he and his friends went out to the clubs dancing, and you always had to wear a seatbelt in Chad's car. Please safeguard your life and others by joining the 'Chad Safe Driver Campaign - Life is A Gift.'";
+    "Chad was a great guy who loved all people, cared about their dreams. He never drank, smoked or did drugs. He always was the 'designated driver' when he and his friends went out to the clubs dancing, and you always had to wear a seatbelt in Chad's car. Please safeguard your life and others by joining the ";
+
+  const keychainAfterLinkText =
+    " Order your 'Life is A Gift' Keychain Shield Pendant,' a heavyweight, curved shield pendant";
 
   const keychainExpandedText =
-    ' Order your "Life is A Gift" Keychain Shield Pendant," a heavyweight, curved shield pendant with a pewter-like finish. Join the "Chad Honour Roll of Safe Drivers" by taking the "Life is a Gift pledge: Save Lives, I will not text/drink and drive." Join the "Honor Roll of Safe Drivers" from all 50 states, and countries world-wide. Hang it in your car, your keychain, use as a piece of jewelry or give a gift as a reminder, "Life is a Gift!" The Keychain Pendant comes in a navy velveteen embossed drawstring pouch; high-quality embossed navy gift box is $5 additional.';
+    ' with a pewter-like finish. Join the "Chad Honour Roll of Safe Drivers" by taking the "Life is a Gift pledge: Save Lives, I will not text/drink and drive." Join the "Honor Roll of Safe Drivers" from all 50 states, and countries world-wide. Hang it in your car, your keychain, use as a piece of jewelry or give a gift as a reminder, "Life is a Gift!" The Keychain Pendant comes in a navy velveteen embossed drawstring pouch; high-quality embossed navy gift box is $5 additional.';
 
   return (
     <section className="ChadMissionSupport">
@@ -130,18 +134,30 @@ const ChadMissionSupport = () => {
                 “Life is a Gift” Keychain Pendant - Chad Safe Driver Campaign
               </h3>
 
-              <h4 style={{ margin: "5px 0 15px 0", color: "#333" }}>
+              <h4 className="otherWays-pricing-h4">
                 ${PRICING.KEYCHAIN.toFixed(2)}
               </h4>
 
               <p className="otherWays-p">
                 {keychainInitialText}
+
+                <Link
+                  to="/gift-of-art/upcoming-events/safe-driver-campaign"
+                  target="_blank"
+                  className="safe-driver-link"
+                >
+                  "Chad Safe Driver Campaign - Life is A Gift."
+                </Link>
+
+                {keychainAfterLinkText}
+
                 {isKeychainExpanded && keychainExpandedText}
+
                 <span
                   className="otherWays-readMore"
                   onClick={() => setIsKeychainExpanded((prev) => !prev)}
                 >
-                  {isKeychainExpanded ? " Read less" : " ..read more"}
+                  {isKeychainExpanded ? " ..read less" : " ..read more"}
                 </span>
               </p>
 
@@ -167,8 +183,11 @@ const ChadMissionSupport = () => {
               </button>
             </div>
           </div>
+         
         </div>
+        
       </div>
+       <p className="donations-bottom-text">The Chad Foundation for Athletes and Artists is a nonprofit, charitable organization with a 501(c ) (3) tax-exempt status. Donations are tax-deductible.</p>
     </section>
   );
 };
