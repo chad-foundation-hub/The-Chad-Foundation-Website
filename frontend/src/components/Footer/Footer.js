@@ -7,6 +7,7 @@ import FeedbackForm from "./FeedbackForm";
 import FacebookIcon from "../../images/Footer-Images/facebook.png";
 import VideoIcon from "../../images/Footer-Images/video.png";
 import LinkedinIcon from "../../images/Footer-Images/linkedin.png";
+import InstagramIcon from "../../images/Footer-Images/instagram.png";
 
 function Footer() {
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
@@ -49,6 +50,13 @@ function Footer() {
                 rel="noopener noreferrer"
               >
                 <img src={VideoIcon} alt="YouTube" width={45} />
+              </a>
+              <a
+                href="https://www.instagram.com/chadfoundationathletesartists/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img src={InstagramIcon} alt="Instagram" width={45} />
               </a>
             </div>
           </Col>
