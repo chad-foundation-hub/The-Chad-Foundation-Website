@@ -16,7 +16,7 @@ function HomeScreen() {
           THE CHAD FOUNDATION FOR ATHLETES AND ARTISTS
         </h2>
         <h1 className="homeScreen-header">
-          RAISING AWARENESS OF HEART-RELATED ABNORMALITIES
+          RAISING AWARENESS OF HEART ANOMALIES IN YOUNG PEOPLE
         </h1>
         <p className="homeScreen-paragraph">
           Ready to take control of your heart health and prevent sudden cardiac
