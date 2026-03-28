@@ -62,7 +62,7 @@ const DonateSuccess = () => {
 
             <h1 className="DonateSuccess-statusTitle">Donation Complete</h1>
 
-            <h2 className="DonateSuccess-heroTitle">Thank you for being a hero!</h2>
+            <h2 className="DonateSuccess-heroTitle">Thank you for being a Heart Hero!</h2>
 
             <p className="DonateSuccess-subtitle">
               Your transaction was successful. 
