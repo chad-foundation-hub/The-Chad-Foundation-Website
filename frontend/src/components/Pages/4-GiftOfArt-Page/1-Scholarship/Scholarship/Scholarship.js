@@ -38,10 +38,12 @@ const Scholarship = () => {
               Every year, The Chad Foundation for Athletes and Artists will
               award $500 scholarships for high school graduating seniors to be
               used for continuing education in an accredited college,
-              university, vocational, or trade school. Qualifying factors will
-              be the student’s goals and progress, financial need, a personal
-              essay, and nominations from teachers, peers, and community
-              leaders.
+              university, vocational, or trade school. We also need mechanics,
+              makeup artists/hair stylists, lab technicians, camera operators,
+              filmmakers. Chad wants to help you take the 1st step of your
+              working dream! Qualifying factors will be the student’s goals and
+              progress, financial need, a personal essay, and nominations from
+              teachers, peers, and community leaders.
             </p>
 
             <p className="scholarship-p">
