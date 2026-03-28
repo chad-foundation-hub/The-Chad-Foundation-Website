@@ -261,7 +261,7 @@ const Board = () => {
                 </a>
               </div>
               <div className="board-paragraph">
-                <p className="board-p">Lead, UFX Designer</p>
+                <p className="board-p">Lead, UX Designer</p>
               </div>
             </Col>
             {/* RIGHT */}
