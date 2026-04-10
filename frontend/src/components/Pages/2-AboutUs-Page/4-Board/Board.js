@@ -263,6 +263,20 @@ const Board = () => {
               <div className="board-paragraph">
                 <p className="board-p">Lead, UX Designer</p>
               </div>
+              {/* FOUR */}
+              <div className="board-dev-p">
+                <h3 className="board-subheader">Ana Chávez</h3>
+                <a
+                  href="https://www.linkedin.com/in/anachavez1995/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img src={LinkedinIcon} alt="alt" width={45} />
+                </a>
+              </div>
+              <div className="board-paragraph">
+                <p className="board-p">UX Designer</p>
+              </div>
             </Col>
             {/* RIGHT */}
             <Col>
