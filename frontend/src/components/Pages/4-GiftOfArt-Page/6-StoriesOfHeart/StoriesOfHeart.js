@@ -6,6 +6,7 @@ import GiftOfArtNavigation from "../GiftOfArtNavigation";
 import PhotoOne from "../../../../images/GiftOfArt-Images/stories-image1.png";
 import PhotoTwo from "../../../../images/GiftOfArt-Images/stories-image2.JPG";
 import PhotoThree from "../../../../images/GiftOfArt-Images/stories-image3.jpg";
+import PhotoFour from "../../../../images/GiftOfArt-Images/stories-image4.png";
 
 const StoriesOfHeartCard = ({
   personsName,
@@ -48,7 +49,7 @@ const StoriesOfHeartCard = ({
             className="storiesOfHeart-readMore-button"
             onClick={toggleExpansion}
           >
-            {" Read more"}
+            {" ..read more"}
           </span>
         )}
       </p>
@@ -61,7 +62,7 @@ const StoriesOfHeartCard = ({
             className="storiesOfHeart-readMore-button"
             onClick={toggleExpansion}
           >
-            {" Read less"}
+            {" ..read less"}
           </span>
         </div>
       )}
@@ -210,6 +211,26 @@ Something else surprising happened when I made the decision to change my life. I
 My journey through hell was transformative. I learned life can throw you punches that can keep you knocked out for years. And it is the loyal, caring friends who never give up on you, and your family who need their son, father, husband and friend back that smack you hard and wake you up. It is to them; I am eternally grateful for the rest of my life.
 								
 - Philip Oberlander
+`}
+          />
+          <StoriesOfHeartCard
+            personsName="Jorge Guzman"
+            photo={PhotoFour}
+            initialStoryText="My name is Jorge Guzman. I was born in a town named Mayarí, province of Holguín, in the eastern part of Cuba just 15 days before the dictatorship of Fidel Castro took over.  My mother always told me that I had been born under the sound of bullets. My life growing up as child was kind of normal but as a teenager, my way of thinking started to change. I discovered American pop music in the 70’s through Miami radio stations that used to sneak in through Cuban airwaves. Since it was banned in Cuba, I remember locking myself in my room to listen to American pop music of the day. You could really get into trouble if you were caught doing that. It changed my life. I felt compelled to learn English by myself because I wanted to understand everything they were saying or singing.  It opened my eyes in ways that can’t be explained."
+            expandedStoryText={`At 17, I decided that I needed to get out of Cuba, if I wanted to be completely free of that ideology. We were always taught in school and by the government-owned media that Communism was right and everything else was wrong. 
+
+              As my English started to improve, I listened to radio stations from all over the world and was able to realize all the lies that the government was instilling in our minds. In 1983, I got a master’s degree in education in the field of Chemistry. Now, I was able to see from inside the kind of education that government wanted teachers to teach students.  I enjoyed teaching and interacting with young minds. This is where my problem began – it was the beginning and the end for me.  My mind and my mouth were too big. I was disgusted but I had to survive someway and went along with it. After a while, I began to speak about my ideas and opinions with friends and acquaintances.  In Cuba, anyone can be a snitch and tell the secret police what you have been talking about with people. It landed me in hot water and the Seguridad del Estado (the secret police) started to harass me. 
+
+              The situation in Cuba had worsened after  the Soviet Union disappeared. Even the basic things you need in everyday life vanished overnight. Harassment towards me and my ideas became commonplace. Everything came crashing down in 1993, when I decided that I’d had enough, and tried to leave the country in a raft with a group of friends. That endeavor didn’t end well since we were caught in the middle of the ocean by Cuban coastguards, who took us back to Cuba. They threw me in jail for a couple of days and, as expected, they fired me from my job as a teacher. The reason behind it was clear. If you try to leave the country, it means that you don’t agree with the government, therefore, you can’t be trusted to teach students about communism. 
+
+              My hometown’s Catholic Church gave me the emotional shelter that I needed, and I became very active in the community. It was the place where I felt most free. I was able to help the community and express my ideas more freely. Of course, it didn’t sit well with the secret police, and they continued to harass me by showing up at my house and searching it without any warrant, looking for “any document that could tie me to any subversive group”. They could never find anything. The priests in my church saw that I was in constant danger of being “disappeared” and in 1999, they got me a visa to Mexico. That was the start of my escape to freedom. The police didn’t interfere. They probably thought that they were getting rid of the opposition. I stayed in the City of Monterrey in Mexico for about 3 months. Four friends of mine who had escaped from Cuba to Venezuela before the Chavez dictatorship took over had been living there for some years.  They were once again escaping another dictatorship. This time Hugo Chavez’s. They contacted me to ask me whether I wanted to go to the United States. I said yes immediately. After all, that was the ultimate goal of mine. One hopeful day in October, we all met in Reynosa, a border town on the Mexican side, and by recommendations from other Cubans that had crossed the Rio Grande before us, we secured a passing though the river with the help of some coyotes that we could trust, after paying them, of course. 
+
+              We were a group of 6. The crossing looked like it had been taken from a movie. We spent the day at the coyote’s house. We waited until nightfall. It all had to be done in the dark. We got into 2 cars as if we were hiding from the Nazis. It turns out that neighbors could call the police if they saw something out of the ordinary going on. These border towns have always had their share of immigration issues going on. We got into the cars as quickly as we could and took off for the river. Upon arriving at the river, the driver told us to quickly run out of the car towards the river shore. There, his “assistants” were waiting for us. They had 3 tractor inner tubes big enough to hold 2 people each inside it, with our legs hanging in the water. All we had to do was stay still as they pushed the tubes with us inside to the American side. All of this was done in complete silence. Once we got to the other side, they told us to run as far as we could into town as they returned to Reynosa. The town’s name was McAllen, Tx. After that, it was all on us, but we knew what we had to do. We needed to surrender to the police. By law, we couldn’t be returned back to Cuba, and we had brought our birth certificates with us, well protected with lots of plastic wrapping, to stop them from getting wet in the river,  as we needed to prove that we were indeed Cubans. After walking through town for a good half an hour, we saw a police car and we did what we had planned all along.
+
+              They booked us into a cell. We didn’t care. We were finally in the land of the free. Surprisingly for us, only 4 of us, who were a family, husband, wife and two kids, were granted passage to Florida. My friend and I were taken to a  refugee camp in Harlingen, Texas, where we stayed for three months waiting for our release. You see, laws in Texas are different from Florida laws. In Florida, we wouldn’t have stayed in a camp for so long. 
+
+              We were released in December 1999. We all went our separate ways although we stayed in touch. A dear cousin of mine took me in. In less than 3 months, I had already found a job as a collector for a company, since I had learned English in Cuba. I met my future husband in Miami in 2000, and the next year, we moved to NYC together. I am very proud of what I have accomplished in this country. I am happily retired and happily married now. Since my retirement, I have been teaching Spanish to adults, which is something that I love. My main message to those reading this is: don’t take democracy for granted.  It can all disappear in the blink of an eye. No dictatorship is good, whether it is from the right or the left.
+
 `}
           />
         </div>
