@@ -87,12 +87,23 @@
   color: var(--orange);
 }
 
+@media only screen and (max-width: 1280px) {
+  .UpcomingEvents .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .UpcomingEvents .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media only screen and (max-width: 1160px) {
   .UpcomingEvents {
     margin-bottom: 80px;
   }
   .UpcomingEvents .upcomingEvents-content {
-    padding: 0 20px;
     flex-direction: column;
     align-items: center;
     text-align: center;

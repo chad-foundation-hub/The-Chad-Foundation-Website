@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import { NavLink } from "react-router-dom";
 import "./Footer.css";
-import ScrollToTopNavLink from "./ScrollToTopNavLink";
 import FeedbackForm from "./FeedbackForm";
 
 import FacebookIcon from "../../images/Footer-Images/facebook.png";
@@ -63,138 +63,136 @@ function Footer() {
           {/* About Us */}
           <Col md className="footer-col">
             <h3 className="footer-h3">About Us</h3>
-            <ScrollToTopNavLink
+            <NavLink
               to="/about/who-we-are"
               className="footer-p nav-link"
             >
               Who We Are
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/about/what-weve-done"
               className="footer-p nav-link"
             >
               What We’ve Done
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/about/testimonials"
               className="footer-p nav-link"
             >
               Testimonials
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink to="/about/board" className="footer-p nav-link">
+            </NavLink>
+            <NavLink to="/about/board" className="footer-p nav-link">
               Board
-            </ScrollToTopNavLink>
+            </NavLink>
           </Col>
           {/* Education of the Heart */}
           <Col md className="footer-col">
             <h3 className="footer-h3">Education of the Heart</h3>
-            <ScrollToTopNavLink
+            <NavLink
               to="/education-of-the-heart/heart-fact-page"
               className="footer-p nav-link"
             >
               Heart Facts
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/education-of-the-heart/screening-home"
               className="footer-p nav-link"
             >
               Screenings
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/education-of-the-heart/emergency-main"
               className="footer-p nav-link"
             >
               Emergencies
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/education-of-the-heart/tips-main"
               className="footer-p nav-link"
             >
               Expert Health Tips
-            </ScrollToTopNavLink>
-            <a
-              href="https://www.cfpublic.org/education/2025-06-29/florida-is-the-first-state-to-require-student-athletes-get-life-saving-ekgs"
-              target="_blank"
-              rel="noopener noreferrer"
+            </NavLink>
+            <NavLink
+              to="/#latest-heart-news"
               className="footer-p nav-link"
             >
               Latest Heart News
-            </a>
+            </NavLink>
           </Col>
           {/* Gift of Art */}
           <Col md className="footer-col">
             <h3 className="footer-h3">Gift of Art</h3>
-            <ScrollToTopNavLink
+            <NavLink
               to="/gift-of-art/scholarship"
               className="footer-p nav-link"
             >
               Scholarship
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/gift-of-art/plays"
               className="footer-p nav-link"
             >
               Plays
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/gift-of-art/films"
               className="footer-p nav-link"
             >
               Films
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/gift-of-art/books"
               className="footer-p nav-link"
             >
               Books
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/gift-of-art/upcoming-events"
               className="footer-p nav-link"
             >
               Events
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/gift-of-art/heart-stories"
               className="footer-p nav-link"
             >
               Stories of the Heart
-            </ScrollToTopNavLink>
+            </NavLink>
           </Col>
           {/* People We Love */}
           <Col md className="footer-col">
             <h3 className="footer-h3">People We Love</h3>
-            <ScrollToTopNavLink
+            <NavLink
               to="/people-we-love/tributes"
               className="footer-p nav-link"
             >
               Tributes
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/people-we-love/survivors"
               className="footer-p nav-link"
             >
               Survivors
-            </ScrollToTopNavLink>
+            </NavLink>
             <h3 className="footer-h3">Resources</h3>
-            <ScrollToTopNavLink
+            <NavLink
               to="/resources/sca-and-training-resources"
               className="footer-p nav-link"
             >
               SCA, Screenings, AED & CPR
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/resources/hospital-screening-resources"
               className="footer-p nav-link"
             >
               Hospital Screening
-            </ScrollToTopNavLink>
-            <ScrollToTopNavLink
+            </NavLink>
+            <NavLink
               to="/donate-main"
               className="nav-link footer-h3"
             >
               Donate
-            </ScrollToTopNavLink>
+            </NavLink>
             {/* Feedback Form Link */}
             <button
               className="feedback-link-btn"

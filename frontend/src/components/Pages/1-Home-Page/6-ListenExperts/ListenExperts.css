@@ -67,6 +67,18 @@
     display: none;
   }
 }
+@media only screen and (max-width: 1280px) {
+  .listenExperts .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .listenExperts .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media only screen and (max-width: 760px) {
   .listenExperts .experts-h3{
     font-size: 32px;
@@ -85,8 +97,6 @@
     gap: 32px;
    }
    .listenExperts h2 {
-    max-width: 92%;
-    margin: 0 auto;
     margin-bottom: 24px;
    }
 }

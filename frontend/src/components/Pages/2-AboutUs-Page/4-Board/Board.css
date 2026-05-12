@@ -59,6 +59,18 @@
   height: auto; 
 }
 
+@media (max-width: 1280px) {
+  .Board .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .Board .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media (max-width: 1160px) {
   .Board .board-header {
     text-align: center;

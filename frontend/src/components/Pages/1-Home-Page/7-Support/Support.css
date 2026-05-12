@@ -100,14 +100,21 @@
   }
 }
 
+@media (max-width: 1280px) {
+  .Support .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .Support .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media (max-width: 900px) {
   .Support .book-display img {
     width: 100%;
-    padding: 0 20px;
-  }
-
-  .Support .text-content {
-    padding: 0 20px;
   }
 
   .Support .text-content button {
@@ -115,7 +122,7 @@
     padding: 14px 0;
   }
 
-  .Support h2, 
+  .Support h2,
   .Support .text-content h3 {
     text-align: center;
   }

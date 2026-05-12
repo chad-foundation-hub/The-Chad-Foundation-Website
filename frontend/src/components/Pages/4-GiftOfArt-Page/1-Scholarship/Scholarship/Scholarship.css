@@ -90,10 +90,21 @@
   border: 1px solid transparent;
 }
 
+@media only screen and (max-width: 1280px) {
+  .Scholarship .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .Scholarship .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media only screen and (max-width: 1100px) {
-
   .Scholarship .scholarship-image {
-    width: 92%;
+    max-width: 100%;
     height: auto;
   }
 }
@@ -149,9 +160,7 @@
     gap: 8px;
     margin-bottom: 24px;
   }
-  .scholarship-content{
-    max-width: 90% ;
-    margin-left: auto;
-    margin-right: auto;
+  .scholarship-content {
+    max-width: 100%;
   }
 }

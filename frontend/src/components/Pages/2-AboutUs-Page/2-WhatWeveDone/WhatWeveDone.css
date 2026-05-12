@@ -79,6 +79,18 @@
   border: 1px solid transparent;
 }
 
+@media screen and (max-width: 1280px) {
+  .WhatWeveDone .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .WhatWeveDone .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media screen and (max-width: 1160px) {
   .WhatWeveDone .whatWeveDone-content {
     flex-direction: column;
@@ -87,16 +99,15 @@
 
   .WhatWeveDone .hospitals-photo,
   .WhatWeveDone .whatWeveDone-text {
-    max-width: 92%;
+    max-width: 100%;
     display: block;
     margin: 0 auto;
   }
 
-  
-  .whatWeveDone-header{
+  .whatWeveDone-header {
     text-align: center;
   }
-  .whatWeveDone-hospitals-logo{
+  .whatWeveDone-hospitals-logo {
     display: block;
     margin: 0 auto;
   }

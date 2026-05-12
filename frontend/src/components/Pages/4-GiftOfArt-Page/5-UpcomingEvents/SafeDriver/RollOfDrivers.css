@@ -167,12 +167,21 @@
   border: 1px solid var(--orange);
 }
 
+@media (max-width: 1280px) {
+  .RollOfDrivers .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .RollOfDrivers .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media (max-width: 960px) {
   .roll-facts-content {
     column-count: 1;
-  }
-  .RollOfDrivers .roll-paper {
-    max-width: 90%;
   }
 }
 @media (max-width: 580px) {

@@ -84,6 +84,18 @@
   color: var(--main-white);
   border: 1px solid transparent;
 }
+@media (max-width: 1280px) {
+  .SCAAndTraining .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .SCAAndTraining .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media (max-width: 1140px) {
   .SCAAndTraining .resource-card {
     width: 100%;
@@ -105,8 +117,5 @@
 
   .SCAAndTraining .resource-links-container {
     justify-content: center;
-  }
-  .SCAAndTraining .main-container {
-     padding: 0 12px;
   }
 }

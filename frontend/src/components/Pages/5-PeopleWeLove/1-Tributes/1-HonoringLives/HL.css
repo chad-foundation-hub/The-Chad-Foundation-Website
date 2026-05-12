@@ -53,6 +53,18 @@
 }
 
 
+@media (max-width: 1280px) {
+  .HonoringLives .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .HonoringLives .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media (max-width: 960px) {
   .honoringLives-content {
     flex-direction: column;

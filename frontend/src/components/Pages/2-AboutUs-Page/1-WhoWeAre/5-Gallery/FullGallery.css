@@ -4,7 +4,7 @@
 }
 
 
-.main-container {
+.FullGallery .main-container {
   max-width: 1200px;
   margin: auto;
 }
@@ -43,9 +43,16 @@
 }
 
 
-@media only screen and (max-width: 1160px) {
-  .FullGallery .full-gallery-header {
-    max-width: 98%;
+@media only screen and (max-width: 1280px) {
+  .FullGallery .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .FullGallery .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
 

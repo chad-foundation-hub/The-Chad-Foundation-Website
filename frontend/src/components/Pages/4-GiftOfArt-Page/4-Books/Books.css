@@ -224,13 +224,24 @@
 }
 
 /* RESPONSIVE */
+@media only screen and (max-width: 1280px) {
+  .Books .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .Books .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media only screen and (max-width: 1160px) {
   .Books {
     margin-bottom: 80px;
   }
 
   .Books .books-content {
-    padding: 0 20px;
     flex-direction: column;
     align-items: center;
     text-align: center;
@@ -287,18 +298,13 @@
     text-align: center !important;
   }
 
-  .chad-excerpt-wrapper {
-    padding: 0 20px;
-  }
-
   .chad-quote {
-    padding: 0 20px;
     text-align: justify;
   }
 }
 
 @media only screen and (max-width: 530px) {
   .Books .books-image {
-    max-width: 92%;
+    max-width: 100%;
   }
 }

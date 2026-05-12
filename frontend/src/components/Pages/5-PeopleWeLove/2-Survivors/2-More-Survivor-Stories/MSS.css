@@ -41,6 +41,18 @@
   border-radius: 8px;
 }
 
+@media (max-width: 1280px) {
+  .SurvivorStoriesGrid .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .SurvivorStoriesGrid .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media (max-width: 1024px) {
   .SurvivorStoriesGrid .survivor-grid-container {
     grid-template-columns: repeat(2, 1fr);

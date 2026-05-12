@@ -86,8 +86,20 @@
   border: 1px solid var(--orange);
 }
 
+@media (max-width: 1280px) {
+  .Winners .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .Winners .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media (max-width: 860px) {
-  .main-container {
+  .Winners .main-container {
     flex-direction: column;
     align-items: stretch;
   }

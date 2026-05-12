@@ -82,6 +82,18 @@
   border: 1px solid var(--orange);
 }
 
+@media (max-width: 1280px) {
+  .ResourcesNavigation .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .ResourcesNavigation .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media (max-width: 1160px) {
   .resources-menu-item {
     padding: 10px 16px;

@@ -103,10 +103,16 @@
     font-size: 28px;
   }
 }
-@media only screen and (max-width: 1130px) {
+@media only screen and (max-width: 1280px) {
   .whatYouShouldKnow .main-container {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .whatYouShouldKnow .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
 @media only screen and (max-width: 860px) {
