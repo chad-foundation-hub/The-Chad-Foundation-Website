@@ -1,0 +1,168 @@
+.LatestHeartNews {
+  background-color: #f5efea;
+  padding-top: 60px;
+  padding-bottom: 80px;
+}
+
+.LatestHeartNews .latestHeartNews-header {
+  color: var(--main-black);
+  font-family: var(--accent-font);
+  font-size: 48px;
+  font-weight: 400;
+  line-height: 100%;
+  text-transform: capitalize;
+  text-align: left;
+  margin-bottom: 48px;
+}
+
+/* Slider wrapper */
+.latestHeartNews-slider {
+  padding-bottom: 48px;
+}
+
+/* Slick arrows */
+.LatestHeartNews .slick-prev,
+.LatestHeartNews .slick-next {
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+}
+.LatestHeartNews .slick-prev { left: -44px; }
+.LatestHeartNews .slick-next { right: -44px; }
+
+.LatestHeartNews .slick-prev:before,
+.LatestHeartNews .slick-next:before {
+  font-size: 32px;
+  color: var(--orange);
+}
+
+/* Slick dots */
+.LatestHeartNews .slick-dots {
+  bottom: 0;
+}
+.LatestHeartNews .slick-dots li button:before {
+  font-size: 12px;
+  color: var(--orange);
+  opacity: 0.4;
+}
+.LatestHeartNews .slick-dots li.slick-active button:before {
+  color: var(--orange);
+  opacity: 1;
+}
+
+/* Slide padding so cards don't touch each other */
+.latestHeartNews-slide {
+  padding: 0 12px;
+  display: flex !important;
+  height: auto;
+}
+
+/* Make the slick track stretch slides to equal height */
+.latestHeartNews-slider .slick-track {
+  display: flex !important;
+  align-items: stretch;
+}
+
+.latestHeartNews-slider .slick-slide {
+  display: flex !important;
+  height: auto;
+}
+
+.latestHeartNews-slider .slick-slide > div {
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
+
+/* Card */
+.latestHeartNews-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  background-color: var(--main-white);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 32px;
+  cursor: pointer;
+  transition: box-shadow 300ms ease-in-out, transform 300ms ease-in-out;
+  height: 100%;
+  
+}
+
+.latestHeartNews-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-3px);
+}
+
+/* Meta row: source + date */
+.latestHeartNews-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.latestHeartNews-source {
+  color: var(--orange);
+  font-family: var(--main-font);
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.latestHeartNews-date {
+  color: #888;
+  font-family: var(--main-font);
+  font-size: 14px;
+}
+
+/* Title */
+.latestHeartNews-title {
+  color: var(--main-black);
+  font-family: var(--accent-font);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+/* Excerpt */
+.latestHeartNews-excerpt {
+  color: #555;
+  font-family: var(--main-font);
+  font-size: 18px;
+  line-height: 1.5;
+  margin-bottom: 24px;
+  text-align: justify;
+}
+
+/* Read more */
+.latestHeartNews-readMore {
+  color: var(--orange);
+  font-family: var(--accent-font);
+  font-size: 22px;
+  margin-top: auto;
+}
+
+/* Responsive margins */
+@media (max-width: 1280px) {
+  .LatestHeartNews .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .LatestHeartNews .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .LatestHeartNews .latestHeartNews-header {
+    font-size: 36px;
+  }
+  .latestHeartNews-title {
+    font-size: 22px;
+  }
+}
