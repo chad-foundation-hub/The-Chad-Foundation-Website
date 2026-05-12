@@ -112,14 +112,12 @@ function Footer() {
             >
               Expert Health Tips
             </NavLink>
-            <a
-              href="https://www.cfpublic.org/education/2025-06-29/florida-is-the-first-state-to-require-student-athletes-get-life-saving-ekgs"
-              target="_blank"
-              rel="noopener noreferrer"
+            <NavLink
+              to="/#latest-heart-news"
               className="footer-p nav-link"
             >
               Latest Heart News
-            </a>
+            </NavLink>
           </Col>
           {/* Gift of Art */}
           <Col md className="footer-col">
