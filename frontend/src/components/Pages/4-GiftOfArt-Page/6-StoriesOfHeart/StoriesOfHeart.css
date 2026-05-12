@@ -121,6 +121,18 @@
 }
 
 /* --- RESPONSIVE --- */
+@media (max-width: 1280px) {
+  .StoriesOfHeart-Two .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .StoriesOfHeart-Two .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media (max-width: 860px) {
   .StoriesOfHeart-Two .storiesOfHeart-image {
     float: none;
@@ -136,10 +148,7 @@
   .StoriesOfHeart-Two .storiesOfHeart-text {
     text-align: left;
   }
-  .StoriesOfHeart-Two .storiesOfHeart-p {
-    width: 90%;
-  }
-  .StoriesOfHeart-Two .storiesOfHeart-card{
+  .StoriesOfHeart-Two .storiesOfHeart-card {
     border-radius: 0;
   }
 }

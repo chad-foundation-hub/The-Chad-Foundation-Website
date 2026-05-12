@@ -117,20 +117,27 @@ section.Testimonials {
   }
 
 }
+@media only screen and (max-width: 1280px) {
+  .Testimonials .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .Testimonials .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media only screen and (max-width: 1060px) {
   .quotationLine-top,
   .quotationLine-bottom {
     display: none;
   }
-  .Testimonials-content {
-    max-width: 92%;
-    padding: 1em;
-    margin: 0 auto;
-  }
   .Testimonials-p {
     margin-left: 0;
   }
-   .Testimonials .Testimonials-header {
+  .Testimonials .Testimonials-header {
     text-align: center;
   }
 }

@@ -86,7 +86,17 @@
     line-height: 100%;
   }
 }
+@media (max-width: 1280px) {
+  .GiftOfArtNavigation .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
 @media (max-width: 768px) {
+  .GiftOfArtNavigation .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
   .GiftOfArtNavigation-menu ul {
     flex-direction: column;
     justify-content: flex-start;
@@ -108,14 +118,7 @@
     text-align: center;
     font-family: var(--main-font);
     font-size: 20px;
-    max-width: 90%;
   }
-  .GiftOfArtNavigation-menu {
-    max-width: 90%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  
 }
 @media (max-width: 430px) {
   .giftOfArt-menu-item {

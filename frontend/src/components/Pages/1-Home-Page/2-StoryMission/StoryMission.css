@@ -55,19 +55,30 @@
   border: 1px solid var(--orange);
 }
 
+@media only screen and (max-width: 1280px) {
+  .StoryMission .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .StoryMission .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
 @media only screen and (max-width: 991px) {
-  
+
   .StoryMission .storyMission-content {
-    padding: 0 20px; 
-    flex-direction: column; 
-    align-items: center; 
-    text-align: center; 
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
     gap: 20px;
   }
 .StoryMission .storyMission-header {
   text-align: center;
-  margin-left: 12px;
-  margin-right: 12px;
 }
   .StoryMission .storyMission-btn {
     justify-content: center; 

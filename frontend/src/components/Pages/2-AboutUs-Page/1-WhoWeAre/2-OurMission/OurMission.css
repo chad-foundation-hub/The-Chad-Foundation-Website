@@ -155,6 +155,18 @@
   opacity: 1;
 }
 
+@media only screen and (max-width: 1280px) {
+  .OurMission .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .OurMission .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media only screen and (min-width: 1160px) {
   .ourMissionHearts {
     margin-top: -60px;

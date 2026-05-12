@@ -119,15 +119,22 @@
     padding-bottom: 60px;
   }
 }
+@media only screen and (max-width: 1280px) {
+  .survivorsStories-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .survivorsStories-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media only screen and (max-width: 1060px) {
   .quotationLine-top,
   .quotationLine-bottom {
     display: none;
-  }
-  .survivorsStories-content {
-    max-width: 92%;
-    padding: 1em;
-    margin: 0 auto;
   }
   .survivorsStories-p {
     margin-left: 0;

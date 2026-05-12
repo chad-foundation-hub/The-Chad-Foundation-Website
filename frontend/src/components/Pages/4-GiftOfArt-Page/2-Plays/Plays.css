@@ -123,13 +123,24 @@
   margin-top: 0;
   margin-bottom: 0;
 }
+@media only screen and (max-width: 1280px) {
+  .Plays .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .Plays .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media only screen and (max-width: 1160px) {
   .Plays {
     margin-bottom: 80px;
   }
 
   .Plays .plays-content {
-    padding: 0 20px;
     flex-direction: column;
     align-items: center;
     text-align: center;

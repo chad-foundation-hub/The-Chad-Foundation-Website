@@ -72,12 +72,23 @@
   text-decoration: underline;
 }
 
+@media only screen and (max-width: 1280px) {
+  .Message .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media only screen and (max-width: 768px) {
+  .Message .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media only screen and (max-width: 1160px) {
   .Message .message-header {
     text-align: center;
   }
   .Message .message-content {
-    margin-top: 40px;
     display: block;
     margin: 0 auto;
     margin-top: 40px;
@@ -93,15 +104,7 @@
   }
 }
 @media only screen and (max-width: 960px) {
-  .Message .message-content {
-    max-width: 92%;
-  }
   .Message .Message-text-box {
     font-size: 20px;
-  }
-  .Message .message-header {
-    max-width: 90%;
-    margin-left: auto;
-    margin-right: auto;
   }
 }

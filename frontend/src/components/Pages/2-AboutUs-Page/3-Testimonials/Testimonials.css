@@ -89,16 +89,21 @@
   cursor: pointer;
 }
 
+@media (max-width: 1280px) {
+  .Testimonials-Two .main-container {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+@media (max-width: 768px) {
+  .Testimonials-Two .main-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
 @media (max-width: 1160px) {
   .Testimonials-Two .testimonials-header {
     text-align: center;
-    max-width: 92%;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .testimonials-container {
-    padding-left: 18px;
-    padding-right: 18px;
   }
 }
 
