@@ -7,6 +7,7 @@ import PhotoOne from "../../../../images/GiftOfArt-Images/stories-image1.png";
 import PhotoTwo from "../../../../images/GiftOfArt-Images/stories-image2.JPG";
 import PhotoThree from "../../../../images/GiftOfArt-Images/stories-image3.jpg";
 import PhotoFour from "../../../../images/GiftOfArt-Images/stories-image4.png";
+import PhotoFive from "../../../../images/GiftOfArt-Images/stories-image5.jpg";
 
 const StoriesOfHeartCard = ({
   personsName,
@@ -230,6 +231,68 @@ My journey through hell was transformative. I learned life can throw you punches
               They booked us into a cell. We didn’t care. We were finally in the land of the free. Surprisingly for us, only 4 of us, who were a family, husband, wife and two kids, were granted passage to Florida. My friend and I were taken to a  refugee camp in Harlingen, Texas, where we stayed for three months waiting for our release. You see, laws in Texas are different from Florida laws. In Florida, we wouldn’t have stayed in a camp for so long. 
 
               We were released in December 1999. We all went our separate ways although we stayed in touch. A dear cousin of mine took me in. In less than 3 months, I had already found a job as a collector for a company, since I had learned English in Cuba. I met my future husband in Miami in 2000, and the next year, we moved to NYC together. I am very proud of what I have accomplished in this country. I am happily retired and happily married now. Since my retirement, I have been teaching Spanish to adults, which is something that I love. My main message to those reading this is: don’t take democracy for granted.  It can all disappear in the blink of an eye. No dictatorship is good, whether it is from the right or the left.
+
+`}
+          />
+          <StoriesOfHeartCard
+            personsName="Joe Connors"
+            photo={PhotoFive}
+            initialStoryText="Joe was born in Philadelphia and grew up in Stoneham, MA, with his parents, three older
+sisters, and a close-knit, fun-loving extended family of aunts and uncles, nephews and nieces,
+and cousins of Irish descent. He worked at Friendly’s and painted houses to pay his way
+through college and received a partial basketball scholarship at UMass Amherst where he
+played basketball with “Dr. J” (Julius Irving). After college, Joe served his country as a Peace
+Corps Volunteer in the Philippines addressing trafficking and abuse of women and fearlessly
+disrupted the begging syndicate’s use of ‘hiring good-looking street children’ to lure more
+donations. After the Peace Corps, he continued to work in the Philippines to prevent dynamite
+fishing and other social causes. In 1986, with camera in hand, he was embedded at
+
+"
+            expandedStoryText={`Camp
+Aguinaldo with the People Power (“Yellow”) non-violent revolution and was the first to report that President Marcos had left the country.
+
+Joe was a fearless adventurer who loved travelling, hiking, mountain climbing, and scuba diving all over the world. His good looks and natural ability to connect with people landed him modeling roles, commercials, and movie parts including in Wonder Women (1973) with Nancy Kwan and a cameo role as one of the helicopter gunmen in Ride of the Valkyries, Apocalypse Now, directed by Francis Ford Coppola. Enterprising and always helpful, Joe helped find a desperately needed generator for the film which Francis Ford Coppola mightily appreciated, and invited him to Hollywood. Loyal to his artisan workers in Baguio who made the jewelry for the movie, Joe remained in the Philippines. Ever the kidder who loved to make people laugh, once with his friend while in the Philippines, Joe announced unabashedly, “Hello! I’m Robert Redford and this is Jon Voight!”
+
+Stumbling by chance to work with metals, semi-precious stones, and wood, and with an eye for
+design he created unique wearable art in the U.S. and Canada creating the “Bayanihan”
+(meaning “coming together as a community”) silver earring collection in the Philippines; then
+partnered with a San Francisco-based artist on inlaid Intarsia jewelry (featured in Harper’s
+Bazaar), and later the famous cross embedded in a crystal heart pendant, “The Quiet Cross.”
+Many of his designs were sold in major jewelers like Tiffany’s, Bloomingdales, and Saks Fifth
+Avenue in NYC.
+
+As his jewelry business grew, so did his love of photography. Self-taught, Joe became world-
+renowned for several famous photographs including The Capitol in Snow of the United States
+Capitol. His empathy, discerning eye and journalistic instinct captured joyful interludes of people living in poverty in Mumbai slums, and playful, happy children in torn dirty clothes in Cambodia.
+He connected with them on a human level, making them laugh. As destiny had it, Joe met his
+beautiful wife Anne Ralte in a revolving door at Bloomingdales NYC and they spent the next 42
+years together. Joe had initially caught a glimpse of Anne at the airport when she first arrived in the U.S. (1971) the same day he left for his Peace Corps assignment. Anne was born in Mizoram in northeast India. Orphaned at age 10, she grew up in a boarding school for disadvantaged children in Calcutta, West Bengal. Through the support of her loving foster parents in the US, her exceptional intelligence and fortitude, became a celebrated force for lifelong work in international development, including in blindness prevention, food aid, and humanitarian assistance. Joe was her champion, coaching her to become who she is today. He donated photography services to non-profit organizations, with emphasis on documenting blindness in Asia and Africa.
+
+Joe faced his life challenges with a “never give up” attitude, and his ever-ready smile to help
+others belied his own daily physical pain. He survived the January 1982 World Airways plane
+crash into Boston Harbor that left him with persistent back pain and can be seen after the crash helping other passengers debark from the frigid waters of the bay. He miraculously survived an emergency open heart surgery with intuitive decisions and overcame stuttering as a child to become a great natural communicator. He loved his Peace Corps experience in the Philippines and told tales that prompted “tell me that story again” (and again) from his young nephews and nieces, enthralled with their dashing uncle’s adventures.
+
+Joe was a good friend to all he met, so happy to help you no matter what the need and always
+made you feel so special. He thought his job was to make people laugh and lift their spirits. His
+long-time friend Beanie wrote, “If he can’t help you solve your problems, he can make you laugh so hard that you’ll forget you even had a problem to begin with.”
+
+“Uncle Joe” to young and old, Joe changed the lives of many, spreading love and hope wherever he went. His nephew John wrote, “Joe has the rare quality of putting others before himself, just to see others flourish in their own life. That is his gift, his talent, and his true heart. He is loved and respected for the full spectrum of humanity he has the pleasure of meeting. A street sweeper in New Delhi to a Head of State, Joe has the same courtesy, respect and passion for each, and every human being.”
+
+Deeply troubled by the January 6th event, Joe was in the process of creating awareness to
+protect the U.S. Capitol as a national treasure using his renowned photo The Capitol in Snow.
+Joe’s full body of work can be seen at Joe Connors Art Collections
+(https://fineartamerica.com/profiles/joe-connors)  He lives on through his photos.
+
+Joe died suddenly on Monday, December 20th, 2021, at 4:44  (Joe’s spiritual number) after entering the ER with stomach pains and surgery for twisted bowels that should have been undertaken on day one (on Saturday early morning). He died with his beloved wife, Anne by his side, who organized goodbye call-ins from family and friends, who shared his own jokes back. Joe could not speak or move but shed a tear.
+
+Joe Connors was an extraordinary human being who emitted love and friendship his entire Life.
+By “doing it different” and fearless protection for those needing help, Joe was able to change
+people’s lives. It is a comfort to Anne that these values are being carried forward by the next
+generation of leaders, such as Adam Dunigan, running for Congress in Virginia’s 8th district.
+https://www.adam4congress.com/platform
+
+To those who had the privilege and pleasure of knowing him, Joe was our ‘own National
+Treasure!’   June 4, 1948–December 20, 2021.
 
 `}
           />
