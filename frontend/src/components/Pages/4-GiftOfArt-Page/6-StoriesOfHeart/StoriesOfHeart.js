@@ -8,6 +8,7 @@ import PhotoTwo from "../../../../images/GiftOfArt-Images/stories-image2.JPG";
 import PhotoThree from "../../../../images/GiftOfArt-Images/stories-image3.jpg";
 import PhotoFour from "../../../../images/GiftOfArt-Images/stories-image4.png";
 import PhotoFive from "../../../../images/GiftOfArt-Images/stories-image5.jpg";
+import AddendumPhoto from "../../../../images/GiftOfArt-Images/stories-addendum.jpg";
 
 const StoriesOfHeartCard = ({
   personsName,
@@ -15,6 +16,7 @@ const StoriesOfHeartCard = ({
   photo,
   initialStoryText,
   expandedStoryText,
+  addendum,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -59,12 +61,26 @@ const StoriesOfHeartCard = ({
       {isExpanded && (
         <div className="storiesOfHeart-expanded">
           {renderParagraphs(expandedStoryText)}
-          <span
-            className="storiesOfHeart-readMore-button"
-            onClick={toggleExpansion}
-          >
-            {" ..read less"}
-          </span>
+          {addendum ? (
+            <div className="storiesOfHeart-addendum">
+              <hr className="storiesOfHeart-addendum-divider" />
+              <p className="storiesOfHeart-addendum-label">Addendum</p>
+              {addendum}
+              <span
+                className="storiesOfHeart-readMore-button"
+                onClick={toggleExpansion}
+              >
+                {" ..read less"}
+              </span>
+            </div>
+          ) : (
+            <span
+              className="storiesOfHeart-readMore-button"
+              onClick={toggleExpansion}
+            >
+              {" ..read less"}
+            </span>
+          )}
         </div>
       )}
     </div>
@@ -237,6 +253,29 @@ My journey through hell was transformative. I learned life can throw you punches
           <StoriesOfHeartCard
             personsName="Joe Connors"
             photo={PhotoFive}
+            addendum={
+              <>
+                <div className="storiesOfHeart-addendum-img-wrapper">
+                  <img
+                    src={AddendumPhoto}
+                    alt="The Quiet Cross – South Africa"
+                    className="storiesOfHeart-addendum-image"
+                  />
+                </div>
+                <p className="storiesOfHeart-text storiesOfHeart-addendum-attribution">
+                  Joe Connors – "The Quiet Cross"
+                </p>
+                <p className="storiesOfHeart-text">
+                  "In 2005, I had the privilege of bringing a team of NY homeless soccer players to Graz, Austria, to participate in the "1st Homeless Streetsoccer World Cup" with 16 countries of unhoused athletes.
+                </p>
+                <p className="storiesOfHeart-text">
+                  This young player from South Africa saw my "Quiet Cross" necklace, which my very good friend Joe Connors designed. I wore it at every game. The player asked me if he could have it... and though it was a treasure to me, how could I refuse... Besides, its creator, "Uncle Joe", loved all people everywhere and would have wanted this young South African player to wear it. I hope it brought him many blessings.~"
+                </p>
+                <p className="storiesOfHeart-text storiesOfHeart-addendum-signature">
+                  – Love, Arista
+                </p>
+              </>
+            }
             initialStoryText="Joe was born in Philadelphia and grew up in Stoneham, MA, with his parents, three older
 sisters, and a close-knit, fun-loving extended family of aunts and uncles, nephews and nieces,
 and cousins of Irish descent. He worked at Friendly’s and painted houses to pay his way
